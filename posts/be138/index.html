@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>学习Docker(5)-Docker服务管理 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="学习Docker(5)-Docker服务管理" />
+<meta property="og:description" content="Docker 容器的网络连接 Docker 客户端和守护进程 Docker 为 c/s 架构，客户端和守护进程支持以下三种socket： unix:///var/run/docker.sock tcp://host:port fd://socket 自定义的 Docker 客户端 可以通过 Remote API 与 Docker守护" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/be138/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2018-08-11T23:40:30+08:00" />
+<meta property="article:modified_time" content="2018-08-11T23:40:30+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="学习Docker(5)-Docker服务管理"/>
+<meta name="twitter:description" content="Docker 容器的网络连接 Docker 客户端和守护进程 Docker 为 c/s 架构，客户端和守护进程支持以下三种socket： unix:///var/run/docker.sock tcp://host:port fd://socket 自定义的 Docker 客户端 可以通过 Remote API 与 Docker守护"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/be138/" /><link rel="prev" href="https://mrchi.cc/posts/d9d3c/" /><link rel="next" href="https://mrchi.cc/posts/7c3a9/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "学习Docker(5)-Docker服务管理",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/be138\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  1216 ,
+        "url": "https:\/\/mrchi.cc\/posts\/be138\/","datePublished": "2018-08-11T23:40:30+08:00","dateModified": "2018-08-11T23:40:30+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Invoker"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">学习Docker(5)-Docker服务管理</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Invoker</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/infrastructure/"><i class="far fa-folder fa-fw"></i>Infrastructure</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2018-08-11">2018-08-11</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1216 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#docker-容器的网络连接">Docker 容器的网络连接</a>
+      <ul>
+        <li><a href="#docker-客户端和守护进程">Docker 客户端和守护进程</a></li>
+        <li><a href="#docker-客户端远程访问">Docker 客户端远程访问</a></li>
+        <li><a href="#docker-容器的互联">Docker 容器的互联</a></li>
+      </ul>
+    </li>
+    <li><a href="#docker-容器的数据管理">Docker 容器的数据管理</a>
+      <ul>
+        <li><a href="#数据卷">数据卷</a></li>
+        <li><a href="#数据卷容器">数据卷容器</a></li>
+        <li><a href="#数据卷的备份和还原">数据卷的备份和还原</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="docker-容器的网络连接">Docker 容器的网络连接</h1>
+<h2 id="docker-客户端和守护进程">Docker 客户端和守护进程</h2>
+<p>Docker 为 c/s 架构，客户端和守护进程支持以下三种socket：</p>
+<ul>
+<li><code>unix:///var/run/docker.sock</code></li>
+<li><code>tcp://host:port</code></li>
+<li><code>fd://socket</code></li>
+</ul>
+<p>自定义的 Docker 客户端 可以通过 Remote API 与 Docker守护进程进行通信。</p>
+<h2 id="docker-客户端远程访问">Docker 客户端远程访问</h2>
+<p>Docker 守护进程使用 <code>-H</code> <code>—-host</code> 选项指定 socket；</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ sudo dockerd -H unix:///var/run/docker.sock -H tcp://192.168.59.106 -H tcp://10.10.10.2
+</code></pre></td></tr></table>
+</div>
+</div><p>Docker 客户端使用 <code>-H</code> <code>—-host</code> 选项</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ docker -H tcp://0.0.0.0:2375 ps
+</code></pre></td></tr></table>
+</div>
+</div><p>或者指定 <code>DOCKER_HOST</code> 环境变量指定 socket</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ export DOCKER_HOST=&#34;tcp://0.0.0.0:2375&#34;
+$ docker ps
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="docker-容器的互联">Docker 容器的互联</h2>
+<p>Docker 容器使用虚拟网桥与宿主机通信，默认网段为 <code>172.17.42.1/16</code>。</p>
+<p>虽然同一宿主机上的 Docker 容器可以互相访问，但由于 Docker 容器的 IP 地址在容器启动时分配，所以容器间不能通过指定 IP 的方式互相连接。</p>
+<p>要链接到其他容器，可以在容器启动时添加 <code>—-link</code> 参数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">docker run —-link=[CONTAINER_NAME or CONTAINER_ID]:[ALIAS]
+</code></pre></td></tr></table>
+</div>
+</div><p>ALIAS 是给被链接容器设置的别名，可以在容器中直接使用这个名字访问被链接容器。</p>
+<p>如果要禁止容器的互相访问，设置 Docker 守护进程的 <code>--icc</code> 参数为 false。</p>
+<p>如果只允许特定容器的互相访问：</p>
+<ol>
+<li>守护进程设置参数 <code>—-icc=false</code>（默认为 true）和 <code>--iptables=true</code>；</li>
+<li>相互访问的容器设置 <code>—-link</code> 参数。</li>
+</ol>
+<h1 id="docker-容器的数据管理">Docker 容器的数据管理</h1>
+<h2 id="数据卷">数据卷</h2>
+<p>有两种方式挂载数据卷。</p>
+<p>一种是，在 Dockerfile 构建文件中使用 VOLUME 命令创建数据卷。通过这种方式创建的数据卷，在容器启动时会被映射到宿主机上不存在的随机目录。不能用于不同容器之间的共享。</p>
+<p>另一种是，使用 <code>-v</code>，<code>—-volume</code> 参数在容器启动时挂载数据卷：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">docker run -v [宿主机目录]:[容器中目录]:[访问权限]
+</code></pre></td></tr></table>
+</div>
+</div><p>容器中目录必须为绝对路径</p>
+<p>访问权限可以不指定，可选值为：</p>
+<ul>
+<li><code>wr</code> 读写（默认值）;</li>
+<li><code>ro</code> 只读；</li>
+</ul>
+<h2 id="数据卷容器">数据卷容器</h2>
+<p>一个容器挂载数据卷，其他容器通过挂载这个容器实现数据共享。挂载数据卷的容器，被称之为<strong>数据卷容器</strong>。</p>
+<p>其他容器通过 <code>—volumes-from</code> 指令在运行时挂载数据卷容器</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">docker run —-volumes-from [数据卷容器名]
+</code></pre></td></tr></table>
+</div>
+</div><p>下面是一个实例。</p>
+<p>首先，我们新建一个 Dockerfile 文件，在文件中创建数据卷 <code>/datavolume</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-dockerfile" data-lang="dockerfile"><span class="k">FROM</span><span class="s"> ubuntu:latest</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="k">VOLUME</span><span class="s"> /datavolume</span><span class="err">
+</span><span class="err"></span><span class="k">CMD</span> bash<span class="err">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>使用该文件构建镜像 dv</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">docker build -t dv - &lt; Dockerfile
+</code></pre></td></tr></table>
+</div>
+</div><p>新建一个数据卷容器 dv1，把数据卷 <code>/datavolume</code> 映射到宿主机 <code>~/Downloads</code> 目录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">docker run --name dv1 -it -v ~/Downloads:/datavolume dv
+</code></pre></td></tr></table>
+</div>
+</div><p>此时该容器已经挂载了 <code>/datavolume</code> 数据卷，我们在数据卷中新建文件 dv1.txt，然后退出 dv1 的 shell，dv1 停止运行。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">echo &#34;&#34; &gt; /datavolume/dv1.txt
+</code></pre></td></tr></table>
+</div>
+</div><p>基于 Ubuntu 镜像新建容器 dv2，把 dv1 作为数据卷容器</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">docker run --name dv2 --volumes-from dv1  -it ubuntu
+</code></pre></td></tr></table>
+</div>
+</div><p>基于 Ubuntu 镜像新建容器 dv3，把 dv1 作为数据卷容器</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">docker run --name dv3 --volumes-from dv1  -it ubuntu
+</code></pre></td></tr></table>
+</div>
+</div><p>在 dv2 和 dv3 中访问 <code>/datavolume</code> 目录，都能看到我们新建的 dv1.txt 文件。</p>
+<p>删除 dv1 容器</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">docker rm dv1
+</code></pre></td></tr></table>
+</div>
+</div><p>在 dv2 中删除文件 dv1.txt，宿主机中 <code>~/Downloads</code> 目录中文件也已经被删除。</p>
+<p>查看 dv2 容器的信息，可以看到 dv2 容器中 <code>/datavolume</code> 数据卷直接映射到了宿主机的 <code>~/Downloads</code> 目录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">docker inspect dv2
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>该数据卷容器的作用仅仅在于传递配置信息（映射关系）。即使删除数据卷容器，容器与宿主机的映射关系仍然存在。</strong></p>
+<h2 id="数据卷的备份和还原">数据卷的备份和还原</h2>
+<ol>
+<li>使用 <code>-—volumes-from</code> 挂载数据卷容器</li>
+<li>使用 <code>-v</code> 挂载备份目录</li>
+<li>使用 tar 命令将数据卷容器目录打包放到备份目录，即实现了数据卷的备份。</li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2018-08-11</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/d9d3c/" class="prev" rel="prev" title="学习Docker(4)-构建镜像"><i class="fas fa-angle-left fa-fw"></i>学习Docker(4)-构建镜像</a>
+            <a href="/posts/7c3a9/" class="next" rel="next" title="whoosh和jieba实现中文全文检索">whoosh和jieba实现中文全文检索<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2018-08-11T23:40:30+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"学习Docker(5)-Docker服务管理"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

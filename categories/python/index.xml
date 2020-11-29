@@ -1,0 +1,78 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Python - 分类 - Déjà vu</title>
+        <link>https://mrchi.cc/categories/python/</link>
+        <description>Python - 分类 - Déjà vu</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>chiqingjun@gmail.com (MrChi)</managingEditor>
+            <webMaster>chiqingjun@gmail.com (MrChi)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Fri, 20 Nov 2020 00:06:46 &#43;0800</lastBuildDate><atom:link href="https://mrchi.cc/categories/python/" rel="self" type="application/rss+xml" /><item>
+    <title>使用Python自己实现Base64</title>
+    <link>https://mrchi.cc/posts/0b6b7/</link>
+    <pubDate>Fri, 20 Nov 2020 00:06:46 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/0b6b7/</guid>
+    <description><![CDATA[<p>不用 Python 的 base64 标准库，如何自己实现一个 Base64 编码函数？</p>]]></description>
+</item><item>
+    <title>Python计算日历星期</title>
+    <link>https://mrchi.cc/posts/0bf3d/</link>
+    <pubDate>Thu, 12 Nov 2020 09:24:24 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/0bf3d/</guid>
+    <description><![CDATA[<p>我们经常会在日历中看到本周是今年的第几周，这是如何定义的？又如何用 Python 来计算呢？</p>]]></description>
+</item><item>
+    <title>使用python -m运行</title>
+    <link>https://mrchi.cc/posts/bfff0/</link>
+    <pubDate>Wed, 07 Aug 2019 13:15:50 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/bfff0/</guid>
+    <description><![CDATA[简介 在 Python 的官方文档中，记录了 python 命令的 -m &lt;module-name&gt; 参数： 在 sys.path 中搜索指定名称的模块并将其内容作为 __main__ 模块来执行。 例如有以下目录结构： 1 2 3 . └── foo └──]]></description>
+</item><item>
+    <title>《Flask Web 开发》大纲</title>
+    <link>https://mrchi.cc/posts/94780/</link>
+    <pubDate>Tue, 30 Apr 2019 09:03:33 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/94780/</guid>
+    <description><![CDATA[Flask 基础 上下文 current_app 应用上下文，当前应用实例。 g 应用上下文，处理请求时的临时存储对象，每次请求会重设对象。 request 请求对象，封装请求，常用的属性和方法有]]></description>
+</item><item>
+    <title>Python中的四舍五入</title>
+    <link>https://mrchi.cc/posts/669c4/</link>
+    <pubDate>Sun, 07 Apr 2019 14:56:40 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/669c4/</guid>
+    <description><![CDATA[<p>在掘金看到一篇文章，讲 Python 中使用 <code>round</code> 函数进行浮点数四舍五入时不够精确的原因，总结一下。</p>]]></description>
+</item><item>
+    <title>pytz中的时间偏移问题</title>
+    <link>https://mrchi.cc/posts/217d6/</link>
+    <pubDate>Sat, 16 Mar 2019 17:36:10 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/217d6/</guid>
+    <description><![CDATA[问题 pytz 是 Python 的一个时区库，可以方便的定义时区，弥补了 Python 自带 datetime 库的不足。例如： 1 2 3 4 5 6 import pytz from pytz import timezone shanghai = timezone(&#39;Asia/Shanghai&#39;) amsterdam = timezone(&#39;Europe/Amsterdam&#39;) utc = pytz.UTC 但是如果将这些时区对象作]]></description>
+</item><item>
+    <title>Python中的类型标注</title>
+    <link>https://mrchi.cc/posts/54419/</link>
+    <pubDate>Sat, 16 Mar 2019 15:12:28 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/54419/</guid>
+    <description><![CDATA[类型标注 类型标注，称为 Type Hints 或者 Type annotation，由以下几个 PEP 定义： PEP 3107，Python 3.0，增加了 function annotation syntax，但没有实现该]]></description>
+</item><item>
+    <title>attrs和Python3.7的dataclasses</title>
+    <link>https://mrchi.cc/posts/9b182/</link>
+    <pubDate>Sat, 16 Mar 2019 12:45:14 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/9b182/</guid>
+    <description><![CDATA[简述 在 Python 编程过程中，有一些 class 是业务模型，用于存储数据，我们称为“数据类”，例如商品等。 attrs 是 Python 核心开发 Hynek Schlawack 设计并实现的一个项目，用于解决数据类]]></description>
+</item><item>
+    <title>Python异常处理的优秀实践</title>
+    <link>https://mrchi.cc/posts/4215f/</link>
+    <pubDate>Thu, 14 Mar 2019 20:38:36 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/4215f/</guid>
+    <description><![CDATA[<p>前几天在掘金上看到一篇文章 《Python 工匠： 异常处理的三个好习惯》，董伟明的 “Python 之美” 公众号也转发了，感觉不错。</p>]]></description>
+</item><item>
+    <title>一些Python小技巧</title>
+    <link>https://mrchi.cc/posts/f6833/</link>
+    <pubDate>Sat, 02 Feb 2019 17:07:02 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/f6833/</guid>
+    <description><![CDATA[datetime.datetime.astimezone(tz=None) 返回一个使用新时区地方时的 datetime 对象。 1 2 3 4 5 6 7 8 9 from datetime import datetime, timezone, timedelta cst_zone = timezone(timedelta(hours=8)) cst_dt = datetime(2018, 12, 20, 8, 0, 0, tzinfo=cst_zone) utc_dt = cst_dt.astimezone(timezone.utc) utc_dt # datetime.datetime(2018, 12, 20, 0, 0, tzinfo=datetime.timezone.utc) os.path.realpath 返回不含有符号链接的文件的]]></description>
+</item></channel>
+</rss>

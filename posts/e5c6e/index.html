@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>使用Flask-RESTful构建RESTful API - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="使用Flask-RESTful构建RESTful API" />
+<meta property="og:description" content="Flask-RESTful 是一个 Flask 扩展，用于快速构建 REST API。本文基于 Flask-RESTful 0.3.6 版本。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/e5c6e/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2018-10-23T00:13:49+08:00" />
+<meta property="article:modified_time" content="2018-10-23T00:13:49+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="使用Flask-RESTful构建RESTful API"/>
+<meta name="twitter:description" content="Flask-RESTful 是一个 Flask 扩展，用于快速构建 REST API。本文基于 Flask-RESTful 0.3.6 版本。"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/e5c6e/" /><link rel="prev" href="https://mrchi.cc/posts/333e4/" /><link rel="next" href="https://mrchi.cc/posts/a18b7/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "使用Flask-RESTful构建RESTful API",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/e5c6e\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  1979 ,
+        "url": "https:\/\/mrchi.cc\/posts\/e5c6e\/","datePublished": "2018-10-23T00:13:49+08:00","dateModified": "2018-10-23T00:13:49+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Invoker"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">使用Flask-RESTful构建RESTful API</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Invoker</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/python/"><i class="far fa-folder fa-fw"></i>Python</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2018-10-23">2018-10-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1979 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装">安装</a></li>
+    <li><a href="#集成">集成</a>
+      <ul>
+        <li><a href="#与-flask-app-集成">与 Flask App 集成</a></li>
+        <li><a href="#与-blueprint-集成">与 Blueprint 集成</a></li>
+      </ul>
+    </li>
+    <li><a href="#路由">路由</a></li>
+    <li><a href="#解析请求参数">解析请求参数</a>
+      <ul>
+        <li><a href="#基本用法">基本用法</a></li>
+        <li><a href="#argument-常见参数">Argument 常见参数</a></li>
+        <li><a href="#自定义参数检查">自定义参数检查</a></li>
+      </ul>
+    </li>
+    <li><a href="#定义输出字段">定义输出字段</a>
+      <ul>
+        <li><a href="#基本用法-1">基本用法</a></li>
+        <li><a href="#fields-常用类型">fields 常用类型</a></li>
+        <li><a href="#重命名属性">重命名属性</a></li>
+        <li><a href="#增加默认值">增加默认值</a></li>
+        <li><a href="#自定义字段值">自定义字段值</a></li>
+        <li><a href="#复杂结构">复杂结构</a></li>
+        <li><a href="#列表字段">列表字段</a></li>
+        <li><a href="#输出列表">输出列表</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考文档">参考文档</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>Flask-RESTful 是一个 Flask 扩展，用于快速构建 REST API。本文基于 Flask-RESTful 0.3.6 版本。</p>
+<h1 id="安装">安装</h1>
+<p>安装：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">pipenv install flask-restful
+</code></pre></td></tr></table>
+</div>
+</div><p>Minimal App:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">flask_restful</span> <span class="kn">import</span> <span class="n">Resource</span><span class="p">,</span> <span class="n">Api</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">api</span> <span class="o">=</span> <span class="n">Api</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">HelloWorld</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;hello&#39;</span><span class="p">:</span> <span class="s1">&#39;world&#39;</span><span class="p">}</span>
+
+<span class="n">api</span><span class="o">.</span><span class="n">add_resource</span><span class="p">(</span><span class="n">HelloWorld</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>运行：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">python3 app.py
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="集成">集成</h1>
+<h2 id="与-flask-app-集成">与 Flask App 集成</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">flask_restful</span> <span class="kn">import</span> <span class="n">Api</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">api</span> <span class="o">=</span> <span class="n">Api</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>使用 factory function 时，可调用 <code>flask_restful.Api</code> 的 <code>init_app</code> 方法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">flask_restful</span> <span class="kn">import</span> <span class="n">Api</span>
+
+<span class="n">api</span> <span class="o">=</span> <span class="n">Api</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">create_app</span><span class="p">():</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">api</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="与-blueprint-集成">与 Blueprint 集成</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">flask_restful</span> <span class="kn">import</span> <span class="n">Api</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">bp_api</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;bp_api&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
+<span class="n">api</span> <span class="o">=</span> <span class="n">Api</span><span class="p">(</span><span class="n">bp_api</span><span class="p">)</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">api_bp</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="路由">路由</h1>
+<p>Flask-RESTful 使用了 Flask 中的 <a href="http://flask.pocoo.org/docs/1.0/views/#pluggable-views" target="_blank" rel="noopener noreffer">即插视图（Pluggable Views）</a>，可参考董伟明老师《Python Web 开发实践》P40。</p>
+<p>Flask-RESTful 中的路由以资源为中心，视图类继承自 <code>flask_restful.Resource</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">flask_restful</span> <span class="kn">import</span> <span class="n">Resource</span><span class="p">,</span> <span class="n">Api</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">api</span> <span class="o">=</span> <span class="n">Api</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+<span class="n">todos</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">class</span> <span class="nc">TodoSimple</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">todo_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">todo_id</span><span class="p">:</span> <span class="n">todos</span><span class="p">[</span><span class="n">todo_id</span><span class="p">]}</span>
+
+    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">todo_id</span><span class="p">):</span>
+        <span class="n">todos</span><span class="p">[</span><span class="n">todo_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">todo_id</span><span class="p">:</span> <span class="n">todos</span><span class="p">[</span><span class="n">todo_id</span><span class="p">]}</span>
+
+<span class="n">api</span><span class="o">.</span><span class="n">add_resource</span><span class="p">(</span><span class="n">TodoSimple</span><span class="p">,</span> <span class="s1">&#39;/&lt;string:todo_id&gt;&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="解析请求参数">解析请求参数</h1>
+<h2 id="基本用法">基本用法</h2>
+<blockquote>
+<p>Flask-RESTful 的请求解析器会在 2.0 版本被删除。</p>
+</blockquote>
+<p>一个 demo 如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask_restful</span> <span class="kn">import</span> <span class="n">reqparse</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">reqparse</span><span class="o">.</span><span class="n">RequestParser</span><span class="p">()</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;rate&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Rate cannot be converted&#39;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>首先新建解析器 <code>reqparse.RequestParser</code> 对象，然后使用 <code>add_argument</code> 方法添加参数，最后在路由方法中使用 <code>parse_args</code> 方法解析参数。</p>
+<p>默认情况下，参数都是可选参数，在解析器中声明但未传入的参数值为 <code>None</code>。</p>
+<h2 id="argument-常见参数">Argument 常见参数</h2>
+<p><code>add_argument</code> 接受 <code>reqparse.Argument</code> 实例，或传递给 <code>reqparse.Argument</code> 构造函数的参数。</p>
+<p>构造函数常用参数有：</p>
+<ul>
+<li><code>name</code> 参数名称</li>
+<li><code>type</code> 参数类型</li>
+<li><code>required</code> 必传参数，默认非必传</li>
+<li><code>default</code> 默认值</li>
+<li><code>dest</code> 添加到返回对象中的参数名</li>
+<li><code>action</code> 默认 “store”，设置为 “append” 即可将同名参数接收为一个列表</li>
+<li><code>choices</code> 参数可选值列表</li>
+<li><code>trim</code> 去掉参数头尾空格，默认不处理</li>
+<li><code>nullable</code> 允许参数为 None，默认不允许</li>
+<li><code>help</code> 参数的简短描述，在参数无效时替换默认的错误消息在响应中返回，替换默认的错误消息。可以使用 “{error_msg}” 来包含默认的错误消息。</li>
+<li><code>location</code> 从何种 <code>flask.Request</code> 对象属性中获取参数，默认为 “json” 和 “value”。多个 location 的参数会被组成为 MultiDict 对象。</li>
+</ul>
+<h2 id="自定义参数检查">自定义参数检查</h2>
+<p>可以传递一个函数给 <code>type</code>，在函数中对参数进行检查和处理。若参数不符合要求可抛出 <code>ValueError</code>，<code>ValueError</code> 的错误消息将在响应中返回。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">parser</span> <span class="o">=</span> <span class="n">reqparse</span><span class="o">.</span><span class="n">RequestParser</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">odd_number</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&#34;Value is not odd&#34;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span>
+
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;OddNumber&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">odd_number</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>函数也可接收两个参数——参数值和参数名。方便于在错误消息中引用参数名。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">odd_number</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&#34;The parameter &#39;{name}&#39; is not odd. You gave us the value: {value}&#34;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="定义输出字段">定义输出字段</h1>
+<h2 id="基本用法-1">基本用法</h2>
+<p>首先定义输出格式 dict，dict 中字段类型从设置为 fields中类型（会自动转换输出值）。其键是要呈现的对象上的属性或键的名称，其值是将格式化并返回该字段的值的类。</p>
+<p>然后使用 <code>marshal_with</code> 装饰器绑定到请求方法上。最后在请求方法中返回数据库对象或字典即可。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask_restful</span> <span class="kn">import</span> <span class="n">Resource</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">marshal_with</span>
+
+<span class="n">resource_fields</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
+    <span class="s1">&#39;address&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
+    <span class="s1">&#39;date_updated&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">DateTime</span><span class="p">(</span><span class="n">dt_format</span><span class="o">=</span><span class="s1">&#39;rfc822&#39;</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Todo</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="nd">@marshal_with</span><span class="p">(</span><span class="n">resource_fields</span><span class="p">,</span> <span class="n">envelope</span><span class="o">=</span><span class="s1">&#39;resource&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">db_get_todo</span><span class="p">()</span>	<span class="c1"># 这里的对象可以是数据库对象，或者 dict</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上面这个例子中，我们假定返回的自定义的数据库对象，有 <code>name</code>、<code>address</code> 和 <code>date_updated</code> 属性。对象中的其他属性将不会被返回。<code>envelope</code> 参数指定可选的关键字参数以包装结果输出。</p>
+<p>装饰器 <code>marshal_with</code> 相当于：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Todo</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">marshal</span><span class="p">(</span><span class="n">db_get_todo</span><span class="p">(),</span> <span class="n">resource_fields</span><span class="p">),</span> <span class="mi">200</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="fields-常用类型">fields 常用类型</h2>
+<ul>
+<li>
+<p><code>String</code>(<em>default=None</em>, <em>attribute=None</em>) 字符串</p>
+</li>
+<li>
+<p><code>Float</code>(<em>default=None</em>, <em>attribute=None</em>) 浮点数</p>
+</li>
+<li>
+<p><code>Boolean</code>(<em>default=None</em>, <em>attribute=None</em>) 布尔型</p>
+</li>
+<li>
+<p><code>Integer</code>(<em>default=0</em>, *<em>*kwargs</em>) 整数</p>
+</li>
+<li>
+<p><code>FormattedString</code>(<em>src_str</em>) 格式化字符串，自动替换 format 语法中的参数。例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">fields</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
+    <span class="s1">&#39;greeting&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">FormattedString</span><span class="p">(</span><span class="s2">&#34;Hello {name}&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Doug&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">marshal</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p><code>DateTime</code>(<em>dt_format='rfc822&rsquo;</em>, *<em>*kwargs</em>) UTC时间，可以输出为 &lsquo;rfc822&rsquo; 或者 &lsquo;iso8601&rsquo; 格式。</p>
+</li>
+<li>
+<p><code>Url</code>(<em>endpoint=None</em>, <em>absolute=False</em>, <em>scheme=None</em>, *<em>*kwargs</em>) url类型，类似 Flask 的 url_for 函数</p>
+</li>
+<li>
+<p><code>Fixed</code>(<em>decimals=5</em>, *<em>*kwargs</em>) 固定小数位数的浮点数，用于价格等场景</p>
+</li>
+<li>
+<p><code>Price</code> 即 <code>Fixed</code></p>
+</li>
+<li>
+<p><code>Arbitrary</code>(<em>default=None</em>, <em>attribute=None</em>) 具有任意精度的浮点数</p>
+</li>
+<li>
+<p><code>Nested</code>(<em>nested</em>, <em>allow_null=False</em>, *<em>*kwargs</em>) 嵌套类型</p>
+</li>
+<li>
+<p><code>List</code>(<em>cls_or_instance</em>, *<em>*kwargs</em>) 列表类型</p>
+</li>
+<li>
+<p><code>Raw</code>(<em>default=None</em>, <em>attribute=None</em>) 提供了一个基本字段类，自定义字段类从该字段类继承。</p>
+</li>
+</ul>
+<h2 id="重命名属性">重命名属性</h2>
+<p>如果内部字段名称和输出字段名称不同，可以使用 <code>attribute</code> 参数指定内部参数名称。</p>
+<p>指定时，可以使用字符串：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">fields</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">attribute</span><span class="o">=</span><span class="s1">&#39;private_name&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;address&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>使用函数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">fields</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">attribute</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">_private_name</span><span class="p">),</span>
+    <span class="s1">&#39;address&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>嵌套属性：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">fields</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">attribute</span><span class="o">=</span><span class="s1">&#39;people_list.0.person_dictionary.name&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;address&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="增加默认值">增加默认值</h2>
+<p>使用 <code>default</code> 参数为输出增加默认值。仅有部分类型支持。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">fields</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;Anonymous User&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;address&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="自定义字段值">自定义字段值</h2>
+<p>自定义字段需要继承 <a href="https://flask-restful.readthedocs.io/en/latest/api.html#fields.Raw" target="_blank" rel="noopener noreffer"><code>fields.Raw</code></a>类并实现<code>format</code>方法。这对于使用整数存储的标识位字段非常有用。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">UrgentItem</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">Raw</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&#34;Urgent&#34;</span> <span class="k">if</span> <span class="n">value</span> <span class="o">&amp;</span> <span class="mh">0x01</span> <span class="k">else</span> <span class="s2">&#34;Normal&#34;</span>
+
+<span class="k">class</span> <span class="nc">UnreadItem</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">Raw</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&#34;Unread&#34;</span> <span class="k">if</span> <span class="n">value</span> <span class="o">&amp;</span> <span class="mh">0x02</span> <span class="k">else</span> <span class="s2">&#34;Read&#34;</span>
+
+<span class="n">fields</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
+    <span class="s1">&#39;priority&#39;</span><span class="p">:</span> <span class="n">UrgentItem</span><span class="p">(</span><span class="n">attribute</span><span class="o">=</span><span class="s1">&#39;flags&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="n">UnreadItem</span><span class="p">(</span><span class="n">attribute</span><span class="o">=</span><span class="s1">&#39;flags&#39;</span><span class="p">),</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="复杂结构">复杂结构</h2>
+<p>除了输出简单的一层 k-v 结构之外，也可以输出嵌套结构。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">resource_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">}</span>
+<span class="n">resource_fields</span><span class="p">[</span><span class="s1">&#39;address&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">resource_fields</span><span class="p">[</span><span class="s1">&#39;address&#39;</span><span class="p">][</span><span class="s1">&#39;line 1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">attribute</span><span class="o">=</span><span class="s1">&#39;addr1&#39;</span><span class="p">)</span>
+<span class="n">resource_fields</span><span class="p">[</span><span class="s1">&#39;address&#39;</span><span class="p">][</span><span class="s1">&#39;line 2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">attribute</span><span class="o">=</span><span class="s1">&#39;addr2&#39;</span><span class="p">)</span>
+<span class="n">resource_fields</span><span class="p">[</span><span class="s1">&#39;address&#39;</span><span class="p">][</span><span class="s1">&#39;city&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span>
+<span class="n">resource_fields</span><span class="p">[</span><span class="s1">&#39;address&#39;</span><span class="p">][</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span>
+<span class="n">resource_fields</span><span class="p">[</span><span class="s1">&#39;address&#39;</span><span class="p">][</span><span class="s1">&#39;zip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;bob&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;addr1&#39;</span><span class="p">:</span> <span class="s1">&#39;123 fake street&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;addr2&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;city&#39;</span><span class="p">:</span> <span class="s1">&#39;New York&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="s1">&#39;NY&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;zip&#39;</span><span class="p">:</span> <span class="s1">&#39;10468&#39;</span>
+<span class="p">}</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">marshal</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">resource_fields</span><span class="p">)</span>
+
+<span class="c1"># result</span>
+<span class="p">{</span>
+    <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;bob&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;address&#34;</span><span class="p">:{</span>
+        <span class="s2">&#34;line 1&#34;</span><span class="p">:</span> <span class="s2">&#34;123 fake street&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;line 2&#34;</span><span class="p">:</span> <span class="s2">&#34;&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;state&#34;</span><span class="p">:</span> <span class="s2">&#34;NY&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;zip&#34;</span><span class="p">:</span> <span class="s2">&#34;10468&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;city&#34;</span><span class="p">:</span> <span class="s2">&#34;New York&#34;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>地址字段实际上并不存在于数据对象上，但是任何子字段都可以直接从对象访问属性，就好像它们没有嵌套一样。</p>
+<h2 id="列表字段">列表字段</h2>
+<p>使用 <code>fields.List</code> 输出列表字段。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">flask_restful</span> <span class="kn">import</span> <span class="n">fields</span><span class="p">,</span> <span class="n">marshal</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">json</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">resource_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="s1">&#39;first_names&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">)}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Bougnazal&#39;</span><span class="p">,</span> <span class="s1">&#39;first_names&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Emile&#39;</span><span class="p">,</span> <span class="s1">&#39;Raoul&#39;</span><span class="p">]}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">marshal</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">resource_fields</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;{&#34;first_names&#34;: [&#34;Emile&#34;, &#34;Raoul&#34;], &#34;name&#34;: &#34;Bougnazal&#34;}&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="输出列表">输出列表</h2>
+<p>有时，我们可能不想要输出 dict，而是要直接输出列表，可以利用 <code>fields.List</code> 和 <code>fields.Nested</code> 配合输出列表。</p>
+<p>此时要使用 <code>marshal_with_field</code> 装饰器。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">resource_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">Integer</span><span class="p">}</span>
+<span class="n">resource_list_fields</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">Nested</span><span class="p">(</span><span class="n">product_fields</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">ResourceList</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="nd">@marshal_with_field</span><span class="p">(</span><span class="n">resource_list_fields</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">14</span><span class="p">),</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;bbb&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">15</span><span class="p">),</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">data</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="参考文档">参考文档</h1>
+<ul>
+<li><a href="https://flask-restful.readthedocs.io/en/latest/index.html" target="_blank" rel="noopener noreffer">Flask-RESTful — Flask-RESTful 0.3.6 documentation</a></li>
+</ul></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2018-10-23</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/333e4/" class="prev" rel="prev" title="Python解析主目录相对路径"><i class="fas fa-angle-left fa-fw"></i>Python解析主目录相对路径</a>
+            <a href="/posts/a18b7/" class="next" rel="next" title="双因素认证2FA">双因素认证2FA<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2018-10-23T00:13:49+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"使用Flask-RESTful构建RESTful API"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

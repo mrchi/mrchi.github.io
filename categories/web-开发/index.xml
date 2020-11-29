@@ -1,0 +1,78 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Web 开发 - 分类 - Déjà vu</title>
+        <link>https://mrchi.cc/categories/web-%E5%BC%80%E5%8F%91/</link>
+        <description>Web 开发 - 分类 - Déjà vu</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>chiqingjun@gmail.com (MrChi)</managingEditor>
+            <webMaster>chiqingjun@gmail.com (MrChi)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 22 Nov 2020 00:05:39 &#43;0800</lastBuildDate><atom:link href="https://mrchi.cc/categories/web-%E5%BC%80%E5%8F%91/" rel="self" type="application/rss+xml" /><item>
+    <title>《图解HTTP》笔记</title>
+    <link>https://mrchi.cc/posts/eeefc/</link>
+    <pubDate>Sun, 22 Nov 2020 00:05:39 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/eeefc/</guid>
+    <description><![CDATA[<p>《图解 HTTP》是一本通俗易懂的介绍 HTTP 协议的书，由日本作者上野宣写作于 2014 年。由于写作时间早于 HTTP/2 的正式发布时间——2015 年 5 月，书中对于 HTTP/2 的部分表述可能有所出入。</p>]]></description>
+</item><item>
+    <title>解决csv中文乱码</title>
+    <link>https://mrchi.cc/posts/bbe08/</link>
+    <pubDate>Thu, 12 Nov 2020 08:11:14 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/bbe08/</guid>
+    <description><![CDATA[<p>Web 应用程序中经常会有导出文件报表的需求，csv 格式结构简单，Python 无需安装第三方库，标准库即可生成 csv 文件，是导出报表的不二首选。然而，如果没有设置好 csv 文件的编码，在 Microsoft Excel 中打开时，可能是一片乱码。</p>]]></description>
+</item><item>
+    <title>集成LDAP登录</title>
+    <link>https://mrchi.cc/posts/a000b/</link>
+    <pubDate>Thu, 14 Mar 2019 13:57:50 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/a000b/</guid>
+    <description><![CDATA[LDAP 概述 LDAP 数据结构为树形结构； LDAP 读性能很好，但写性能很差； LDAP 是一种开放 Internet 标准，LDAP 协议是跨平台的 Internet 协议 LDAP 基本概念 Entry 条目，也叫记录项，是 LDAP 中]]></description>
+</item><item>
+    <title>使用JSON Schema进行参数验证</title>
+    <link>https://mrchi.cc/posts/1fd99/</link>
+    <pubDate>Fri, 01 Feb 2019 19:16:31 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/1fd99/</guid>
+    <description><![CDATA[什么是 JSON Schema JSON Schema 是基于 JSON 语法，用来描述 JSON 数据格式的一种规范。可以数据校验、生成接口文档，生成模拟数据等多种用途。 本质上，JSON 是由以下几种基]]></description>
+</item><item>
+    <title>Let&#39;s Encrypt:免费生成HTTPS证书</title>
+    <link>https://mrchi.cc/posts/3fad1/</link>
+    <pubDate>Tue, 27 Nov 2018 13:39:59 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/3fad1/</guid>
+    <description><![CDATA[简介 Let&rsquo;s Encrypt 是一个免费，自动化和开放的证书颁发机构，由非营利性机构互联网安全研究组（ISRG）驱动。该机构可以为域名颁发免费的 HTTPS 证书，每次证书的]]></description>
+</item><item>
+    <title>双因素认证2FA</title>
+    <link>https://mrchi.cc/posts/a18b7/</link>
+    <pubDate>Wed, 24 Oct 2018 09:36:20 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/a18b7/</guid>
+    <description><![CDATA[2FA 概念 认证（authentication）即是确认用户身份，密码是最常见的认证方法。但是密码容易泄露和冒充，因此越来越多的网站开始采用双因素]]></description>
+</item><item>
+    <title>JSON Web Token入门</title>
+    <link>https://mrchi.cc/posts/5304a/</link>
+    <pubDate>Fri, 03 Aug 2018 14:41:06 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/5304a/</guid>
+    <description><![CDATA[简介 JSON Web Token（JWT）是是目前最流行的跨域认证（Authentication）解决方案。 基于 session 的认证方案，在服务器集群或跨域的多系统中]]></description>
+</item><item>
+    <title>Nginx配置</title>
+    <link>https://mrchi.cc/posts/9a8a2/</link>
+    <pubDate>Wed, 01 Aug 2018 15:13:36 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/9a8a2/</guid>
+    <description><![CDATA[<p>Nginx 的配置文件是一个以块（block）的形式组织一组指令的文本文件。</p>]]></description>
+</item><item>
+    <title>CSS入门教程-MDN</title>
+    <link>https://mrchi.cc/posts/53748/</link>
+    <pubDate>Thu, 07 Jun 2018 17:04:10 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/53748/</guid>
+    <description><![CDATA[什么是CSS？ Cascading Style Sheets (CSS) 是一门指定文档该如何呈现给用户的语言。 文档是信息的集合，它使用一门标记语言作为结构。文档不等同于文件，一个文档可能由多]]></description>
+</item><item>
+    <title>HTML和CSS基础教程-慕课网</title>
+    <link>https://mrchi.cc/posts/79cd5/</link>
+    <pubDate>Thu, 31 May 2018 13:47:59 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/79cd5/</guid>
+    <description><![CDATA[HTML &lt;em&gt;：表示强调，斜体表示； &lt;strong&gt;：表示更强烈的强调，粗体表示； &lt;span&gt;：用于给文本设]]></description>
+</item></channel>
+</rss>

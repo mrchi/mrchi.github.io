@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>在 Home Assistant 中集成 69 元 3 个的米家蓝牙温湿度计 2 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="在 Home Assistant 中集成 69 元 3 个的米家蓝牙温湿度计 2" />
+<meta property="og:description" content="本文记录如何把米家蓝牙温湿度计 2（型号LYWSD03MMC）集成到 Home Assistant 中。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/b5ee0/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2020-11-29T12:30:40+08:00" />
+<meta property="article:modified_time" content="2020-11-29T12:30:40+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="在 Home Assistant 中集成 69 元 3 个的米家蓝牙温湿度计 2"/>
+<meta name="twitter:description" content="本文记录如何把米家蓝牙温湿度计 2（型号LYWSD03MMC）集成到 Home Assistant 中。"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/b5ee0/" /><link rel="prev" href="https://mrchi.cc/posts/eeefc/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "在 Home Assistant 中集成 69 元 3 个的米家蓝牙温湿度计 2",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/b5ee0\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  1395 ,
+        "url": "https:\/\/mrchi.cc\/posts\/b5ee0\/","datePublished": "2020-11-29T12:30:40+08:00","dateModified": "2020-11-29T12:30:40+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Mr.Chi"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">在 Home Assistant 中集成 69 元 3 个的米家蓝牙温湿度计 2</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Mr.Chi</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E6%9E%81%E5%AE%A2%E6%9C%89%E5%8A%9B%E9%87%8F/"><i class="far fa-folder fa-fw"></i>极客有力量</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-11-29">2020-11-29</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1395 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#集成步骤">集成步骤</a>
+      <ul>
+        <li><a href="#准备-python-环境">准备 Python 环境</a></li>
+        <li><a href="#安装-ha-自定义组件-ble_monitor">安装 HA 自定义组件 ble_monitor</a></li>
+        <li><a href="#获取温湿度计数据加密密钥">获取温湿度计数据加密密钥</a></li>
+        <li><a href="#添加-ha-配置">添加 HA 配置</a></li>
+      </ul>
+    </li>
+    <li><a href="#使用感受">使用感受</a></li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>本文记录如何把米家蓝牙温湿度计 2（型号<code>LYWSD03MMC</code>）集成到 Home Assistant 中。</p>
+<h1 id="前言">前言</h1>
+<p>米家蓝牙温湿度计 2（型号<code>LYWSD03MMC</code>）是小米出品的价格十分美丽的蓝牙温湿度计，69 元 3 个，长这样</p>
+<p>![LYWSD03MMC](在 Home Assistant 中集成 69 元 3 个的米家蓝牙温湿度计 2.assets/LYWSD03MMC.jpg)</p>
+<p>它的蓝牙数据广播频率为：</p>
+<ul>
+<li>大约每隔 10 分钟通过蓝牙广播温湿度数据；</li>
+<li>大约每隔 1 小时通过蓝牙广播电量。</li>
+</ul>
+<p><a href="https://www.home-assistant.io/" target="_blank" rel="noopener noreffer">Home Assistant</a>（以下简称 HA） 的 <a href="https://www.home-assistant.io/integrations/mitemp_bt/" target="_blank" rel="noopener noreffer">官方集成</a> ，目前不支持米家蓝牙温湿度计 2，原因可能是 2 代的蓝牙广播数据进行了加密。我在 GitHub 上找到了一个 HA 的自定义组件 <a href="https://github.com/custom-components/ble_monitor" target="_blank" rel="noopener noreffer">ble_monitor</a>，几乎支持米家所有的蓝牙温湿度计硬件，非常不错。</p>
+<p>本次集成所使用的版本为：</p>
+<ul>
+<li>Python <code>3.8.6</code>；</li>
+<li>Home Assistant <code>0.118.4</code></li>
+<li>米家蓝牙温湿度计 2 固件版本号 <code>0109</code>；</li>
+</ul>
+<h1 id="集成步骤">集成步骤</h1>
+<h2 id="准备-python-环境">准备 Python 环境</h2>
+<p><a href="https://github.com/custom-components/ble_monitor" target="_blank" rel="noopener noreffer">ble_monitor</a> 需要使用 Python 标准库的 <code>socket.AF_BLUETOOTH</code>，需要先检查运行 HA 的 Python 环境是否有支持常量。若不支持则需要重新编译 Python 环境。</p>
+<p>以 Debian 系统为例，首先安装 <code>libbluetooth-dev</code> 包，确保 <code>/usr/include</code> 或 <code>/usr/include/bluetooth</code> 路径中有 <code>bluetooth.h</code> 文件。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">sudo apt install libbluetooth-dev
+</code></pre></td></tr></table>
+</div>
+</div><p>然后使用 pyenv 编译 Python，此时编译出的 Python 就会支持  <code>socket.AF_BLUETOOTH</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">pyenv install 3.8.6
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="安装-ha-自定义组件-ble_monitor">安装 HA 自定义组件 ble_monitor</h2>
+<p><a href="https://github.com/custom-components/ble_monitor" target="_blank" rel="noopener noreffer">ble_monitor</a> 是一个被动式收集数据的自定义组件。它不主动向温湿度计发起轮询请求数据，而是被动地等待温湿度计的蓝牙广播，能够有效节约蓝牙温湿度计的电池电量。</p>
+<p>首先要授权运行 HA 的 Python 对 HCI interface 的 rootless 访问权限（使用 Python 虚拟环境运行 HA 的要在虚拟环境中执行）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">sudo setcap &#39;cap_net_raw,cap_net_admin+eip&#39; `readlink -f \`which python3\``
+</code></pre></td></tr></table>
+</div>
+</div><p>检查权限设置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">sudo getcap `readlink -f \`which python3\``
+</code></pre></td></tr></table>
+</div>
+</div><p>获取代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">git clone https://github.com/custom-components/ble_monitor.git
+</code></pre></td></tr></table>
+</div>
+</div><p>添加自定义组件到 HA 配置中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">cp -r ble_monitor/custom_components/ble_monitor &lt;HA_CONFIG&gt;/custom_components/
+</code></pre></td></tr></table>
+</div>
+</div><p><code>&lt;HA_CONFIG&gt;</code> 请替换为 HA 的配置目录，一般是 <code>$HOME/.homeassistant</code>。</p>
+<h2 id="获取温湿度计数据加密密钥">获取温湿度计数据加密密钥</h2>
+<p>如上文所述，米家蓝牙温湿度计 2 的蓝牙广播数据默认是加密的，我们要配置密钥才能正确解析数据。获取密钥有多种方法，可以参考 <a href="https://github.com/custom-components/ble_monitor/blob/master/faq.md#my-sensors-ble-advertisements-are-encrypted-how-can-i-get-the-key" target="_blank" rel="noopener noreffer">ble_monitor/faq.md at master · custom-components/ble_monitor</a>，这里使用最简单的一种。</p>
+<p>首先，在米家 App 添加将米家蓝牙温湿度计 2，读取到数据。</p>
+<p>然后，在 Android 手机、支持蓝牙功能的 Windows、Mac 上用 Chrome 打开 <a href="https://atc1441.github.io/TelinkFlasher.html" target="_blank" rel="noopener noreffer">Telink Flasher</a> 这个网站，点击 Connect，Chrome 会请求蓝牙权限，并扫描附近的蓝牙设备，选择名为 <code>LYWSD03MMC</code> 进行配对。由于米家蓝牙温湿度计 2 的蓝牙广播周期较长，需要耐心等待其出现在设备列表中。</p>
+<p>配对成功后网页上会展示实时的温度和湿度，此时点击 “Do Activation” 按钮，等待完成后，“Mi Bind Key” 中的值就是我们需要的密钥。</p>
+<h2 id="添加-ha-配置">添加 HA 配置</h2>
+<p>在 HA 的 <code>configuration.yaml</code> 中，添加配置，保存后重启 HA 服务。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">ble_monitor</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">rounding</span><span class="p">:</span><span class="w"> </span>True<span class="w">
+</span><span class="w">  </span><span class="k">decimals</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">  </span><span class="k">period</span><span class="p">:</span><span class="w"> </span><span class="m">60</span><span class="w">
+</span><span class="w">  </span><span class="k">log_spikes</span><span class="p">:</span><span class="w"> </span>False<span class="w">
+</span><span class="w">  </span><span class="k">use_median</span><span class="p">:</span><span class="w"> </span>False<span class="w">
+</span><span class="w">  </span><span class="k">active_scan</span><span class="p">:</span><span class="w"> </span>False<span class="w">
+</span><span class="w">  </span><span class="k">hci_interface</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span><span class="w">  </span><span class="k">batt_entities</span><span class="p">:</span><span class="w"> </span>False<span class="w">
+</span><span class="w">  </span><span class="k">discovery</span><span class="p">:</span><span class="w"> </span>True<span class="w">
+</span><span class="w">  </span><span class="k">restore_state</span><span class="p">:</span><span class="w"> </span>False<span class="w">
+</span><span class="w">  </span><span class="k">report_unknown</span><span class="p">:</span><span class="w"> </span>False<span class="w">
+</span><span class="w">  </span><span class="k">devices</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">mac</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;A4:C1:38:2F:86:6C&#39;</span><span class="w">	</span><span class="c"># 米家蓝牙温湿度计 2 的蓝牙 MAC 地址</span><span class="w">
+</span><span class="w">      </span><span class="k">name</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;Livingroom&#39;</span><span class="w">
+</span><span class="w">      </span><span class="k">encryption_key</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;217C568CF5D22808DA20181502D84C1B&#39;</span><span class="w">	</span><span class="c"># 上一步中获取到的密钥</span><span class="w">
+</span><span class="w">      </span><span class="k">temperature_unit</span><span class="p">:</span><span class="w"> </span>C<span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>具体配置项含义请参考 <a href="https://github.com/custom-components/ble_monitor" target="_blank" rel="noopener noreffer">ble_monitor</a> 的 README。</p>
+<h1 id="使用感受">使用感受</h1>
+<ul>
+<li>米家蓝牙温湿度计 2 的数据更新时间比较久，大概每隔 11 分钟更新一次；</li>
+<li>每次更新时的数据不是实时数据，猜测是 11 分钟内温度数据的均值；</li>
+</ul>
+<p>因此这种集成，不太适合作为传感器触发自动化温度调节。</p>
+<p>想要提高米家蓝牙温湿度计 2 广播频率，可以选择给米家蓝牙温湿度计 2 刷自定义的固件，参考 <a href="https://github.com/atc1441/ATC_MiThermometer" target="_blank" rel="noopener noreffer">atc1441/ATC_MiThermometer: Custom firmware for the Xiaomi Thermometer LYWSD03MMC and Telink Flasher via USB to Serial converter</a>。</p>
+<h1 id="参考链接">参考链接</h1>
+<ul>
+<li><a href="https://www.home-assistant.io/" target="_blank" rel="noopener noreffer">Home Assistant</a></li>
+<li><a href="https://www.home-assistant.io/integrations/mitemp_bt/" target="_blank" rel="noopener noreffer">Xiaomi Mijia BLE Temperature and Humidity Sensor - Home Assistant</a></li>
+<li><a href="https://stackoverflow.com/questions/29107537/missing-socket-af-bluetooth-in-anaconda-python" target="_blank" rel="noopener noreffer">Missing socket.AF_BLUETOOTH in Anaconda Python? - Stack Overflow</a></li>
+<li><a href="https://github.com/custom-components/ble_monitor" target="_blank" rel="noopener noreffer">custom-components/ble_monitor: Xiaomi Mijia BLE MiBeacon monitor</a></li>
+<li><a href="https://github.com/custom-components/ble_monitor/blob/master/faq.md#my-sensors-ble-advertisements-are-encrypted-how-can-i-get-the-key" target="_blank" rel="noopener noreffer">ble_monitor/faq.md at master · custom-components/ble_monitor</a></li>
+<li><a href="https://atc1441.github.io/TelinkFlasher.html" target="_blank" rel="noopener noreffer">Telink Flasher</a></li>
+<li><a href="https://github.com/atc1441/ATC_MiThermometer" target="_blank" rel="noopener noreffer">atc1441/ATC_MiThermometer: Custom firmware for the Xiaomi Thermometer LYWSD03MMC and Telink Flasher via USB to Serial converter</a></li>
+</ul></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-11-29</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/eeefc/" class="prev" rel="prev" title="《图解HTTP》笔记"><i class="fas fa-angle-left fa-fw"></i>《图解HTTP》笔记</a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2020-11-29T12:30:40+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"在 Home Assistant 中集成 69 元 3 个的米家蓝牙温湿度计 2"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

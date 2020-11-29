@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>logrotate日志轮转 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="logrotate日志轮转" />
+<meta property="og:description" content="logrotate旨在简化对生成大量日志文件的系统的管理。它允许自动转储，压缩，删除和发送日志文件。每个日志文件可以在每天、每周、每月或日志文件达到一定大小时处理。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/a7779/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2018-02-16T21:46:54+08:00" />
+<meta property="article:modified_time" content="2018-02-16T21:46:54+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="logrotate日志轮转"/>
+<meta name="twitter:description" content="logrotate旨在简化对生成大量日志文件的系统的管理。它允许自动转储，压缩，删除和发送日志文件。每个日志文件可以在每天、每周、每月或日志文件达到一定大小时处理。"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/a7779/" /><link rel="prev" href="https://mrchi.cc/posts/91ce2/" /><link rel="next" href="https://mrchi.cc/posts/d8fd4/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "logrotate日志轮转",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/a7779\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  1219 ,
+        "url": "https:\/\/mrchi.cc\/posts\/a7779\/","datePublished": "2018-02-16T21:46:54+08:00","dateModified": "2018-02-16T21:46:54+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Invoker"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">logrotate日志轮转</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Invoker</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/infrastructure/"><i class="far fa-folder fa-fw"></i>Infrastructure</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2018-02-16">2018-02-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1219 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装">安装</a></li>
+    <li><a href="#配置">配置</a>
+      <ul>
+        <li><a href="#配置文件路径">配置文件路径</a></li>
+        <li><a href="#配置参数">配置参数</a></li>
+      </ul>
+    </li>
+    <li><a href="#运行">运行</a>
+      <ul>
+        <li><a href="#自动运行">自动运行</a></li>
+        <li><a href="#手动运行">手动运行</a></li>
+      </ul>
+    </li>
+    <li><a href="#reference">Reference</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>logrotate旨在简化对生成大量日志文件的系统的管理。它允许自动转储，压缩，删除和发送日志文件。每个日志文件可以在每天、每周、每月或日志文件达到一定大小时处理。</p>
+<h1 id="安装">安装</h1>
+<p>主流Linux发行版上都默认安装了logrotate。如果没有，可以使用下面的命令安装：</p>
+<ul>
+<li>Debian/Ubuntu：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">apt install logrotate cron
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>Fedora/CentOS/RHEL：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">yum install logrotate crontabs
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="配置">配置</h1>
+<h2 id="配置文件路径">配置文件路径</h2>
+<ol>
+<li><code>/etc/logrotate.conf</code>，为全局配置，通常不需要要修改；</li>
+<li>在<code>/etc/logrotate.d/</code>目录下，为各应用的具体配置，通常以应用程序名称来命名文件。</li>
+</ol>
+<h2 id="配置参数">配置参数</h2>
+<p>以12306轮询的配置为例（<code>/etc/logrotate.d/12306</code>）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">/home/chi/12306/query.log {
+    daily
+    rotate 20
+    dateext
+    copytruncate
+    missingok
+    notifempty
+    create 644 chi chi
+}
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>daily</code>：日志切割的执行周期。可以为&quot;daily&rdquo;、&ldquo;weekly&rdquo;、&ldquo;monthly&quot;或者&quot;yearly&rdquo;。</li>
+<li><code>rotate 20</code>：最多保留20个日志备份。第21个日志备份文件生成时，最早的日志备份将被删除。</li>
+<li><code>dateext</code>：日志文件切割时文件名后缀添加日期，形如<code>query.log-20180210</code>，日期格式可在<code>/etc/logrotate.conf</code>中配置。不加该参数时，默认添加阿拉伯数字后缀。</li>
+<li><code>copytruncate</code>：使用该参数后，拷贝原日志文件作为备份，并且将原文件清空。优点是兼容性好，缺点是拷贝和清空之间的时间差会丢数据。如果没有配置该选项，默认的方式是，把旧日志文件改名为备份文件名 ，然后创建新日志文件，并告知应用程序使用新的描述符。</li>
+<li><code>missingok</code>：在日志轮循期间，任何错误将被忽略，例如“文件无法找到”之类的错误。</li>
+<li><code>notifempty</code>：如果日志文件为空的话，不转储。</li>
+<li><code>create 644 chi chi</code>：使用指定的文件模式创建新日志文件。</li>
+</ul>
+<h1 id="运行">运行</h1>
+<p>Logrotate是基于CRON来运行的，其脚本是<code>/etc/cron.daily/logrotate</code>，日志轮转是系统自动完成的。</p>
+<p>题外话，不同cron任务的执行时间分别为：</p>
+<ul>
+<li><code>/etc/cron.daily/</code> 下面的任务都是每天6:25 执行；</li>
+<li><code>/etc/cron.weekly/</code> 下面的任务都是每周日 6:47 执行；</li>
+<li><code>/etc/cron.monthly/</code> 下面的任务都是每月1号 6:52 执行；</li>
+</ul>
+<p><strong>因此默认情况下，日志转储都在早上6:25执行。</strong></p>
+<h2 id="自动运行">自动运行</h2>
+<p>无需任何设置。logrotate每天会执行一次，检查是否需要做日志转储。</p>
+<h2 id="手动运行">手动运行</h2>
+<p>如果想自定义运行时间，那么可以将logrotate加入到cron定时任务中去。由于<strong>logrotate每天至多执行一次</strong>的原则，我们自己加入到cron中的定时任务执行后，自动运行的任务就不会执行了。</p>
+<p>当然这要求我们自己任务的执行时间在6:25之前，否则需要删除<code>/etc/cron.daily/logrotate</code>阻止其自动运行才可以。</p>
+<p>⚠️：定义的任务必须是root用户的定时任务，格式为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"> /usr/sbin/logrotate /etc/logrotate.d/web_roteate -fv
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="reference">Reference</h1>
+<ol>
+<li><a href="https://mp.weixin.qq.com/s/GXRde42CLOyXm1SAX-OgYQ" target="_blank" rel="noopener noreffer">Linux 日志定时轮询流程详解</a>；</li>
+<li><a href="https://linux.cn/article-4126-1.html" target="_blank" rel="noopener noreffer">Linux日志文件总管——logrotate</a>；</li>
+<li><a href="https://jin-yang.github.io/post/logrotate-usage.html" target="_blank" rel="noopener noreffer">logrotate 使用方法</a>；</li>
+</ol></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2018-02-16</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/91ce2/" class="prev" rel="prev" title="加快分页查询大量数据速度的一种方法"><i class="fas fa-angle-left fa-fw"></i>加快分页查询大量数据速度的一种方法</a>
+            <a href="/posts/d8fd4/" class="next" rel="next" title="JavaScript复制内容到剪贴板">JavaScript复制内容到剪贴板<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2018-02-16T21:46:54+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"logrotate日志轮转"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

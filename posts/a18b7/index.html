@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>双因素认证2FA - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="双因素认证2FA" />
+<meta property="og:description" content="2FA 概念 认证（authentication）即是确认用户身份，密码是最常见的认证方法。但是密码容易泄露和冒充，因此越来越多的网站开始采用双因素" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/a18b7/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2018-10-24T09:36:20+08:00" />
+<meta property="article:modified_time" content="2018-10-24T09:36:20+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="双因素认证2FA"/>
+<meta name="twitter:description" content="2FA 概念 认证（authentication）即是确认用户身份，密码是最常见的认证方法。但是密码容易泄露和冒充，因此越来越多的网站开始采用双因素"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/a18b7/" /><link rel="prev" href="https://mrchi.cc/posts/e5c6e/" /><link rel="next" href="https://mrchi.cc/posts/2e36d/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "双因素认证2FA",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/a18b7\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  1725 ,
+        "url": "https:\/\/mrchi.cc\/posts\/a18b7\/","datePublished": "2018-10-24T09:36:20+08:00","dateModified": "2018-10-24T09:36:20+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Invoker"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">双因素认证2FA</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Invoker</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/web-%E5%BC%80%E5%8F%91/"><i class="far fa-folder fa-fw"></i>Web 开发</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2018-10-24">2018-10-24</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1725 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#2fa-概念">2FA 概念</a></li>
+    <li><a href="#2fa-认证方案">2FA 认证方案</a></li>
+    <li><a href="#totp">TOTP</a>
+      <ul>
+        <li><a href="#使用步骤">使用步骤</a></li>
+        <li><a href="#算法原理">算法原理</a></li>
+        <li><a href="#totp-客户端">TOTP 客户端</a></li>
+        <li><a href="#服务端-python-实现">服务端 Python 实现</a></li>
+      </ul>
+    </li>
+    <li><a href="#2fa-缺点">2FA 缺点</a></li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="2fa-概念">2FA 概念</h1>
+<p><strong>认证</strong>（authentication）即是确认用户身份，密码是最常见的认证方法。但是密码容易泄露和冒充，因此越来越多的网站开始采用<strong>双因素认证</strong>（Two-factor authentication，简称 2FA）。即通过使用除密码外的其他因素，来确认用户身份，增加冒充的难度。</p>
+<p>常用的认证因素可以分为以下几类：</p>
+<ul>
+<li><strong>秘密信息</strong>：只有该用户知道、其他人不知道的某种信息，比如密码。</li>
+<li><strong>个人物品</strong>：该用户的私人物品，比如身份证、钥匙、U 盾等。</li>
+<li><strong>生理特征</strong>：该用户的遗传特征，比如指纹、相貌、虹膜等等。</li>
+</ul>
+<p>因素越多，证明力就越强，身份就越可靠。要求更高的的系统可以采用<strong>多因素认证</strong>（MFA）。</p>
+<h1 id="2fa-认证方案">2FA 认证方案</h1>
+<p>常见的 2FA 认证方案有：</p>
+<ul>
+<li>基于硬件的方式，密码 + 某种个人物品，例如 网银 U 盾、智能卡等，缺点要随身携带；</li>
+<li>基于手机 SMS 的方式，密码 + 短信验证码，缺点是 容易被拦截和伪造（ss7信令漏洞），手机丢失或更换手机号成本较高；</li>
+<li>基于<strong>一次性密码</strong>（One Time Password，简称OTP）；</li>
+</ul>
+<p>OTP 密码不易泄露，即是泄漏也难以受到重放攻击，另外其公开协议 + 高强度算法方式也难以猜测，是 2FA 方案的首选。</p>
+<p>OTP 有两种：</p>
+<ul>
+<li><strong>HOTP</strong>（HMAC-Based One-Time Password）基于 HMAC 的一次性密码，使用计数器计算下一个密码值。标准写入 RFC4226；</li>
+<li><strong>TOTP</strong>（Time-Based One-Time Password）基于时间的一次性密码，使用时间计算下一个密码值。标准写入 RFC6238；</li>
+</ul>
+<p>TOTP 从 HOTP 发展而来，目前已经成为主流的验证方式。</p>
+<h1 id="totp">TOTP</h1>
+<h2 id="使用步骤">使用步骤</h2>
+<ol>
+<li>用户开启双因素认证后，服务器生成一个密钥；</li>
+<li>服务器提示用户扫描二维码（或其他方式），用户保存该密钥到硬件生成器或软件生成器中，此时服务器和用户拥有了相同的密钥；</li>
+<li>用户登录时，手机客户端使用这个密钥和当前时间戳，生成一个哈希，有效期默认为30秒。用户在有效期内，把这个哈希提交给服务器。</li>
+<li>服务器也使用密钥和当前时间戳，生成一个哈希，跟用户提交的哈希比对。只要两者不一致，就拒绝登录。</li>
+</ol>
+<p>实际应用过程中，还要做到：</p>
+<ul>
+<li>提供备用的固定哈希代码，用于 TOTP 密钥丢失的情况；</li>
+<li>在第2步用户绑定密钥时，就让用户输入一次哈希，验证绑定正确，用户与服务器使用了同一个密钥。</li>
+</ul>
+<h2 id="算法原理">算法原理</h2>
+<p>首先计算时间计数器 <code>TC</code>，TOTP 用 <code>TC</code> 代替了 HOTP 中的计数器。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">TC = floor((unixtime(now) − unixtime(T0)) / TS)
+</code></pre></td></tr></table>
+</div>
+</div><p><code>unixtime(now)</code>是当前 Unix 时间戳，<code>unixtime(T0)</code>是约定的起始时间点的时间戳，默认是<code>0</code>，也就是1970年1月1日。TS 则是哈希有效期的时间长度，默认是30秒。通过整除，能够保证在 30 秒内，<code>TC</code> 都是同一个值。</p>
+<p>然后使用 <code>TC</code> 计算哈希：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">TOTP = HASH(SecretKey, TC)
+</code></pre></td></tr></table>
+</div>
+</div><p><code>HASH</code>就是约定的哈希函数，默认是 SHA-1。</p>
+<p>根据TOTP的算法特性，服务器时间与 TOTP 客户端时间差如果超过 <code>TC</code> ，那么一定无法生成一致的哈希。实际应用中最好能够保持时间同步。</p>
+<h2 id="totp-客户端">TOTP 客户端</h2>
+<p>TOTP 客户端可以分为 TOTP 硬件生成器 和 TOTP 软件生成器。软件生成器与硬件生成器相比，优势在于：</p>
+<ul>
+<li>可以绑定多个密钥；</li>
+<li>可以方便的绑定解绑；</li>
+<li>时间准确性高；</li>
+</ul>
+<p>常用 TOTP 软件生成器：</p>
+<ul>
+<li>Google Authenticator</li>
+<li>Microsoft Authenticator（可为微软系网站生成8位字符令牌，为其他网站生成6位字符令牌）</li>
+<li>FreeOTP</li>
+</ul>
+<h2 id="服务端-python-实现">服务端 Python 实现</h2>
+<p>Python 可以选择使用 <a href="https://github.com/pyotp/pyotp" target="_blank" rel="noopener noreffer">PyOTP 库</a>，该库实现了 HOTP 和 TOTP。可以通过 pip 安装：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">pip install pyotp
+</code></pre></td></tr></table>
+</div>
+</div><p>TOTP 示例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">totp</span> <span class="o">=</span> <span class="n">pyotp</span><span class="o">.</span><span class="n">TOTP</span><span class="p">(</span><span class="s1">&#39;base32secret3232&#39;</span><span class="p">)</span>	<span class="c1"># 字符串长度一定要是16</span>
+
+<span class="n">totp</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="c1"># =&gt; &#39;492039&#39;</span>
+
+<span class="c1"># OTP verified for current time</span>
+<span class="n">totp</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="s1">&#39;492039&#39;</span><span class="p">)</span> <span class="c1"># =&gt; True</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">totp</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="s1">&#39;492039&#39;</span><span class="p">)</span> <span class="c1"># =&gt; False</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>HOTP 示例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">hotp</span> <span class="o">=</span> <span class="n">pyotp</span><span class="o">.</span><span class="n">HOTP</span><span class="p">(</span><span class="s1">&#39;base32secret3232&#39;</span><span class="p">)</span>	<span class="c1"># 字符串长度一定要是16</span>
+
+<span class="c1"># HOTP 计算时要传入计数值</span>
+<span class="n">hotp</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># =&gt; &#39;260182&#39;</span>
+<span class="n">hotp</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># =&gt; &#39;055283&#39;</span>
+<span class="n">hotp</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1401</span><span class="p">)</span> <span class="c1"># =&gt; &#39;316439&#39;</span>
+
+<span class="c1"># OTP verified with a counter</span>
+<span class="n">hotp</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="s1">&#39;316439&#39;</span><span class="p">,</span> <span class="mi">1401</span><span class="p">)</span> <span class="c1"># =&gt; True</span>
+<span class="n">hotp</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="s1">&#39;316439&#39;</span><span class="p">,</span> <span class="mi">1402</span><span class="p">)</span> <span class="c1"># =&gt; False</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>生成 base32 随机密钥：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># 返回 16 长度的 base32 密钥，与 Google Authenticator 和其他 OTP 客户端兼容</span>
+<span class="n">pyotp</span><span class="o">.</span><span class="n">random_base32</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>生成 Google Authenticator 兼容链接：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">totp</span> <span class="o">=</span> <span class="n">pyotp</span><span class="o">.</span><span class="n">TOTP</span><span class="p">(</span><span class="s1">&#39;JBSWY3DPEHPK3PXP&#39;</span><span class="p">)</span>
+<span class="n">totp</span><span class="o">.</span><span class="n">provisioning_uri</span><span class="p">(</span><span class="s2">&#34;alice@google.com&#34;</span><span class="p">,</span> <span class="n">issuer_name</span><span class="o">=</span><span class="s2">&#34;Secure App&#34;</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;otpauth://totp/Secure%20App:alice</span><span class="si">%40g</span><span class="s1">oogle.com?secret=JBSWY3DPEHPK3PXP&amp;issuer=Secure%20App&#39;</span>
+
+<span class="n">hotp</span> <span class="o">=</span> <span class="n">pyotp</span><span class="o">.</span><span class="n">HOTP</span><span class="p">(</span><span class="s1">&#39;JBSWY3DPEHPK3PXP&#39;</span><span class="p">)</span>
+<span class="n">hotp</span><span class="o">.</span><span class="n">provisioning_uri</span><span class="p">(</span><span class="s2">&#34;alice@google.com&#34;</span><span class="p">,</span> <span class="n">initial_count</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">issuer_name</span><span class="o">=</span><span class="s2">&#34;Secure App&#34;</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;otpauth://hotp/Secure%20App:alice</span><span class="si">%40g</span><span class="s1">oogle.com?secret=JBSWY3DPEHPK3PXP&amp;issuer=Secure%20App&amp;counter=0&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Google Authenticator 需要传入账户名称和签发机构 <code>issuer_name</code> 参数。得到的链接可以生成二维码供 Google Authenticator 扫描。</p>
+<h1 id="2fa-缺点">2FA 缺点</h1>
+<p>双因素认证有一个最大的问题，那就是帐户的恢复。一旦密钥丢失，想要恢复登录，势必就要绕过双因素认证，这就形成了一个安全漏洞。除非准备两套双因素认证，一套用来登录，另一套用来恢复账户（前文所说的备用哈希代码）。</p>
+<h1 id="参考链接">参考链接</h1>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E4%B8%80%E6%AC%A1%E6%80%A7%E5%AF%86%E7%A2%BC" target="_blank" rel="noopener noreffer">一次性密碼 - 维基百科，自由的百科全书</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2017/11/2fa-tutorial.html" target="_blank" rel="noopener noreffer">双因素认证（2FA）教程 - 阮一峰的网络日志</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%9F%BA%E4%BA%8E%E6%97%B6%E9%97%B4%E7%9A%84%E4%B8%80%E6%AC%A1%E6%80%A7%E5%AF%86%E7%A0%81%E7%AE%97%E6%B3%95" target="_blank" rel="noopener noreffer">基于时间的一次性密码算法 - 维基百科，自由的百科全书</a></li>
+<li><a href="https://tools.ietf.org/html/rfc4226" target="_blank" rel="noopener noreffer">RFC 4226 - HOTP: An HMAC-Based One-Time Password Algorithm</a></li>
+<li><a href="https://www.jianshu.com/p/a7b900e8e50a" target="_blank" rel="noopener noreffer">HOTP和TOTP算法图解 - 简书</a></li>
+<li><a href="https://github.com/pyotp/pyotp" target="_blank" rel="noopener noreffer">GitHub - pyotp/pyotp</a></li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2018-10-24</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/e5c6e/" class="prev" rel="prev" title="使用Flask-RESTful构建RESTful API"><i class="fas fa-angle-left fa-fw"></i>使用Flask-RESTful构建RESTful API</a>
+            <a href="/posts/2e36d/" class="next" rel="next" title="RQ-轻量级Python任务队列">RQ-轻量级Python任务队列<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2018-10-24T09:36:20+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"双因素认证2FA"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

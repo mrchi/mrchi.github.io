@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>PyYAML-YAML格式Python处理库 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="PyYAML-YAML格式Python处理库" />
+<meta property="og:description" content="PyYAML 是一个用于解析和生成 YAML 格式的 Python 库。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/444aa/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2018-11-01T13:27:51+08:00" />
+<meta property="article:modified_time" content="2018-11-01T13:27:51+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="PyYAML-YAML格式Python处理库"/>
+<meta name="twitter:description" content="PyYAML 是一个用于解析和生成 YAML 格式的 Python 库。"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/444aa/" /><link rel="prev" href="https://mrchi.cc/posts/2e36d/" /><link rel="next" href="https://mrchi.cc/posts/a49ce/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "PyYAML-YAML格式Python处理库",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/444aa\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  2148 ,
+        "url": "https:\/\/mrchi.cc\/posts\/444aa\/","datePublished": "2018-11-01T13:27:51+08:00","dateModified": "2018-11-01T13:27:51+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Invoker"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">PyYAML-YAML格式Python处理库</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Invoker</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/python/"><i class="far fa-folder fa-fw"></i>Python</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2018-11-01">2018-11-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2148 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#quickstart">QuickStart</a></li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#没有嵌套集合的字典经过-dump-后格式错误">没有嵌套集合的字典经过 dump 后格式错误？</a></li>
+      </ul>
+    </li>
+    <li><a href="#yaml--python">YAML → Python</a>
+      <ul>
+        <li><a href="#yamlload">yaml.load</a></li>
+        <li><a href="#yamlload_all">yaml.load_all</a></li>
+        <li><a href="#构造任意类型-python-对象">构造任意类型 Python 对象</a></li>
+        <li><a href="#yamlsafe_load">yaml.safe_load</a></li>
+      </ul>
+    </li>
+    <li><a href="#python--yaml">Python → YAML</a>
+      <ul>
+        <li><a href="#yamldump">yaml.dump</a></li>
+        <li><a href="#yamldump_all">yaml.dump_all</a></li>
+        <li><a href="#自定义输出格式">自定义输出格式</a></li>
+      </ul>
+    </li>
+    <li><a href="#自定义-python-对象转换">自定义 Python 对象转换</a>
+      <ul>
+        <li><a href="#yamlyamlobject">yaml.YAMLObject</a></li>
+        <li><a href="#yamladd_constructor-和-yamladd_representer">yaml.add_constructor 和 yaml.add_representer</a></li>
+        <li><a href="#yamladd_implicit_resolver">yaml.add_implicit_resolver</a></li>
+      </ul>
+    </li>
+    <li><a href="#转换映射参考表">转换映射参考表</a></li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>PyYAML 是一个用于解析和生成 YAML 格式的 Python 库。</p>
+<p>PyYAML 相比 json，不仅能够解析数据，也能解析 Python 对象（非 YAML 标准语法）。</p>
+<p>本文基于 PyYAML 3.13 版本。</p>
+<h1 id="quickstart">QuickStart</h1>
+<p>安装纯 Python 实现版本</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">pipenv install pyyaml
+</code></pre></td></tr></table>
+</div>
+</div><p>PyYAML 还有一个依赖 LibYAML 的版本，处理起来比纯 Python 版本要快，可以参考文档安装。</p>
+<p>解析 yaml：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="n">document</span> <span class="o">=</span> <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">  a: 1
+</span><span class="s2">  b:
+</span><span class="s2">    c: 3
+</span><span class="s2">    d: 4
+</span><span class="s2">&#34;&#34;&#34;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">document</span><span class="p">))</span>
+<span class="c1"># {&#39;a&#39;: 1, &#39;b&#39;: {&#39;c&#39;: 3, &#39;d&#39;: 4}}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="faq">FAQ</h1>
+<h2 id="没有嵌套集合的字典经过-dump-后格式错误">没有嵌套集合的字典经过 dump 后格式错误？</h2>
+<p>如下的实例，字典中 b 字典的元素没有嵌套集合。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}}</span>
+<span class="k">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>结果为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">a</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w"></span><span class="k">b</span><span class="p">:</span><span class="w"> </span>{<span class="k">c: 3, d</span><span class="p">:</span><span class="w"> </span><span class="m">4</span>}<span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>而不是我们期望的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">a</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w"></span><span class="k">b</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">c</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span><span class="w">  </span><span class="k">d</span><span class="p">:</span><span class="w"> </span><span class="m">4</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>按照官方文档的说法，这是正常的：</p>
+<blockquote>
+<p>By default, PyYAML chooses the style of a collection depending on whether it has nested collections. If a collection has nested collections, it will be assigned the block style. Otherwise it will have the flow style.</p>
+</blockquote>
+<p>如果想总是输出 block style（即后者），可以在 dump 时将 <code>default_flow_style</code> 参数置为 <code>False</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="yaml--python">YAML → Python</h1>
+<h2 id="yamlload">yaml.load</h2>
+<p>该函数将 YAML 文档转换为 Python 对象。</p>
+<p>**注意，对不受信任的数据直接进行转换会造成安全隐患，<code>yaml.load</code> 和 <code>pickle.load</code> 一样强大，可以调用任意 Python 函数。**对于这种情况，请使用 <code>yaml.safe_load</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&#34;&#34;&#34;
+</span><span class="s2">... - Hesperiidae
+</span><span class="s2">... - Papilionidae
+</span><span class="s2">... - Apatelodidae
+</span><span class="s2">... - Epiplemidae
+</span><span class="s2">... &#34;&#34;&#34;</span><span class="p">)</span>
+
+<span class="p">[</span><span class="s1">&#39;Hesperiidae&#39;</span><span class="p">,</span> <span class="s1">&#39;Papilionidae&#39;</span><span class="p">,</span> <span class="s1">&#39;Apatelodidae&#39;</span><span class="p">,</span> <span class="s1">&#39;Epiplemidae&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>yaml.load</code> 可以传入 字节字符串、Unicode 字符串、二进制文件对象和文本文件对象。对于 字节字符串和文件，要求必须是 <em>utf-8</em>、<em>utf-16-be</em>或<em>utf-16-le</em>编码。<code>yaml.load</code> 通过检查字符串和文件开头的 BOM 来检测编码，如果没有 BOM 则认为是 <em>utf-8</em> 编码。</p>
+<h2 id="yamlload_all">yaml.load_all</h2>
+<p>如果字符串或文件包含多个 YAML 块，则可以使用 <code>yaml.load_all</code> 函数加载全部。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">documents</span> <span class="o">=</span> <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">... ---
+</span><span class="s2">... name: The Set of Gauntlets &#39;Pauraegen&#39;
+</span><span class="s2">... description: &gt;
+</span><span class="s2">...     A set of handgear with sparks that crackle
+</span><span class="s2">...     across its knuckleguards.
+</span><span class="s2">... ---
+</span><span class="s2">... name: The Set of Gauntlets &#39;Paurnen&#39;
+</span><span class="s2">... description: &gt;
+</span><span class="s2">...   A set of gauntlets that gives off a foul,
+</span><span class="s2">...   acrid odour yet remains untarnished.
+</span><span class="s2">... ---
+</span><span class="s2">... name: The Set of Gauntlets &#39;Paurnimmen&#39;
+</span><span class="s2">... description: &gt;
+</span><span class="s2">...   A set of handgear, freezing with unnatural cold.
+</span><span class="s2">... &#34;&#34;&#34;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load_all</span><span class="p">(</span><span class="n">documents</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="p">{</span><span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A set of handgear with sparks that crackle across its knuckleguards.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+<span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&#34;The Set of Gauntlets &#39;Pauraegen&#39;&#34;</span><span class="p">}</span>
+<span class="p">{</span><span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A set of gauntlets that gives off a foul, acrid odour yet remains untarnished.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+<span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&#34;The Set of Gauntlets &#39;Paurnen&#39;&#34;</span><span class="p">}</span>
+<span class="p">{</span><span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A set of handgear, freezing with unnatural cold.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+<span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&#34;The Set of Gauntlets &#39;Paurnimmen&#39;&#34;</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="构造任意类型-python-对象">构造任意类型 Python 对象</h2>
+<p>PyYAML允许构造任何类型的Python对象，如下，注意 None 和 Bool type 都由多种值转换而来。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&#34;&#34;&#34;
+</span><span class="s2">... none: [~, null]
+</span><span class="s2">... bool: [true, false, on, off]
+</span><span class="s2">... int: 42
+</span><span class="s2">... float: 3.14159
+</span><span class="s2">... list: [LITE, RES_ACID, SUS_DEXT]
+</span><span class="s2">... dict: {hp: 13, sp: 5}
+</span><span class="s2">... &#34;&#34;&#34;</span><span class="p">)</span>
+
+<span class="p">{</span><span class="s1">&#39;none&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">],</span> <span class="s1">&#39;int&#39;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">:</span> <span class="mf">3.1415899999999999</span><span class="p">,</span>
+<span class="s1">&#39;list&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;LITE&#39;</span><span class="p">,</span> <span class="s1">&#39;RES_ACID&#39;</span><span class="p">,</span> <span class="s1">&#39;SUS_DEXT&#39;</span><span class="p">],</span> <span class="s1">&#39;dict&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;hp&#39;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span> <span class="s1">&#39;sp&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
+<span class="s1">&#39;bool&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">]}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>还可以使用标记 <code>!!python/object</code> 构建 Python 类的实例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Hero</span><span class="p">:</span>
+<span class="o">...</span>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">hp</span><span class="p">,</span> <span class="n">sp</span><span class="p">):</span>
+<span class="o">...</span>         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+<span class="o">...</span>         <span class="bp">self</span><span class="o">.</span><span class="n">hp</span> <span class="o">=</span> <span class="n">hp</span>
+<span class="o">...</span>         <span class="bp">self</span><span class="o">.</span><span class="n">sp</span> <span class="o">=</span> <span class="n">sp</span>
+<span class="o">...</span>     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="s2">&#34;</span><span class="si">%s</span><span class="s2">(name=</span><span class="si">%r</span><span class="s2">, hp=</span><span class="si">%r</span><span class="s2">, sp=</span><span class="si">%r</span><span class="s2">)&#34;</span> <span class="o">%</span> <span class="p">(</span>
+<span class="o">...</span>             <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&#34;&#34;&#34;
+</span><span class="s2">... !!python/object:__main__.Hero
+</span><span class="s2">... name: Welthyr Syxgon
+</span><span class="s2">... hp: 1200
+</span><span class="s2">... sp: 0
+</span><span class="s2">... &#34;&#34;&#34;</span><span class="p">)</span>
+
+<span class="n">Hero</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Welthyr Syxgon&#39;</span><span class="p">,</span> <span class="n">hp</span><span class="o">=</span><span class="mi">1200</span><span class="p">,</span> <span class="n">sp</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="yamlsafe_load">yaml.safe_load</h2>
+<p>safe_load 只识别标准 YAML 语法的 tag，不解析 Python 对象。</p>
+<p>如果输入含有 python 对象，则会报错。</p>
+<h1 id="python--yaml">Python → YAML</h1>
+<h2 id="yamldump">yaml.dump</h2>
+<p><code>yaml.dump</code> 函数接受 Python 对象并生成 YAML 文档。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Silenthand Olleander&#39;</span><span class="p">,</span> <span class="s1">&#39;race&#39;</span><span class="p">:</span> <span class="s1">&#39;Human&#39;</span><span class="p">,</span>
+<span class="o">...</span> <span class="s1">&#39;traits&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;ONE_HAND&#39;</span><span class="p">,</span> <span class="s1">&#39;ONE_EYE&#39;</span><span class="p">]})</span>
+
+<span class="n">name</span><span class="p">:</span> <span class="n">Silenthand</span> <span class="n">Olleander</span>
+<span class="n">race</span><span class="p">:</span> <span class="n">Human</span>
+<span class="n">traits</span><span class="p">:</span> <span class="p">[</span><span class="n">ONE_HAND</span><span class="p">,</span> <span class="n">ONE_EYE</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>该函数可接受第二个参数，该参数必须为文本文件对象或二进制文件对象。此时，函数将生成的 YAML 文档写入文件中，否则作为函数返回值返回。</p>
+<p>除了普通的数据对象，PyYAML 也可以 dump Python 对象。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Hero</span><span class="p">:</span>
+<span class="o">...</span>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">hp</span><span class="p">,</span> <span class="n">sp</span><span class="p">):</span>
+<span class="o">...</span>         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+<span class="o">...</span>         <span class="bp">self</span><span class="o">.</span><span class="n">hp</span> <span class="o">=</span> <span class="n">hp</span>
+<span class="o">...</span>         <span class="bp">self</span><span class="o">.</span><span class="n">sp</span> <span class="o">=</span> <span class="n">sp</span>
+<span class="o">...</span>     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="s2">&#34;</span><span class="si">%s</span><span class="s2">(name=</span><span class="si">%r</span><span class="s2">, hp=</span><span class="si">%r</span><span class="s2">, sp=</span><span class="si">%r</span><span class="s2">)&#34;</span> <span class="o">%</span> <span class="p">(</span>
+<span class="o">...</span>             <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">Hero</span><span class="p">(</span><span class="s2">&#34;Galain Ysseleg&#34;</span><span class="p">,</span> <span class="n">hp</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">sp</span><span class="o">=</span><span class="mi">2</span><span class="p">)))</span>
+
+<span class="err">!!</span><span class="n">python</span><span class="o">/</span><span class="nb">object</span><span class="p">:</span><span class="n">__main__</span><span class="o">.</span><span class="n">Hero</span> <span class="p">{</span><span class="n">hp</span><span class="p">:</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Galain</span> <span class="n">Ysseleg</span><span class="p">,</span> <span class="n">sp</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="yamldump_all">yaml.dump_all</h2>
+<p>该函数将多个 yaml 文档 dump 到单个流中，此时传入列表或者生成器等可迭代对象。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">explicit_start</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="o">---</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump_all</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">explicit_start</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="o">---</span> <span class="mi">1</span>
+<span class="o">---</span> <span class="mi">2</span>
+<span class="o">---</span> <span class="mi">3</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="自定义输出格式">自定义输出格式</h2>
+<p><code>yaml.dump</code> 支持许多关键字参数，用于指定输出的格式详细信息。</p>
+<ul>
+<li><code>width</code> 设置行宽</li>
+<li><code>indent</code> 设置缩进</li>
+<li><code>default_flow_style</code> 默认使用 flow style，不使用 block style。</li>
+<li><code>default_style</code> 设置字符串的表示符号，单引号还是双引号。</li>
+</ul>
+<p>例如，设置行宽和缩进。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span>
+    <span class="mi">28</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span>
+    <span class="mi">40</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span> <span class="mi">44</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span> <span class="mi">47</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">49</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="自定义-python-对象转换">自定义 Python 对象转换</h1>
+<h2 id="yamlyamlobject">yaml.YAMLObject</h2>
+<p>你可以控制 Python 对象拥有自己的输出格式，最简单的方式是定义一个子类从 <code>yaml.YAMLObject</code> 继承。</p>
+<p><code>yaml.YAMLObject</code> 通过元类“魔法”，注册一个 constructor，用于转换 YAML 节点到 Python 类实例；一个 representer，用于转换 Python 类实例到 YAML 节点。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Monster</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">YAMLObject</span><span class="p">):</span>
+<span class="o">...</span>     <span class="n">yaml_tag</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;!Monster&#39;</span>
+<span class="o">...</span>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">hp</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">attacks</span><span class="p">):</span>
+<span class="o">...</span>         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+<span class="o">...</span>         <span class="bp">self</span><span class="o">.</span><span class="n">hp</span> <span class="o">=</span> <span class="n">hp</span>
+<span class="o">...</span>         <span class="bp">self</span><span class="o">.</span><span class="n">ac</span> <span class="o">=</span> <span class="n">ac</span>
+<span class="o">...</span>         <span class="bp">self</span><span class="o">.</span><span class="n">attacks</span> <span class="o">=</span> <span class="n">attacks</span>
+<span class="o">...</span>     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="s2">&#34;</span><span class="si">%s</span><span class="s2">(name=</span><span class="si">%r</span><span class="s2">, hp=</span><span class="si">%r</span><span class="s2">, ac=</span><span class="si">%r</span><span class="s2">, attacks=</span><span class="si">%r</span><span class="s2">)&#34;</span> <span class="o">%</span> <span class="p">(</span>
+<span class="o">...</span>             <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ac</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attacks</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上面的类在 dump 时</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">Monster</span><span class="p">(</span>
+<span class="o">...</span>     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Cave lizard&#39;</span><span class="p">,</span> <span class="n">hp</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="n">ac</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">attacks</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;BITE&#39;</span><span class="p">,</span><span class="s1">&#39;HURT&#39;</span><span class="p">])))</span>
+
+<span class="err">!</span><span class="n">Monster</span>
+<span class="n">ac</span><span class="p">:</span> <span class="mi">16</span>
+<span class="n">attacks</span><span class="p">:</span> <span class="p">[</span><span class="n">BITE</span><span class="p">,</span> <span class="n">HURT</span><span class="p">]</span>
+<span class="n">hp</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+<span class="n">name</span><span class="p">:</span> <span class="n">Cave</span> <span class="n">lizard</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>同时如果 load 一个 Monster 对象，YAML 格式为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&#34;&#34;&#34;
+</span><span class="s2">... --- !Monster
+</span><span class="s2">... name: Cave spider
+</span><span class="s2">... hp: [2,6]    # 2d6
+</span><span class="s2">... ac: 16
+</span><span class="s2">... attacks: [BITE, HURT]
+</span><span class="s2">... &#34;&#34;&#34;</span><span class="p">)</span>
+
+<span class="n">Monster</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Cave spider&#39;</span><span class="p">,</span> <span class="n">hp</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="n">ac</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">attacks</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;BITE&#39;</span><span class="p">,</span> <span class="s1">&#39;HURT&#39;</span><span class="p">])</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="yamladd_constructor-和-yamladd_representer">yaml.add_constructor 和 yaml.add_representer</h2>
+<p>如果不想使用元类继承的方式，也可以使用函数 <code>yaml.add_constructor</code> 注册构造函数，使用 <code>yaml.add_repersenter</code> 注册表现函数。</p>
+<p>举例说明，我们有这样一个类</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Dice</span><span class="p">(</span><span class="nb">tuple</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="nb">tuple</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span>
+<span class="o">...</span>     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="s2">&#34;Dice(</span><span class="si">%s</span><span class="s2">,</span><span class="si">%s</span><span class="s2">)&#34;</span> <span class="o">%</span> <span class="bp">self</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">Dice</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">Dice</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>默认情况下转换为 YAML 格式后，不够优雅</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">Dice</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">)))</span>
+
+<span class="err">!!</span><span class="n">python</span><span class="o">/</span><span class="nb">object</span><span class="o">/</span><span class="n">new</span><span class="p">:</span><span class="n">__main__</span><span class="o">.</span><span class="n">Dice</span>
+<span class="o">-</span> <span class="err">!!</span><span class="n">python</span><span class="o">/</span><span class="nb">tuple</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>假如我们想让 <code>Dice(3, 6)</code> 在 YAML 中表示为 <code>3d6</code>，可以这样：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="k">def</span> <span class="nf">dice_representer</span><span class="p">(</span><span class="n">dumper</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">dumper</span><span class="o">.</span><span class="n">represent_scalar</span><span class="p">(</span><span class="s1">&#39;!dice&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">d</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># 注册表现函数</span>
+<span class="n">yaml</span><span class="o">.</span><span class="n">add_representer</span><span class="p">(</span><span class="n">Dice</span><span class="p">,</span> <span class="n">dice_representer</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>此时再 dump 一个 Dice 对象</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s1">&#39;gold&#39;</span><span class="p">:</span> <span class="n">Dice</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">)}))</span>
+<span class="p">{</span><span class="n">gold</span><span class="p">:</span> <span class="err">!</span><span class="n">dice</span> <span class="s1">&#39;10d6&#39;</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>对于 load 我们也可以做相同的自定义：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">dice_constructor</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="o">...</span>     <span class="n">value</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">construct_scalar</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="o">...</span>     <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">))</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="n">Dice</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">yaml</span><span class="o">.</span><span class="n">add_constructor</span><span class="p">(</span><span class="s1">&#39;!dice&#39;</span><span class="p">,</span> <span class="n">dice_constructor</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>此时再 load 一个 YAML 节点：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&#34;&#34;&#34;
+</span><span class="s2">... initial hit points: !dice 8d4
+</span><span class="s2">... &#34;&#34;&#34;</span><span class="p">))</span>
+
+<span class="p">{</span><span class="s1">&#39;initial hit points&#39;</span><span class="p">:</span> <span class="n">Dice</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">)}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="yamladd_implicit_resolver">yaml.add_implicit_resolver</h2>
+<p>如果你想在不指定 <code>!dice</code> 标记的情况下将 <code>XdY</code> 的格式转换为 Dice 类的对象，可以使用 <code>add_implicit_resolver</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">re</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\d+d\d+$&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">yaml</span><span class="o">.</span><span class="n">add_implicit_resolver</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;!dice&#39;</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这时转换就不再需要指定 <code>!dice</code> 。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s1">&#39;treasure&#39;</span><span class="p">:</span> <span class="n">Dice</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">)}))</span>
+
+<span class="p">{</span><span class="n">treasure</span><span class="p">:</span> <span class="mi">10</span><span class="n">d20</span><span class="p">}</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&#34;&#34;&#34;
+</span><span class="s2">... damage: 5d10
+</span><span class="s2">... &#34;&#34;&#34;</span><span class="p">))</span>
+
+<span class="p">{</span><span class="s1">&#39;damage&#39;</span><span class="p">:</span> <span class="n">Dice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">)}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="转换映射参考表">转换映射参考表</h1>
+<table>
+<thead>
+<tr>
+<th><em>YAML tag</em></th>
+<th><em>Python type</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Standard YAML tags</em></td>
+<td></td>
+</tr>
+<tr>
+<td><code>!!null</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>!!bool</code></td>
+<td><code>bool</code></td>
+</tr>
+<tr>
+<td><code>!!int</code></td>
+<td><code>int</code> or <code>long</code> (<code>int</code> in Python 3)</td>
+</tr>
+<tr>
+<td><code>!!float</code></td>
+<td><code>float</code></td>
+</tr>
+<tr>
+<td><code>!!binary</code></td>
+<td><code>str</code> (<code>bytes</code> in Python 3)</td>
+</tr>
+<tr>
+<td><code>!!timestamp</code></td>
+<td><code>datetime.datetime</code></td>
+</tr>
+<tr>
+<td><code>!!omap</code>, <code>!!pairs</code></td>
+<td><code>list</code> of pairs</td>
+</tr>
+<tr>
+<td><code>!!set</code></td>
+<td><code>set</code></td>
+</tr>
+<tr>
+<td><code>!!str</code></td>
+<td><code>str</code> or <code>unicode</code> (<code>str</code> in Python 3)</td>
+</tr>
+<tr>
+<td><code>!!seq</code></td>
+<td><code>list</code></td>
+</tr>
+<tr>
+<td><code>!!map</code></td>
+<td><code>dict</code></td>
+</tr>
+<tr>
+<td><em>Python-specific tags</em></td>
+<td></td>
+</tr>
+<tr>
+<td><code>!!python/none</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>!!python/bool</code></td>
+<td><code>bool</code></td>
+</tr>
+<tr>
+<td><code>!!python/bytes</code></td>
+<td>(<code>bytes</code> in Python 3)</td>
+</tr>
+<tr>
+<td><code>!!python/str</code></td>
+<td><code>str</code> (<code>str</code> in Python 3)</td>
+</tr>
+<tr>
+<td><code>!!python/unicode</code></td>
+<td><code>unicode</code> (<code>str</code> in Python 3)</td>
+</tr>
+<tr>
+<td><code>!!python/int</code></td>
+<td><code>int</code></td>
+</tr>
+<tr>
+<td><code>!!python/long</code></td>
+<td><code>long</code> (<code>int</code> in Python 3)</td>
+</tr>
+<tr>
+<td><code>!!python/float</code></td>
+<td><code>float</code></td>
+</tr>
+<tr>
+<td><code>!!python/complex</code></td>
+<td><code>complex</code></td>
+</tr>
+<tr>
+<td><code>!!python/list</code></td>
+<td><code>list</code></td>
+</tr>
+<tr>
+<td><code>!!python/tuple</code></td>
+<td><code>tuple</code></td>
+</tr>
+<tr>
+<td><code>!!python/dict</code></td>
+<td><code>dict</code></td>
+</tr>
+<tr>
+<td><em>Complex Python tags</em></td>
+<td></td>
+</tr>
+<tr>
+<td><code>!!python/name:module.name</code></td>
+<td><code>module.name</code></td>
+</tr>
+<tr>
+<td><code>!!python/module:package.module</code></td>
+<td><code>package.module</code></td>
+</tr>
+<tr>
+<td><code>!!python/object:module.cls</code></td>
+<td><code>module.cls</code> instance</td>
+</tr>
+<tr>
+<td><code>!!python/object/new:module.cls</code></td>
+<td><code>module.cls</code> instance</td>
+</tr>
+<tr>
+<td><code>!!python/object/apply:module.f</code></td>
+<td>value of <code>f(...)</code></td>
+</tr>
+</tbody>
+</table>
+<h1 id="参考链接">参考链接</h1>
+<ul>
+<li><a href="https://pyyaml.org/wiki/PyYAMLDocumentation" target="_blank" rel="noopener noreffer">PyYAML - Documentation</a></li>
+</ul></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2018-11-01</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/2e36d/" class="prev" rel="prev" title="RQ-轻量级Python任务队列"><i class="fas fa-angle-left fa-fw"></i>RQ-轻量级Python任务队列</a>
+            <a href="/posts/a49ce/" class="next" rel="next" title="MacBook外接2K显示器开启HiDPI">MacBook外接2K显示器开启HiDPI<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2018-11-01T13:27:51+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"PyYAML-YAML格式Python处理库"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>《Flask Web 开发》大纲 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="《Flask Web 开发》大纲" />
+<meta property="og:description" content="Flask 基础 上下文 current_app 应用上下文，当前应用实例。 g 应用上下文，处理请求时的临时存储对象，每次请求会重设对象。 request 请求对象，封装请求，常用的属性和方法有" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/94780/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2019-04-30T09:03:33+08:00" />
+<meta property="article:modified_time" content="2019-05-02T18:22:39+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="《Flask Web 开发》大纲"/>
+<meta name="twitter:description" content="Flask 基础 上下文 current_app 应用上下文，当前应用实例。 g 应用上下文，处理请求时的临时存储对象，每次请求会重设对象。 request 请求对象，封装请求，常用的属性和方法有"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/94780/" /><link rel="prev" href="https://mrchi.cc/posts/669c4/" /><link rel="next" href="https://mrchi.cc/posts/bfff0/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "《Flask Web 开发》大纲",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/94780\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  7868 ,
+        "url": "https:\/\/mrchi.cc\/posts\/94780\/","datePublished": "2019-04-30T09:03:33+08:00","dateModified": "2019-05-02T18:22:39+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "MrChi"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">《Flask Web 开发》大纲</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>MrChi</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/python/"><i class="far fa-folder fa-fw"></i>Python</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2019-04-30">2019-04-30</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 7868 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 16 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#flask-基础">Flask 基础</a>
+      <ul>
+        <li><a href="#上下文">上下文</a></li>
+        <li><a href="#route">route</a></li>
+        <li><a href="#view-和-blueprint">view 和 blueprint</a></li>
+        <li><a href="#response">response</a></li>
+        <li><a href="#error-handler">error handler</a></li>
+        <li><a href="#管理">管理</a></li>
+      </ul>
+    </li>
+    <li><a href="#模板">模板</a></li>
+    <li><a href="#表单">表单</a></li>
+    <li><a href="#数据库">数据库</a>
+      <ul>
+        <li><a href="#flask-sqlalchemy">Flask-SQLAlchemy</a></li>
+        <li><a href="#一对多关系">一对多关系</a></li>
+        <li><a href="#一对一关系">一对一关系</a></li>
+        <li><a href="#多对多关系">多对多关系</a></li>
+        <li><a href="#数据库迁移框架">数据库迁移框架</a></li>
+      </ul>
+    </li>
+    <li><a href="#电子邮件">电子邮件</a></li>
+    <li><a href="#身份认证">身份认证</a>
+      <ul>
+        <li><a href="#密码-hash-计算">密码 hash 计算</a></li>
+        <li><a href="#flask-login">Flask-Login</a></li>
+        <li><a href="#安全令牌">安全令牌</a></li>
+        <li><a href="#flask-httpauth">Flask-HTTPAuth</a></li>
+      </ul>
+    </li>
+    <li><a href="#rest-api">REST API</a>
+      <ul>
+        <li><a href="#rest-api-架构">REST API 架构</a></li>
+        <li><a href="#数据验证">数据验证</a></li>
+      </ul>
+    </li>
+    <li><a href="#测试">测试</a>
+      <ul>
+        <li><a href="#faker">faker</a></li>
+        <li><a href="#coverage">coverage</a></li>
+        <li><a href="#flask-测试客户端">Flask 测试客户端</a></li>
+        <li><a href="#selenium-端到端测试">Selenium 端到端测试</a></li>
+      </ul>
+    </li>
+    <li><a href="#日志和性能">日志和性能</a>
+      <ul>
+        <li><a href="#日志">日志</a>
+          <ul>
+            <li><a href="#应用日志">应用日志</a></li>
+            <li><a href="#werkzeug-日志">Werkzeug 日志</a></li>
+          </ul>
+        </li>
+        <li><a href="#性能分析">性能分析</a>
+          <ul>
+            <li><a href="#数据库性能分析">数据库性能分析</a></li>
+            <li><a href="#源码分析">源码分析</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#部署">部署</a>
+      <ul>
+        <li><a href="#flask-sslify">Flask-SSLify</a></li>
+        <li><a href="#proxyfix">ProxyFix</a></li>
+        <li><a href="#web-服务器">Web 服务器</a></li>
+        <li><a href="#docker">Docker</a></li>
+      </ul>
+    </li>
+    <li><a href="#其他">其他</a>
+      <ul>
+        <li><a href="#权限设计">权限设计</a></li>
+        <li><a href="#bleach">Bleach</a></li>
+        <li><a href="#markdown-相关库">markdown 相关库</a></li>
+        <li><a href="#url-片段">URL 片段</a></li>
+        <li><a href="#httpie">HTTPie</a></li>
+        <li><a href="#web-应用设计原则">Web 应用设计原则</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="flask-基础">Flask 基础</h1>
+<h2 id="上下文">上下文</h2>
+<p><code>current_app</code> 应用上下文，当前应用实例。</p>
+<p><code>g</code> 应用上下文，处理请求时的临时存储对象，每次请求会重设对象。</p>
+<p><code>request</code> 请求对象，封装请求，常用的属性和方法有：</p>
+<ul>
+<li><code>form</code> 获取表单数据；</li>
+<li><code>args</code> 获取 URL 查询参数，参数值都是 string，<code>args.get(key, default=None, type=None)</code> 的 type 参数指定的函数用于类型强制转换，如果转换失败就会返回默认值；</li>
+<li><code>cookies</code> 获取请求 cookie；</li>
+<li><code>headers</code> 获取 HTTP header；</li>
+<li><code>files</code> 获取请求上传的文件；</li>
+<li><code>get_json()</code> 获取 body 中的 JSON 数据；</li>
+<li><code>is_secure()</code> 是否通过安全连接发送的请求；</li>
+<li><code>host</code> 请求定义的主机名；</li>
+<li><code>blueprint</code> 处理请求的 Flask 蓝本；</li>
+<li><code>endpoint</code> 处理请求的端点名称；</li>
+<li><code>accept_mimetypes</code> 获取请求客户端接受的响应格式，子属性 <code>accept_json</code> 和 <code>accept_html</code>，可用于内容协商；</li>
+</ul>
+<p><code>session</code> 请求上下文，用户会话。</p>
+<p><code>@app.shell_context_processor</code> 装饰器可以用来添加 shell 上下文。</p>
+<p><code>@app.app_context_processor</code> 装饰器装饰的函数的返回内容在所有模版中都可访问。</p>
+<p><code>with app.app_context()</code> 可以用来在应用上下文中执行代码。</p>
+<h2 id="route">route</h2>
+<p>请求钩子，使用 <code>g</code> 在请求钩子和视图函数之间共享数据。</p>
+<ul>
+<li><code>before_request</code></li>
+<li><code>before_app_request</code> 用于 blueprint 定义 app 的 <code>before_request</code>；</li>
+<li><code>before_first_request</code></li>
+<li><code>after_request</code></li>
+<li><code>teardown_request</code></li>
+</ul>
+<p>添加路由的方式：</p>
+<ul>
+<li><code>@app.route</code> 装饰器，endpoint 即为视图函数名称；</li>
+<li><code>app.add_url()</code> 方法，可以自定义 endpoint；</li>
+</ul>
+<p>Flask 支持动态路由，内置动态路由的类型有 string、int、float 和 path。</p>
+<p>查看路由表通过 <code>app.url_map</code> 属性读取。Flask 会自动为静态文件目录添加 <code>static</code> 路由，默认静态文件目录为 <code>static</code>。</p>
+<p><code>url_for('blueprint.endpoint', _external=True)</code>，第二个参数控制生成绝对链接，绝对链接主机名取决于 request。目标是动态路由时，通过关键字参数传入动态路由参数，也可以通过关键字参数传入 URL 查询参数。</p>
+<p>如果没有定义 <code>/api</code> 但定义了 <code>/api/</code>，Flask 会自动将 <code>/api</code> 的请求重定向到 <code>/api/</code>，反之则不会重定向。</p>
+<h2 id="view-和-blueprint">view 和 blueprint</h2>
+<p>view 函数处理逻辑并生成响应。</p>
+<p>blueprint 是 view 的集合，可以设置 url 前缀，通过 <code>app.register_blueprint()</code> 注册到 Flask app。</p>
+<p>blueprint 包中应该使用相对导入，以便解耦。</p>
+<p>在 blueprint 中使用 url_for 指向同一 blueprint 的路由时， blueprint 名可以省略，仅使用 <code>.endpoint</code> 的形式。</p>
+<h2 id="response">response</h2>
+<p>通过 <code>[响应内容, 状态码, header]</code> 的格式，在视图函数中直接返回，后两个参数可以省略，默认 200 状态码。</p>
+<p>通过<code>make_response</code> 生成响应对象，响应对象常用属性和方法如下：</p>
+<ul>
+<li><code>status_code</code> 状态码；</li>
+<li><code>headers</code> HTTP 头部；</li>
+<li><code>set_cookie()</code> 设置 cookie；</li>
+<li><code>delete_cookie()</code> 删除 cookie；</li>
+<li><code>set_data()</code> 使用字符串或字节值设定响应；</li>
+<li><code>get_data()</code> 获取响应主体，常用于 Flask test_client 获取响应中数据；</li>
+</ul>
+<p>通过 <code>redirect</code> 和 <code>url_for</code> 重定向；</p>
+<p>通过 <code>abort(xxx)</code> 进行 xxx 状态码的错误处理。注意是通过抛出异常的方式，也就是说 <code>abort</code> 之后视图函数就返回了。<code>abort</code> 还可以传第二个参数，作为错误的描述。</p>
+<p>根据客户端请求的格式改写响应类型，称为内容协商。浏览器一般不限制响应的格式。</p>
+<h2 id="error-handler">error handler</h2>
+<ul>
+<li><code>@app.errorhandler(500)</code> 为 app 定义错误处理函数</li>
+<li><code>@blueprint.errorhandler(500)</code> 为 blueprint 定义错误处理函数；</li>
+<li><code>@blueprint.app_errorhandler(500)</code> 为 app 定义错误处理函数；</li>
+</ul>
+<p>除了使用状态码，也可以使用 <code>Exception</code> 作为参数，例如 <code>@bp.errorhandler(ValidationError)</code>。</p>
+<h2 id="管理">管理</h2>
+<p><code>@app.cli.command()</code> 用于添加 flask 自定义命令。修饰的函数的 docstring 会成为 help 消息。</p>
+<p>安装 python-dotenv 包后，flask 可以自动从 <code>.env</code> 文件中导入环境变量。</p>
+<h1 id="模板">模板</h1>
+<p>Flask 使用 Jinja2 模板引擎。</p>
+<p>常用变量过滤器有：</p>
+<ul>
+<li><code>safe</code> 不要在不可信的文本上使用 safe 过滤器。</li>
+<li><code>capitalize</code></li>
+<li><code>lower</code></li>
+<li><code>upper</code></li>
+<li><code>title</code></li>
+<li><code>trim</code></li>
+<li><code>striptags</code></li>
+</ul>
+<p>常用控制结构有</p>
+<ul>
+<li><code>import ... macro</code> 宏定义和宏导入，宏的参数列表中不需要显式指定 <code>**kwargs</code> 和 <code>*args</code> 即可接受关键字参数和可变参数；</li>
+<li><code>include 'xx.html'</code> 引用模板片段；</li>
+<li><code>extends 'xx.html'</code> 模板继承；</li>
+</ul>
+<p>在模板继承中，常常使用 <code>block</code> 区块。如果要重新定义父模板的区块并保留父模板区块中的内容，可以在区块中使用 <code>super()</code> 函数。</p>
+<p>跟模板有关的两个扩展是</p>
+<ul>
+<li><code>Flask-Bootstrap</code> 集成 Bootstrap 框架；</li>
+<li><code>Flask-Moment</code> 集成 Moment.js 处理时间展示。在引入 Moment.js 之后，立即使用 <code>locale('es')</code> 函数设置时间的语言偏好。</li>
+</ul>
+<p>模版的默认目录为 <code>templates</code>，也可以配置 blueprint 使用专门的目录保存模版。搜索时会先搜索 app 的模版目录，再搜索 blueprint 的模版目录。</p>
+<p>在模版的 for 循环结构内，可以访问一个特殊的 <code>loop</code> 变量，提供了 for 循环状态的一些信息。</p>
+<ul>
+<li><code>loop.index</code> 当前循环计数，从 1 开始；</li>
+<li><code>loop.first</code> 是否是循环的第一项；</li>
+<li><code>loop.last</code> 是否是循环的最后一项；</li>
+</ul>
+<p>具体可见 <a href="http://jinja.pocoo.org/docs/2.10/templates/#for" target="_blank" rel="noopener noreffer">Jinjia 文档</a></p>
+<h1 id="表单">表单</h1>
+<p>Flask 使用 Flask-WTF 扩展快速实现表单。该扩展不需要在应用层初始化，但要配置密钥 <code>SECRET_KEY</code>。</p>
+<p>表单类继承自 <code>FlaskForm</code> 类，每个表单对象可以有多个多种类型的字段，每个字段可以绑定多个 validator，validator 也可以使用自定义函数。表单类构造函数可以接受一些参数，比如用户对象，并保存在环境变量中，供自定义的验证方法使用。</p>
+<p>表单字段可以通过 <code>coerce</code> 参数指定函数进行强制类型转换。</p>
+<p>将表单类实例化后可以在视图函数中使用，<code>form.validate_on_submit()</code> 用于判断表单提交且通过验证。</p>
+<p>将表单对象传递给模版，在模版中构造表单，使用 <code>form.hidden_tag()</code> 可以为表单添加防止 CSRF 攻击的隐藏字段。也可以使用 Flask-Bootstrap 渲染整个 Flask-WTF 表单，只需要：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-jinja" data-lang="jinja"><span class="cp">{%</span> <span class="k">import</span> <span class="s1">&#39;bootstrap/wtf.html&#39;</span> <span class="cp">%}</span><span class="x">
+</span><span class="x"></span><span class="cp">{{</span> <span class="nv">wtf.quick_form</span><span class="o">(</span><span class="nv">form</span><span class="o">)</span> <span class="cp">}}</span><span class="x">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>在 POST 请求中，常使用 <strong>Post/重定向/Get</strong> 的模式提升用户体验，但不是所有场景都需要这样做，比如前后端分离模式下，以及 API 模式下就不应该返回 302。</p>
+<p>Flask 调用 <code>flash(msg, category=&quot;INFO&quot;)</code> 函数可以向模版中传递消息，在模版中调用 <code>get_flashed_messages(with_categories=False)</code> 获取消息列表。category 是消息类别。</p>
+<h1 id="数据库">数据库</h1>
+<p>数据库分为关系型数据库和非关系型数据库。</p>
+<ul>
+<li>关系性数据库遵循 ACID 范式，存储数据高效且避免了重复，但是结构复杂。</li>
+<li>非关系型数据库又有键值对数据库、文档数据库等，查询操作简单，查询速度快，但增加了数据重复量。</li>
+</ul>
+<p>Flask 使用的关系型数据库 ORM 框架主要是 Flask-SQLAlchemy，依赖 SQLAlchemy。除此之外，还需要安装相应数据库的驱动模块，例如 MySQL 数据库需要安装 pymysql，Postgres 需要安装 psycopg2。</p>
+<h2 id="flask-sqlalchemy">Flask-SQLAlchemy</h2>
+<p>模型通过 <code>__tablename__</code> 类变量指定数据库表名，一般使用复数命名。</p>
+<p>常用的查询过滤器有：</p>
+<ul>
+<li><code>filter()</code></li>
+<li><code>filter_by()</code></li>
+<li><code>limit()</code></li>
+<li><code>offset()</code></li>
+<li><code>order_by()</code></li>
+<li><code>group_by()</code></li>
+</ul>
+<p>常用的查询执行方法有：</p>
+<ul>
+<li><code>all()</code></li>
+<li><code>first()</code></li>
+<li><code>first_or_404()</code> Flask-SQLAlchemy 特有</li>
+<li><code>get()</code></li>
+<li><code>get_or_404()</code> Flask-SQLAlchemy 特有</li>
+<li><code>count()</code></li>
+<li><code>paginate()</code> Flask-SQLAlchemy 特有</li>
+</ul>
+<p>分页对象属性和方法（分页对象是 Flask-SQLAlchemy 特有的）：</p>
+<ul>
+<li><code>items</code> 记录集合</li>
+<li><code>prev_num</code> 上一页的页数</li>
+<li><code>next_num</code> 下一页的页数</li>
+<li><code>has_prev</code> 是否有上一页</li>
+<li><code>has_next</code> 是否有下一页</li>
+<li><code>total</code></li>
+<li><code>pages</code> 总页数</li>
+<li><code>page</code> 当前页码</li>
+<li><code>per_page</code></li>
+<li><code>query</code> 分页的源查询</li>
+<li><code>iter_pages(left_edge=2, left_current=2, right_current=5, right_edge=2)</code> 用户构建分页导航条数据的迭代器；</li>
+<li><code>prev()</code> 上一页的分页对象</li>
+<li><code>next()</code> 下一页的分页对象</li>
+</ul>
+<p>常用的关系选项有：</p>
+<ul>
+<li><code>backref</code> 在关系的另一侧添加反向引用；</li>
+<li><code>lazy</code> 如何加载相关记录，最常用的是 <code>dynamic</code>（不加载记录，但提供加载记录的查询）；</li>
+<li><code>uselist</code> 设置为 false 时，不使用列表，而使用标量值；</li>
+<li><code>order_by</code> 指定关系中记录的排序方式</li>
+<li><code>secondary</code> 指定多对多关系中关联表的名称；</li>
+<li><code>primaryjoin</code> 明确指定两个模型之间使用的联接条件，只在模糊的关系中需要指定；</li>
+<li><code>secondaryjoin</code> 指定多对多关系中的二级联结条件</li>
+</ul>
+<p>涉及到外键定义和关系时，可以使用模型名，或者表名的字符串格式。</p>
+<p>数据库字段的 default 参数可以接受函数作为默认值。</p>
+<p><code>db.event.listen(Post.body, 'set', Post.on_changed_body)</code> 用于增加数据库事件监听程序。</p>
+<h2 id="一对多关系">一对多关系</h2>
+<p>定义一对多关系：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># 在一的一侧使用 relationship</span>
+<span class="k">class</span> <span class="nc">Role</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">relationship</span><span class="p">(</span><span class="s1">&#39;User&#39;</span><span class="p">,</span> <span class="n">backref</span><span class="o">=</span><span class="s1">&#39;role&#39;</span><span class="p">,</span> <span class="n">lazy</span><span class="o">=</span><span class="s1">&#39;dynamic&#39;</span><span class="p">)</span>
+
+<span class="c1"># 在多的一侧使用 ForeignKey</span>
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+    <span class="n">role_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Role</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="一对一关系">一对一关系</h2>
+<p>与定义一对多关系相似，只需要在调用 <code>db.relationship()</code> 的时候把 uselist 设为 False。</p>
+<h2 id="多对多关系">多对多关系</h2>
+<p>多对多关系需要指定一张关联表，拆分成原表与关联表的两个一对多关系（关联表是多的一侧）。</p>
+<p>如果不需要操作关联表，可以这样定义：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">registrations</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span>
+    <span class="s1">&#39;registrations&#39;</span><span class="p">,</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;student_id&#39;</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;students.id&#39;</span><span class="p">)),</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;class_id&#39;</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;classes.id&#39;</span><span class="p">)),</span>
+<span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Class</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;classes&#39;</span>
+    <span class="c1"># ...</span>
+
+<span class="k">class</span> <span class="nc">Student</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;students&#39;</span>
+    <span class="c1"># ...</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">relationship</span><span class="p">(</span>
+        <span class="n">Class</span><span class="p">,</span>
+        <span class="n">secondary</span><span class="o">=</span><span class="n">registrations</span><span class="p">,</span>
+        <span class="n">backref</span><span class="o">=</span><span class="n">db</span><span class="o">.</span><span class="n">backref</span><span class="p">(</span><span class="s1">&#39;students&#39;</span><span class="p">,</span> <span class="n">lazy</span><span class="o">=</span><span class="s1">&#39;dynamic&#39;</span><span class="p">),</span>
+        <span class="n">lazy</span><span class="o">=</span><span class="s1">&#39;dynamic&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>此时使用 <code>secondary</code> 参数设置了关联表，SQLAlchemy 会自动接管这张表。</p>
+<p>如果需要操作关联表，可以这样定义：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Follow</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;follows&#39;</span>
+    <span class="n">follower_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;users.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">followed_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;users.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">UserMixin</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;users&#39;</span>
+    <span class="n">followers</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">relationship</span><span class="p">(</span>
+        <span class="n">Follow</span><span class="p">,</span>
+        <span class="n">foreign_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">Follow</span><span class="o">.</span><span class="n">followed_id</span><span class="p">],</span>
+        <span class="n">backref</span><span class="o">=</span><span class="n">db</span><span class="o">.</span><span class="n">backref</span><span class="p">(</span><span class="s1">&#39;followed&#39;</span><span class="p">,</span> <span class="n">lazy</span><span class="o">=</span><span class="s1">&#39;joined&#39;</span><span class="p">),</span>
+        <span class="n">lazy</span><span class="o">=</span><span class="s1">&#39;dynamic&#39;</span><span class="p">,</span>
+        <span class="n">cascade</span><span class="o">=</span><span class="s1">&#39;all, delete-orphan&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">followed</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">relationship</span><span class="p">(</span>
+        <span class="n">Follow</span><span class="p">,</span>
+        <span class="n">foreign_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">Follow</span><span class="o">.</span><span class="n">follower_id</span><span class="p">],</span>
+        <span class="n">backref</span><span class="o">=</span><span class="n">db</span><span class="o">.</span><span class="n">backref</span><span class="p">(</span><span class="s1">&#39;followed&#39;</span><span class="p">,</span> <span class="n">lazy</span><span class="o">=</span><span class="s1">&#39;joined&#39;</span><span class="p">),</span>
+        <span class="n">lazy</span><span class="o">=</span><span class="s1">&#39;dynamic&#39;</span><span class="p">,</span>
+        <span class="n">cascade</span><span class="o">=</span><span class="s1">&#39;all, delete-orphan&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这是一个自引用关系，描述了用户的关注和 fans。要点如下：</p>
+<ul>
+<li>由于 Follow 表上有两个外键都指向 User，因此需要使用 <code>foreign_keys</code> 参数指定外键。</li>
+<li><code>lazy</code> 模式设置为 joined，可以实现立即从联接查询中加载相关对象，在一次数据库查询中完成这些操作。</li>
+<li><code>cascade</code> 参数，在关联表中删除记录后应该把指向该记录的实体也删除，因此使用了 <code>delete-orphan</code>，<code>all</code> 表示除了 <code>delete-orphan</code> 之外的所有选项</li>
+</ul>
+<h2 id="数据库迁移框架">数据库迁移框架</h2>
+<p>数据库迁移框架能够跟踪数据库模式的变化，例如 Alembic 和 Flask-Migrate，后者是前者的轻量级包装，与 Flask 命令 <code>flask db</code> 做了集成。常用命令有：</p>
+<ul>
+<li><code>revision</code> 手动创建迁移，需要分别实现 <code>upgrade()</code> 和 <code>downgrade()</code> 函数；</li>
+<li><code>migrate</code> 自动创建迁移；</li>
+<li><code>upgrade</code> 把改动应用到数据库；</li>
+<li><code>downgrade</code> 还原前一个脚本对数据库的改动；</li>
+<li><code>stamp</code> 把数据库标记为已更新。</li>
+</ul>
+<p>数据库模型在开发过程中可能时有变动，在提交到版本控制系统之前，可以合并迁移，避免产生大量无意义的小迁移脚本。</p>
+<p>数据库迁移框架并不完美，在一些情况下是无法迁移的。例如在表中添加了一个非 null 而且没有默认值的字段就无法迁移，因为框架不知道该如何填充这个字段的数据。</p>
+<h1 id="电子邮件">电子邮件</h1>
+<p>Flask 发送邮件可以使用 Flask-Mail 扩展库，它实现了对标准库 <code>smtplib</code> 的包装，能更好的与 Flask 集成。</p>
+<p>使用时需要添加几个 SMTP 服务器的配置项：</p>
+<ul>
+<li><code>MAIL_SERVER</code></li>
+<li><code>MAIL_PORT</code></li>
+<li><code>MAIL_USE_TLS</code></li>
+<li><code>MAIL_USE_SSL</code></li>
+<li><code>MAIL_USERNAME</code></li>
+<li><code>MAIL_PASSWORD</code></li>
+</ul>
+<p>一个简单示例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask_mail</span> <span class="kn">import</span> <span class="n">Message</span>
+
+<span class="n">msg</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;this is title&#39;</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="s1">&#39;you@example.com&#39;</span><span class="p">,</span> <span class="n">recipients</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;you@example.com&#39;</span><span class="p">])</span>
+<span class="n">msg</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="s1">&#39;This is the body&#39;</span>
+<span class="n">msg</span><span class="o">.</span><span class="n">html</span> <span class="o">=</span> <span class="s1">&#39;This is the &lt;b&gt;HTML&lt;/b&gt; body&#39;</span>
+
+<span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
+    <span class="n">mail</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Flask-Mail 的 <code>send()</code> 函数使用 <code>current_app</code>，因此要在激活的应用上下文中执行。</p>
+<h1 id="身份认证">身份认证</h1>
+<p>身份认证主要使用到以下几个库：</p>
+<ul>
+<li>Flask-Login 管理登录、登出用户，管理用户会话；</li>
+<li>itsdangerous 生成并核对加密安全令牌；</li>
+<li>Werkzeug 计算密码 hash 值并进行核对。</li>
+</ul>
+<h2 id="密码-hash-计算">密码 hash 计算</h2>
+<p>Werkzeug 的 security 模块实现了密码 hash 的计算。提供了两个常用的函数：</p>
+<ul>
+<li><code>generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)</code> 用于生成密码，生成的密码是加了 salt 的，即使两个用户使用相同的密码，hash 值也完全不一致。；</li>
+<li><code>check_password_hash(hash, password)</code> 用于验证密码；</li>
+</ul>
+<p>实际开发中，可以通过 <code>@property</code> 特性，在模型层面，让数据库中的密码字段只读。</p>
+<h2 id="flask-login">Flask-Login</h2>
+<p>Flask-Login 要求实现的用户模型的属性和方法：</p>
+<ul>
+<li><code>is_authenticated</code> 用户提供的登录凭据是否有效</li>
+<li><code>is_active</code> 是否允许用户登录</li>
+<li><code>is_anonymous</code> 普通用户返回 False，匿名用户返回 True</li>
+<li><code>get_id()</code> 返回用户的唯一标识符，使用 Unicode 编码字符串。</li>
+</ul>
+<p>Flask-Login 的 <code>UserMixin</code> 类包含了以上的默认实现，用户模型继承该类即可：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">UserMixin</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>使用 Flask-Login，需要实例化 <code>LoginManager</code> 类，并设置：</p>
+<ul>
+<li><code>login_manager.login_view</code> 属性指定登录页面的端点，用于匿名用户访问时重定向到该页面；</li>
+<li><code>login_manager.anonymous_user</code> 属性指定自定义的匿名用户类，定义匿名用户类的目的是，给用户类添加的自定义方法，在匿名类中也定义，就不需要判断用户是否登录即可调用；</li>
+<li><code>@login_manager.user_loader</code> 装饰器，指定加载用户的函数，函数参数是用户标识符（字符串），返回用户对象或 None。用于给上下文变量 <code>current_user</code> 赋值；</li>
+<li><code>@login_required</code> 装饰器，装饰受保护的路由，该装饰器要在 <code>@app.route()</code> 之后；</li>
+<li><code>current_user</code> 是由 Flask-Login 提供的上下文变量，可以在模版和视图函数中使用，是用户对象的轻度包装，获取真正的用户对象需要使用 <code>current_user._get_current_object()</code>；</li>
+</ul>
+<p>用户登录，调用 <code>login_user(user, remember=False, duration=None, force=False, fresh=True)</code> 函数，duration 用于设置 cookie 的有效期，或者通过 <code>REMEMBER_COOKIE_DURATION</code> 配置选项设置；</p>
+<p>用户登出，调用 <code>logout_user()</code> 函数</p>
+<h2 id="安全令牌">安全令牌</h2>
+<p>使用 itsdangerous 库生成包含用户信息的安全令牌，可用于重置密码，电子邮件确认等场景；</p>
+<p>itsdangerous 提供了多种生成令牌的方法。<code>TimedJSONWebSignatureSerializer</code> 类生成具有过期时间的 JSON Web 签名（JWS）。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">itsdangerous</span> <span class="kn">import</span> <span class="n">TimedJSONWebSignatureSerializer</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">TimedJSONWebSignatureSerializer</span><span class="p">(</span><span class="s1">&#39;secret_key&#39;</span><span class="p">,</span> <span class="n">expires_in</span><span class="o">=</span><span class="mi">3600</span><span class="p">)</span>
+<span class="n">token</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;user_id&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>expires_in</code> 参数指定令牌过期时间，单位为秒。如果令牌过期或者无效，会抛出异常。这种令牌在有效时间内，无法判断是否已经使用过。</p>
+<h2 id="flask-httpauth">Flask-HTTPAuth</h2>
+<p>Flask-HTTPAuth 常用于 API 请求认证，因为 API 是无状态的，不能使用 cookie 认证的方式。</p>
+<p>使用 Flask-HTTPAuth 需要实例化 <code>HTTPBasicAuth</code> 类，并设置：</p>
+<ul>
+<li><code>@auth.verify_password</code> 装饰器，指定验证函数，函数只返回 True/False，获取到的用户需要存入 <code>g</code> 中；</li>
+<li><code>@auth.login_required</code> 装饰器，修饰需要登录保护的路由；</li>
+</ul>
+<p>使用令牌的身份认证，用户名即令牌，密码为空。</p>
+<ul>
+<li>避免了总是发送敏感信息；</li>
+<li>令牌具有短暂有效期，降低泄漏后的安全隐患；</li>
+<li>必须使用登录凭据签发新令牌，不能使用旧令牌签发新令牌；</li>
+</ul>
+<p>验证失败时，返回 401 状态码。</p>
+<h1 id="rest-api">REST API</h1>
+<h2 id="rest-api-架构">REST API 架构</h2>
+<p>RESTful 架构的特征：</p>
+<ul>
+<li>客户端-服务端有明确的界线；</li>
+<li>无状态；</li>
+<li>服务器响应可以标记为缓存或者不缓存；</li>
+<li>接口统一</li>
+<li>系统分层</li>
+<li>按需编程</li>
+</ul>
+<p>资源 是 REST 架构风格的核心：</p>
+<ul>
+<li>使用唯一的 URL 表示每个资源；</li>
+<li>使用请求方法表示期望的操作；</li>
+</ul>
+<p>常用请求方法：</p>
+<ul>
+<li><code>GET</code> 目标 URL 是单个资源或者资源集合，获取目标资源，响应状态码 200；</li>
+<li><code>POST</code> 目标 URL 是资源集合，用于新建资源，响应状态 201，并在 header 的 Location 中返回新资源 URL，也可以在响应的主体中包含该资源；</li>
+<li><code>PUT</code> 目标 URL 是单个资源，用于修改资源（也可以用来创建），响应状态码 200 或者 204；</li>
+<li><code>DELETE</code> 目标 URL 是单个资源或资源集合，用于删除资源，响应状态码 200 或者 204。</li>
+</ul>
+<p>相关状态码说明：</p>
+<ul>
+<li>HTTP 201，Created，请求成功并且创建了一个新资源；</li>
+<li>HTTP 204，No Content，请求成功处理，但是返回的响应没有数据，比如资源被删除了。</li>
+</ul>
+<p>设计良好的 RESTful API：</p>
+<ul>
+<li>在返回数据中包含完整的其他资源 URL，可以由客户端自己发掘新资源；</li>
+<li>使用版本区分 Web 服务所处理的 URL。</li>
+</ul>
+<h2 id="数据验证">数据验证</h2>
+<p>客户端提供的数据可能无效、错误或者多余，要进行数据验证。</p>
+<p>数据验证时，可以通过抛出异常的方式，将错误交给上层调用函数处理。同时，可以注册该种错误的异常处理函数，来返回给客户端错误消息。</p>
+<h1 id="测试">测试</h1>
+<h2 id="faker">faker</h2>
+<p>使用 faker 库可以生成多种类型的虚拟数据</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">faker</span> <span class="kn">import</span> <span class="n">Faker</span>
+<span class="n">fake</span> <span class="o">=</span> <span class="n">Faker</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>fake.email()</code></li>
+<li><code>fake.user_name()</code></li>
+<li><code>fake.name()</code></li>
+<li><code>fake.city()</code></li>
+<li><code>fake.past_date()</code></li>
+<li><code>fake.text()</code></li>
+</ul>
+<h2 id="coverage">coverage</h2>
+<p>coverage 是一个代码覆盖度工具，用于统计单元测试检查了应用多少功能，并提供一份详细的报告。</p>
+<p>coverage 提供了 CLI 命令 <code>coverage</code>。主要功能有：</p>
+<ul>
+<li><code>coverage run cmd args</code> 启动覆盖度检测引擎并运行，<code>cmd args</code> 是运行单元测试的命令；</li>
+<li><code>coverage report</code> 生成文本格式报告并输出到 stdout；</li>
+<li><code>coverage html</code> 生成 html 格式报告；</li>
+<li><code>coverage erase</code> 删除 coverage 缓存目录。</li>
+</ul>
+<p>coverage 同时也可以在代码中进行控制。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">coverage</span>
+
+<span class="c1"># 创建覆盖度检测引擎</span>
+<span class="c1"># branch 选项是否开启分支覆盖度分析，开启后会检查条件语句的 True 和 False 分支是否都执行了</span>
+<span class="c1"># include 选项限制检测的文件在应用包内</span>
+<span class="n">COV</span> <span class="o">=</span> <span class="n">coverage</span><span class="o">.</span><span class="n">coverage</span><span class="p">(</span><span class="n">branch</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="s1">&#39;app/*&#39;</span><span class="p">)</span>
+
+<span class="n">COV</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="n">COV</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+<span class="n">COV</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="c1"># 会在 stdout 输出文本格式的报告</span>
+<span class="n">COV</span><span class="o">.</span><span class="n">report</span><span class="p">()</span>
+
+<span class="c1"># directory 指定 html 报告保存路径</span>
+<span class="n">COV</span><span class="o">.</span><span class="n">html_report</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">covdir</span><span class="p">)</span>
+
+<span class="n">COV</span><span class="o">.</span><span class="n">erase</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>注意覆盖度指标无法表明项目中的代码多么健康，因为代码有没有缺陷还受其他因素的影响（例如测试的质量）。</p>
+<h2 id="flask-测试客户端">Flask 测试客户端</h2>
+<p>Flask 内建了一个测试客户端，来向 Flask 应用发送请求，得到的结果是一个 Flask response 对象。</p>
+<p>获得测试客户端。<code>use_cookies</code> 选项执行测试客户端是否使用 cookie。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">(</span><span class="s1">&#39;testing&#39;</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">test_client</span><span class="p">(</span><span class="n">use_cookies</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>发起 GET 请求：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>发起 POST 请求（FORM）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>发起 POST 请求（JSON），测试客户端不会自动编码 JSON 数据：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+    <span class="s1">&#39;/&#39;</span><span class="p">,</span>
+    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">},</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+<span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>发请求时有以下参数：</p>
+<ul>
+<li><code>follow_redirects</code> 自动重定向请求</li>
+<li><code>headers</code> 指定 HTTP header</li>
+</ul>
+<p>获得的响应是 response 对象，可以使用 <code>get_data()</code> 方法获取响应主体，默认情况下返回字节数组，传入 <code>as_text=True</code> 参数后返回字符串。</p>
+<p>在 with 上下文中使用 <code>client</code>，可以访问上下文变量，例如 <code>session</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask_login</span> <span class="kn">import</span> <span class="n">current_user</span>
+
+<span class="k">with</span> <span class="n">client</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">current_user</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">1</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="selenium-端到端测试">Selenium 端到端测试</h2>
+<p>Selenium 是一个浏览器自动化工具，支持多种主流 Web 浏览器。使用时，除了安装 selenium 外，还需要安装：</p>
+<ul>
+<li>相应的浏览器驱动，比如 Chome 的 ChromeDriver。</li>
+<li>Selenium 的 Python 接口；</li>
+</ul>
+<p>使用 Selenium 进行 Web 测试时，让应用运行在后台线程的开发服务器中，而测试运行在主线程中。通过实现并发送一个 HTTP 请求，来关闭服务器。这里会调用 Werkzeug web 服务器本身的停止选项。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">shutdown</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;werkzeug.server.shutdown&#39;</span><span class="p">)</span>
+<span class="n">shutdown</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>启动 Chrome，headless 选项指定在无界面 Chrome 实例中运行，并执行所有操作：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
+
+<span class="n">options</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">ChromeOptions</span><span class="p">()</span>
+<span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;headless&#39;</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="n">chrome_options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>测试过程中，可以禁止服务器的日志或只输出错误日志，保持输出简洁。</p>
+<p>请求：</p>
+<ul>
+<li><code>client.get()</code></li>
+</ul>
+<p>寻找元素：</p>
+<ul>
+<li><code>client.find_element_by_link_text()</code></li>
+<li><code>client.find_element_by_name()</code></li>
+</ul>
+<p>操作：</p>
+<ul>
+<li><code>send_keys()</code> 填写表单；</li>
+<li><code>click()</code> 点击</li>
+</ul>
+<p>关闭 Chrome：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">client</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="日志和性能">日志和性能</h1>
+<h2 id="日志">日志</h2>
+<h3 id="应用日志">应用日志</h3>
+<p>在应用启动过程中，Flask 会创建一个 logging.Logger 类实例，通过 <code>app.logger</code> 访问。</p>
+<p>但在生产模式中，默认情况下没有配置日志的处理程序，如果不添加处理程序，就不会保存日志。</p>
+<p>可以通过配置类的 <code>init_app</code> 方法添加处理程序。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">init_app</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">logging.handlers</span> <span class="kn">import</span> <span class="n">SMTPHandler</span>
+    <span class="n">mail_handler</span> <span class="o">=</span> <span class="n">SMTPHandler</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="n">mail_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">mail_handler</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>常用 handler 有：</p>
+<ul>
+<li><code>SMTPHandler</code> 发邮件</li>
+<li><code>StreamHandler</code> 日志内容输出到 stderr</li>
+<li><code>SysLogHandler</code> 日志发送给守护进程 syslog</li>
+</ul>
+<h3 id="werkzeug-日志">Werkzeug 日志</h3>
+<p>获取 Werkzeug 日志对象：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;werkzeug&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="性能分析">性能分析</h2>
+<h3 id="数据库性能分析">数据库性能分析</h3>
+<p>多数数据库查询语言都提供了 <code>explain</code> 语句，用于显示数据库执行查询时采取的步骤。</p>
+<p>Flask-SQLAlchemy 提供了获取数据库查询的接口。</p>
+<p>首先需要设置 <code>SQLALCHEMY_RECORD_QUERIES</code> 为 True，启用记录查询统计数据的功能。</p>
+<p>然后在 <code>@after_request</code> 中获取数据库查询：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask_sqlalchemy</span> <span class="kn">import</span> <span class="n">get_debug_queries</span>
+
+<span class="k">for</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">get_debug_queries</span><span class="p">():</span>
+    <span class="c1"># ...</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>查询对象拥有以下属性：</p>
+<ul>
+<li><code>statement</code> SQL 语句；</li>
+<li><code>parameters</code> SQL 语句使用的参数；</li>
+<li><code>duration</code> 查询持续的时间，单位为秒；</li>
+<li><code>context</code> 查询在源码中所处的位置；</li>
+<li><code>start_time</code> 执行查询时的时间</li>
+<li><code>end_time</code> 返回查询结果时的时间</li>
+</ul>
+<p>根据 <code>duration</code> 属性筛选出慢查询，将信息写入到日志中，级别 WARNING。</p>
+<h3 id="源码分析">源码分析</h3>
+<p><strong>应当只在开发环境中分析源码，源码分析器会导致应用的运行速度比常规情况下慢的多。</strong></p>
+<p>Werkzeug 提供了一个源码分析器中间件，通过 Flask app 的 <code>wsgi_app</code> 属性依附到应用上。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">werkzeug.contrib.profiler</span> <span class="kn">import</span> <span class="n">ProfilerMiddleware</span>
+<span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">ProfilerMiddleware</span><span class="p">(</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span><span class="p">,</span>
+    <span class="n">restrictions</span><span class="o">=</span><span class="p">[</span><span class="n">func_count</span><span class="p">],</span>
+    <span class="n">profile_dir</span><span class="o">=</span><span class="n">profile_dir</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>应用启动后，控制台会显示每条请求的分析数据。</p>
+<ul>
+<li><code>restrictions</code> 参数的 func_count 指定了展示执行最慢的函数的数量；</li>
+<li><code>profile_dir</code> 参数指定了保存分析数据的路径，分析器输出的数据文件可以用于生成更详细的报告，如调用图等；</li>
+</ul>
+<h1 id="部署">部署</h1>
+<h2 id="flask-sslify">Flask-SSLify</h2>
+<p>Flask-SSLify 扩展能够拦截发给 <code>http://</code> 的请求，将其重定向到 <code>https://</code>，需要在应用层初始化。但是如果应用部署在 Nginx 等反向代理服务器后面时，就没有必要使用该库了，完全可以在 Nginx 配置 HTTPS 并进行重定向，同时应用使用 HTTP 与 Nginx 通信。</p>
+<h2 id="proxyfix">ProxyFix</h2>
+<p>使用反向代理服务器时，代理会设定一些自定义的 HTTP 头部，以用来标识请求的真实协议、地址等。</p>
+<p>Werkzeug 提供的一个 WSGI 中间件 ProxyFix 能够检查代理服务器设定的这些自定义 HTTP 头部，并更新 request 对象。举例来说，<code>request.is_secure</code> 会反映客户端发给反向代理服务器的请求的加密状态，而不是代理服务器到应用的请求的加密状态。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">werkzeug.contrib.fixers</span> <span class="kn">import</span> <span class="n">ProxyFix</span>
+<span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">ProxyFix</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="web-服务器">Web 服务器</h2>
+<p>常用的 Web 服务器有 Gunicorn, uWSGI 和 Waitress。</p>
+<h2 id="docker">Docker</h2>
+<p>使用 Docker 部署时，应当使用单独的用户运行应用程序，单独的用户在 Dockerfile 文件中新建。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-Dockerfile" data-lang="Dockerfile"><span class="k">RUN</span> adduser -D flasky<span class="err">
+</span><span class="err"></span><span class="k">USER</span><span class="s"> flasky</span><span class="err">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>adduser 命令的 <code>-D</code> 选项禁止命令提示输入密码。</p>
+<p>另外程序启动命令我们使用一个 shell 脚本 <code>boot.sh</code>，因为启动时还需要进行初始化工作：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="cp">#!/bin/sh
+</span><span class="cp"></span><span class="nb">source</span> venv/bin/activate
+flask deploy
+<span class="nb">exec</span> gunicorn -b 0.0.0.0:5000 --access-logfile - --error-logfile - flasky:app
+</code></pre></td></tr></table>
+</div>
+</div><p>使用 <code>exec</code> 命令启动 Gunicorn 后，Gunicorn 的进程便取代了运行 boot.sh 文件的进程，成为主进程。</p>
+<p>排查容器问题的常用策略是，创建一个特殊的容器，加载一些辅助工具，然后在 shell 会话中调用。</p>
+<p>执行 docker run 命令时有 <code>--link target:alias</code> 选项，该选项把这个新容器与一个现有的容器连接起来。其值是以冒号分隔的两个名称，一个是目标容器的名称或 ID <code>target</code>，另一个是在当前容器中访问目标容器所用的别名 <code>alias</code>。</p>
+<p>使用容器编排时，尽可能让每个容器使用单独的 env 文件，隔离机密配置信息。</p>
+<p>docker-compose 可以按照依赖顺序启动容器，但如 mysql 可能需要几秒钟才能启动，而 docker-compose 不会等待。因此连接外部服务器时要有重试机制。</p>
+<p><code>docker-compose up -d --build</code> 命令，<code>--build</code> 选项指明，应该在启动应用之前构建镜像。</p>
+<p><code>docker system prune --volumes</code> 命令，会删除所有不再使用的 image 或 volume，以及不在运行的容器。</p>
+<p>在生产环境中使用 docker，需要考虑的安全问题：</p>
+<ul>
+<li>监控和提醒</li>
+<li>日志</li>
+<li>机密信息管理</li>
+<li>可靠性和伸缩性</li>
+</ul>
+<h1 id="其他">其他</h1>
+<h2 id="权限设计">权限设计</h2>
+<p>书中把不同权限的权限值设置为 2 的幂，有三个好处：</p>
+<ul>
+<li>每种不同的权限组合对应的值都是唯一的，方便在数据库中存储；</li>
+<li>为权限组合增加权限只需要 <code>self.permissions += perm</code>，反之则 <code>self.permissions -= perm</code>；</li>
+<li>检查是否拥有某项权限，只需要按位与即可，<code>self.permissions &amp; perm == perm</code>；</li>
+</ul>
+<h2 id="bleach">Bleach</h2>
+<p>Bleach 是使用 Python 实现的 HTML 清理程序。</p>
+<ul>
+<li><code>bleach.clean(content, tags, strip=True)</code> 删除不在白名单中的标签；</li>
+<li><code>bleach.linkify(content)</code> 把纯文本中的 URL 转换为合适的 <code>&lt;a&gt;</code> 链接；</li>
+</ul>
+<h2 id="markdown-相关库">markdown 相关库</h2>
+<ul>
+<li>Markdown：使用 Python 实现的服务端 Markdown 到 HTML 转换程序；</li>
+<li>PageDown：使用 JavaScript 实现的客户端 Markdown 到 HTML 转换程序；</li>
+<li>Flask-PageDown：为 Flask 包装的 PageDown，把 PageDown 集成到 Flask-WTF 中；</li>
+</ul>
+<h2 id="url-片段">URL 片段</h2>
+<p>URL 片段 用于指定加载页面后滚动条所在的初始位置。格式为在 URL 查询参数之后，以 <code>#</code> 开头的锚点名。</p>
+<p>例如：<code>http://example.com/users/?page=1#tom</code>。</p>
+<h2 id="httpie">HTTPie</h2>
+<p>HTTPie 是一个 Python 编写的命令行 HTTP 请求工具，安装后会添加 CLI 命令 http。与 cURL 相比，其语法更加简洁，可读性更高，进行 API 请求也更便捷</p>
+<p>发起 GET 请求：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">http <span class="s2">&#34;httpbin.org/get?a=1&amp;b=2&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>发起 POST 请求（JSON）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">http httpbin.org/post <span class="nv">a</span><span class="o">=</span><span class="m">1</span> <span class="nv">b</span><span class="o">=</span><span class="m">2</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>发起 POST 请求（FORM）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">http --form httpbin.org/post <span class="nv">a</span><span class="o">=</span><span class="m">1</span> <span class="nv">b</span><span class="o">=</span><span class="m">2</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>发起带 Http AUTH 的请求：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">http --auth username:password httpbin.org/get
+</code></pre></td></tr></table>
+</div>
+</div><p>发起 PUT 请求：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">http --auth username:password PUT httpbin.org/put <span class="nv">a</span><span class="o">=</span><span class="m">1</span> <span class="nv">b</span><span class="o">=</span><span class="m">2</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>设置 header</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">http httpbin.org/headers User-Agent:asdf
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="web-应用设计原则">Web 应用设计原则</h2>
+<p>业务逻辑应写入独立与应用上下文的模块中，在视图函数中的代码应该保持简洁，仅发挥粘合剂的作用。</p>
+<p>如何优化数据库性能：</p>
+<ul>
+<li>查找数据库慢查询，优化索引；</li>
+<li>在应用和数据库之间加入缓存；</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2019-05-02</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/669c4/" class="prev" rel="prev" title="Python中的四舍五入"><i class="fas fa-angle-left fa-fw"></i>Python中的四舍五入</a>
+            <a href="/posts/bfff0/" class="next" rel="next" title="使用python -m运行">使用python -m运行<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2019-04-30T09:03:33+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"《Flask Web 开发》大纲"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

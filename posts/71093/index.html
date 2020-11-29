@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>在树莓派上安装OpenWrt - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="在树莓派上安装OpenWrt" />
+<meta property="og:description" content="认识 OpenWrt 来自官网的介绍 The OpenWrt Project is a Linux operating system targeting embedded devices. Instead of trying to create a single, static firmware, OpenWrt provides a fully writable filesystem with package management. This frees you from the application selection and configuration provided by the vendor and allows you to customize the device through the use of packages to suit any application. For developers," />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/71093/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2020-06-08T00:04:22+08:00" />
+<meta property="article:modified_time" content="2020-06-08T00:04:22+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="在树莓派上安装OpenWrt"/>
+<meta name="twitter:description" content="认识 OpenWrt 来自官网的介绍 The OpenWrt Project is a Linux operating system targeting embedded devices. Instead of trying to create a single, static firmware, OpenWrt provides a fully writable filesystem with package management. This frees you from the application selection and configuration provided by the vendor and allows you to customize the device through the use of packages to suit any application. For developers,"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/71093/" /><link rel="prev" href="https://mrchi.cc/posts/b0ebf/" /><link rel="next" href="https://mrchi.cc/posts/e9313/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "在树莓派上安装OpenWrt",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/71093\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  2256 ,
+        "url": "https:\/\/mrchi.cc\/posts\/71093\/","datePublished": "2020-06-08T00:04:22+08:00","dateModified": "2020-06-08T00:04:22+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Mr.Chi"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">在树莓派上安装OpenWrt</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Mr.Chi</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E6%9E%81%E5%AE%A2%E6%9C%89%E5%8A%9B%E9%87%8F/"><i class="far fa-folder fa-fw"></i>极客有力量</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-06-08">2020-06-08</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2256 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#认识-openwrt">认识 OpenWrt</a></li>
+    <li><a href="#安装-openwrt">安装 OpenWrt</a></li>
+    <li><a href="#基本设置">基本设置</a></li>
+    <li><a href="#安装网络设备驱动">安装网络设备驱动</a>
+      <ul>
+        <li><a href="#usb-有线网卡rtl8152">USB 有线网卡（RTL8152）</a></li>
+        <li><a href="#usb-无线网卡rt5370">USB 无线网卡（RT5370）</a></li>
+        <li><a href="#android-usb-网络共享rndis">Android USB 网络共享（RNDIS）</a></li>
+      </ul>
+    </li>
+    <li><a href="#shadowsocks-透明代理">Shadowsocks 透明代理</a>
+      <ul>
+        <li><a href="#安装">安装</a>
+          <ul>
+            <li><a href="#源安装">源安装</a></li>
+            <li><a href="#一键安装脚本">一键安装脚本</a></li>
+          </ul>
+        </li>
+        <li><a href="#配置">配置</a>
+          <ul>
+            <li><a href="#配置-shadowsocks">配置 Shadowsocks</a></li>
+            <li><a href="#配置-dns-转发">配置 DNS 转发</a></li>
+            <li><a href="#配置-chinadns">配置 ChinaDNS</a></li>
+            <li><a href="#配置-dhcpdns">配置 DHCP/DNS</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#其他设置">其他设置</a>
+      <ul>
+        <li><a href="#定时重启-wi-fi">定时重启 Wi-Fi</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="认识-openwrt">认识 OpenWrt</h1>
+<p>来自<a href="https://openwrt.org/" target="_blank" rel="noopener noreffer">官网</a>的介绍</p>
+<blockquote>
+<p>The OpenWrt Project is a Linux operating system targeting embedded devices. Instead of trying to create a single, static firmware, OpenWrt provides a fully writable filesystem with package management. This frees you from the application selection and configuration provided by the vendor and allows you to customize the device through the use of packages to suit any application. For developers, OpenWrt is the framework to build an application without having to build a complete firmware around it; for users this means the ability for full customization, to use the device in ways never envisioned.</p>
+</blockquote>
+<p>OpenWrt 与 LEDE 项目还有一段相爱相杀的历史。</p>
+<ul>
+<li>2016 年 5 月，由于原 OpenWrt 开发者社区已经长时间没有关键性更新以及对新设备的支持，而关于这些的讨论也迟迟未有结果，导致一群 OpenWrt 核心贡献者感到不满，另外成立了 LEDE 项目。该项目源码基本继承自 OpenWrt，但采取了更有效的开发讨论规定和决议流程。</li>
+<li>2017 年 6 月，LEDE 社区和 OpwnWrt 社区均同意将原 OpenWrt 项目合并至 LEDE 项目。新项目使用 Openwrt 的名称，但沿用 LEDE 社区的版规和流程规定。</li>
+<li>2018 年 1 月，所有源代码合并完成。</li>
+<li>2018 年 7 月 31 日，发布合并之后的第一个稳定版本 OpenWrt 18.06。</li>
+</ul>
+<p>OpenWrt 的优势主要有：</p>
+<ul>
+<li><strong>可扩展性</strong> 不仅支持多种设备，还提供了许多仅在高端设备中可用的功能；</li>
+<li><strong>安全性</strong> OpenWrt 的标准安装是安全的——禁用 Wi-Fi、没有弱密码或后门，另外官方会及时修复漏洞；</li>
+<li><strong>性能和稳定性</strong> 标准模块化，经过充分的测试和错误修复后发布。</li>
+<li><strong>强大的社区支持</strong></li>
+<li><strong>研究</strong> 许多团队使用 OpenWrt 作为他们研究网络性能的平台，成功实验的改进将首先在 OpenWrt 中提供；</li>
+<li><strong>开源免费</strong></li>
+</ul>
+<h1 id="安装-openwrt">安装 OpenWrt</h1>
+<p>根据自己的硬件在 <a href="https://openwrt.org/toh/start" target="_blank" rel="noopener noreffer">官网支持设备列表</a> 中选择合适的镜像下载，目前树莓派受支持的型号有 A、B、B+、2B、3B、3B+  和 Zero W。</p>
+<p>下载完成后将镜像刷到 SD 卡中，将树莓派通过以太网接口连接到电脑或路由器（默认情况下 Wi-Fi 是关闭的），接通电源。树莓派直连电脑时 IP 地址为 192.168.1.1。</p>
+<p>有两种方式可以访问树莓派：</p>
+<ul>
+<li>通过浏览器访问 OpenWrt 自带的 luci Web 管理界面；</li>
+<li>通过 SSH 登录树莓派，root 用户，默认为空密码；</li>
+</ul>
+<p>注意 登录 luci 的账号密码和 SSH 的账号密码其实是同一套。</p>
+<h1 id="基本设置">基本设置</h1>
+<p>更新软件列表</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">opkg update
+</code></pre></td></tr></table>
+</div>
+</div><p>安装 luci 中文界面</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">opkg install luci-compat luci-i18n-base-zh-cn
+</code></pre></td></tr></table>
+</div>
+</div><p>在 luci 中：</p>
+<ul>
+<li>设置主机密码（root 用户密码）；</li>
+<li>添加 SSH 访问公钥；</li>
+<li>设置时区，修改时间；</li>
+</ul>
+<h1 id="安装网络设备驱动">安装网络设备驱动</h1>
+<h2 id="usb-有线网卡rtl8152">USB 有线网卡（RTL8152）</h2>
+<p>这是一款 TPLINK 的 USB 转 RJ45 有线网卡，使用芯片 RTL8152。安装驱动：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">opkg install kmod-usb-net-rtl8152
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="usb-无线网卡rt5370">USB 无线网卡（RT5370）</h2>
+<p>我的无线网卡型号为 Tenda W311MI，使用 RT5370 芯片，OpenWrt 默认没有安装该无线网卡的驱动。</p>
+<p>安装 lsusb 命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">opkg update
+opkg install usbutils
+</code></pre></td></tr></table>
+</div>
+</div><p>安装驱动组件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">opkg install kmod-rt2800-lib
+opkg install kmod-rt2800-usb
+opkg install kmod-rt2x00-lib
+opkg install kmod-rt2x00-usb
+</code></pre></td></tr></table>
+</div>
+</div><p>重新配置 Wi-Fi，会在 luci 的网络菜单中出现“无线”选项</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">wifi config
+</code></pre></td></tr></table>
+</div>
+</div><p>如果没有生效，尝试重启 OpenWrt。</p>
+<p><strong>Tenda W311MI 能够同时工作在 AP 模式 和 Client 模式，可以用作无线中继。</strong></p>
+<h2 id="android-usb-网络共享rndis">Android USB 网络共享（RNDIS）</h2>
+<p>安卓手机的 USB 网络共享功能使用 RNDIS 协议（Remote Network Driver Interface Specification，远程网络驱动程序接口规范）。该协议为微软公司专有协议，OpenWrt 默认情况下不支持该协议。</p>
+<p>安装驱动</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">opkg update
+opkg install kmod-usb-net-rndis usb-modeswitch
+</code></pre></td></tr></table>
+</div>
+</div><p>离线安装时需要下载的包有（包括上述包的依赖包）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">kmod-mii
+kmod-usb-net-cdc-ether
+kmod-usb-net-rndis
+kmod-usb-net
+libusb-1.0
+usb-modeswitch
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="shadowsocks-透明代理">Shadowsocks 透明代理</h1>
+<p>这里我们使用 Shadowsocks + ChinaDNS + DNS-Forwarder 的方案。</p>
+<ul>
+<li>Shadowsocks 实现透明代理、socks5 代理和端口转发等功能；</li>
+<li>ChinaDNS 解析国内域名时自动查询本地 DNS 服务器，解析国外域名时查询国外DNS服务器，以防止 DNS 投毒，同时它维护的 IP 列表可以实现 Shadowsocks 代理的分流；</li>
+<li>DNS-Forwarder 使用 TCP 协议转发 DNS 请求，DNS 默认使用 UDP 协议，但 ISP 的 UDP 常常出现不稳定的情况，因此使用 DNS-Forwarder 提高 DNS 转发的稳定性。如果配合了 SS，TCP 查询会自动走 SS 线路，也同时解决了线路优化的问题。</li>
+</ul>
+<h2 id="安装">安装</h2>
+<h3 id="源安装">源安装</h3>
+<p>这里安装我们使用了第三方源 <a href="http://openwrt-dist.sourceforge.net/" target="_blank" rel="noopener noreffer">Openwrt-dist</a>。</p>
+<p>添加公钥</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">wget http://openwrt-dist.sourceforge.net/openwrt-dist.pub
+opkg-key add openwrt-dist.pub
+</code></pre></td></tr></table>
+</div>
+</div><p>查看 openwrt 路由器 CPU 架构，树莓派 2B 是 <code>arm_cortex-a7_neon-vfpv4</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ opkg print-architecture
+arch all 1
+arch noarch 1
+arch arm_cortex-a7_neon-vfpv4 10
+</code></pre></td></tr></table>
+</div>
+</div><p>将以下内容添加到 <code>/etc/opkg/customfeeds.conf</code> 文件中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">src/gz openwrt_dist http://openwrt-dist.sourceforge.net/packages/base/{architecture}
+src/gz openwrt_dist_luci http://openwrt-dist.sourceforge.net/packages/luci
+</code></pre></td></tr></table>
+</div>
+</div><p>安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">opkg update
+opkg install shadowsocks-libev
+opkg install luci-app-shadowsocks
+opkg install dns-forwarder
+opkg install luci-app-dns-forwarder
+opkg install ChinaDNS
+opkg install luci-app-chinadns
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="一键安装脚本">一键安装脚本</h3>
+<p>一键安装脚本会额外安装 ShadowVPN。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">wget http://openwrt-dist.sourceforge.net/auto_install.sh
+chmod +x auto_install.sh
+./auto_install.sh
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置">配置</h2>
+<p>为了方便，我们在 LUCI 界面进行配置，首先刷新页面。</p>
+<h3 id="配置-shadowsocks">配置 Shadowsocks</h3>
+<p>进入[服务]-[影梭]菜单：</p>
+<ol>
+<li>在[服务器管理]菜单，添加 Shadowsocks 服务器信息；</li>
+<li>在[访问控制]菜单，“外网区域-被忽略IP列表” 选择 “ChinaDNS 路由表”；</li>
+<li>在[基本设置]菜单，“全局设置-自启动延时” 选择 “5 秒”，透明代理和 SOCKS5 代理的服务器设置为刚刚添加的服务器；</li>
+</ol>
+<h3 id="配置-dns-转发">配置 DNS 转发</h3>
+<p>进入[服务]-[DNS 转发]菜单，勾选 “启用”，设置 “监听端口” 为 5300，“上游 DNS” 为 <code>8.8.8.8</code>。</p>
+<h3 id="配置-chinadns">配置 ChinaDNS</h3>
+<p>进入[服务]-[ChinaDNS]菜单：</p>
+<ol>
+<li>勾选 “启用”，勾选 “启用双向过滤”；</li>
+<li>设置 “本地端口” 为 5353；</li>
+<li>设置上游服务器地址为 <code>114.114.114.114,127.0.0.1:5300</code>；</li>
+</ol>
+<p><code>127.0.0.1:5300</code> 即 DNS 转发的监听地址。这样配置后，ChinaDNS 国内域名查询走 <code>114.114.114.114</code>，国外域名查询会经由 DNS 转发走 ss 到 <code>8.8.8.8</code>；</p>
+<h3 id="配置-dhcpdns">配置 DHCP/DNS</h3>
+<p>进入[网络]-[DHCP/DNS]菜单：</p>
+<ol>
+<li>在[基本设置]菜单，设置 “本地服务器” 为 <code>127.0.0.1#5353</code>，即 ChinaDNS 的服务监听地址；</li>
+<li>在[HOSTS 和解析文件]菜单，勾选 “忽略解析文件”；</li>
+</ol>
+<p>Over，保存并重启。</p>
+<h1 id="其他设置">其他设置</h1>
+<h2 id="定时重启-wi-fi">定时重启 Wi-Fi</h2>
+<p>使用过程中发现无线网卡偶尔会出现网络缓慢的情况，重启 Wi-Fi 后就会恢复正常。因此设置一个定时任务，每天凌晨重启 Wi-Fi。</p>
+<p>进入[系统]-[计划任务]菜单，添加内容：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">0 4 * * * wifi down &amp;&amp; sleep 3 &amp;&amp; wifi
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>如果之前定时任务为空，需要手动重启一下 cron 服务：进入[系统]-[启动项]，重启 cron。</strong></p>
+<h1 id="参考链接">参考链接</h1>
+<ul>
+<li><a href="https://openwrt.org/" target="_blank" rel="noopener noreffer">OpenWrt Project: Welcome to the OpenWrt Project</a></li>
+<li><a href="https://openwrt.org/toh/start" target="_blank" rel="noopener noreffer">OpenWrt Project: Table of Hardware</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/LEDE" target="_blank" rel="noopener noreffer">LEDE - 维基百科，自由的百科全书</a></li>
+<li><a href="https://www.jianshu.com/p/461d361b33f4" target="_blank" rel="noopener noreffer">openwrt挂载usb无线网卡 - 简书</a></li>
+<li><a href="https://wiki.openwrt.org/doc/recipes/ethernetoverusb_rndis" target="_blank" rel="noopener noreffer">Use RNDIS USB Dongle for WAN connection [OpenWrt Wiki]</a></li>
+<li><a href="https://wiki.openwrt.org/zh-cn/doc/techref/opkg" target="_blank" rel="noopener noreffer">OPKG 软件包管理 [OpenWrt Wiki]</a></li>
+<li><a href="https://briteming.blogspot.com/2018/10/openwrtlede-shadowsocks.html" target="_blank" rel="noopener noreffer">FISHERMAN&rsquo;S BLOG: 在 OpenWrt/LEDE路由器上，安装配置 Shadowsocks 服务</a></li>
+<li><a href="http://openwrt-dist.sourceforge.net/" target="_blank" rel="noopener noreffer">OpenWrt-dist by aa65535</a></li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-06-08</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/b0ebf/" class="prev" rel="prev" title="小米路由器4A刷openwrt"><i class="fas fa-angle-left fa-fw"></i>小米路由器4A刷openwrt</a>
+            <a href="/posts/e9313/" class="next" rel="next" title="在树莓派上安装HAP-NodeJS">在树莓派上安装HAP-NodeJS<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2020-06-08T00:04:22+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"在树莓派上安装OpenWrt"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

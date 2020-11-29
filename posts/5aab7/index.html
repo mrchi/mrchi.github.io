@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>慕课网Python3入门课程笔记 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="慕课网Python3入门课程笔记" />
+<meta property="og:description" content="Python变量和数据类型 数据类型 整数和浮点数：在计算机内部存储的方式是不同的，整数运算永远是精确的（除法也是精确的），而浮点数运算则可能会" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/5aab7/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2017-08-16T00:12:16+08:00" />
+<meta property="article:modified_time" content="2017-08-16T00:12:16+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="慕课网Python3入门课程笔记"/>
+<meta name="twitter:description" content="Python变量和数据类型 数据类型 整数和浮点数：在计算机内部存储的方式是不同的，整数运算永远是精确的（除法也是精确的），而浮点数运算则可能会"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/5aab7/" /><link rel="prev" href="https://mrchi.cc/posts/a0773/" /><link rel="next" href="https://mrchi.cc/posts/9d5d8/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "慕课网Python3入门课程笔记",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/5aab7\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  9191 ,
+        "url": "https:\/\/mrchi.cc\/posts\/5aab7\/","datePublished": "2017-08-16T00:12:16+08:00","dateModified": "2017-08-16T00:12:16+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Invoker"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">慕课网Python3入门课程笔记</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Invoker</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/python/"><i class="far fa-folder fa-fw"></i>Python</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2017-08-16">2017-08-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 9191 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 19 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#python变量和数据类型">Python变量和数据类型</a>
+      <ul>
+        <li><a href="#数据类型">数据类型</a></li>
+        <li><a href="#print语句">Print语句</a></li>
+        <li><a href="#注释">注释</a></li>
+        <li><a href="#变量">变量</a></li>
+        <li><a href="#定义字符串">定义字符串</a></li>
+        <li><a href="#raw字符串和多行字符串">raw字符串和多行字符串</a>
+          <ul>
+            <li><a href="#raw字符串">raw字符串</a></li>
+            <li><a href="#多行字符串">多行字符串</a></li>
+          </ul>
+        </li>
+        <li><a href="#字符串编码">字符串编码</a>
+          <ul>
+            <li><a href="#几种常见的编码">几种常见的编码</a></li>
+            <li><a href="#unicode编码与其他编码的转换">Unicode编码与其他编码的转换</a></li>
+          </ul>
+        </li>
+        <li><a href="#数据类型-1">数据类型</a></li>
+        <li><a href="#布尔类型">布尔类型</a></li>
+      </ul>
+    </li>
+    <li><a href="#list和tuple类型">List和Tuple类型</a>
+      <ul>
+        <li><a href="#list">List</a>
+          <ul>
+            <li><a href="#创建list">创建list</a></li>
+            <li><a href="#按照索引访问list">按照索引访问list</a></li>
+            <li><a href="#倒序访问list">倒序访问list</a></li>
+            <li><a href="#添加新元素">添加新元素</a></li>
+            <li><a href="#从list删除元素">从list删除元素</a></li>
+            <li><a href="#替换元素">替换元素</a></li>
+          </ul>
+        </li>
+        <li><a href="#tuple">Tuple</a>
+          <ul>
+            <li><a href="#创建tuple">创建tuple</a></li>
+            <li><a href="#创建单元素tuple">创建单元素tuple</a></li>
+            <li><a href="#可变的tuple">“可变”的tuple</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#条件判断和循环">条件判断和循环</a>
+      <ul>
+        <li><a href="#条件判断语句">条件判断语句</a>
+          <ul>
+            <li><a href="#if语句">if语句</a></li>
+            <li><a href="#if-else">if-else</a></li>
+            <li><a href="#if-elif-else">if-elif-else</a></li>
+          </ul>
+        </li>
+        <li><a href="#循环">循环</a>
+          <ul>
+            <li><a href="#forin循环--range函数">for&hellip;in循环 &amp; range()函数</a></li>
+            <li><a href="#while循环">while循环</a></li>
+            <li><a href="#break退出循环">break退出循环</a></li>
+            <li><a href="#continue继续循环">continue继续循环</a></li>
+            <li><a href="#多重循环">多重循环</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#dict和set类型">Dict和Set类型</a>
+      <ul>
+        <li><a href="#dict">Dict</a>
+          <ul>
+            <li><a href="#什么是dict">什么是dict</a></li>
+            <li><a href="#访问dict">访问dict</a></li>
+            <li><a href="#dict的特点">dict的特点</a></li>
+            <li><a href="#更新dict">更新dict</a></li>
+            <li><a href="#遍历dict">遍历dict</a></li>
+          </ul>
+        </li>
+        <li><a href="#set">Set</a>
+          <ul>
+            <li><a href="#什么是set">什么是set</a></li>
+            <li><a href="#遍历set">遍历set</a></li>
+            <li><a href="#更新set">更新set</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#函数">函数</a>
+      <ul>
+        <li><a href="#调用函数">调用函数</a></li>
+        <li><a href="#编写函数">编写函数</a></li>
+        <li><a href="#返回多值">返回多值</a></li>
+        <li><a href="#递归函数">递归函数</a></li>
+        <li><a href="#函数的参数">函数的参数</a>
+          <ul>
+            <li><a href="#定义默认参数">定义默认参数</a></li>
+            <li><a href="#定义可变参数">定义可变参数</a></li>
+            <li><a href="#关键字参数">关键字参数</a></li>
+            <li><a href="#命名关键字参数">命名关键字参数</a></li>
+            <li><a href="#参数组合">参数组合</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#切片">切片</a>
+      <ul>
+        <li><a href="#对listtuple进行切片">对list/tuple进行切片</a></li>
+        <li><a href="#倒序切片">倒序切片</a></li>
+        <li><a href="#对字符串切片">对字符串切片</a></li>
+      </ul>
+    </li>
+    <li><a href="#迭代">迭代</a>
+      <ul>
+        <li><a href="#什么是迭代">什么是迭代</a></li>
+        <li><a href="#判断可迭代对象">判断可迭代对象</a></li>
+        <li><a href="#迭代list的下标和元素">迭代list的下标和元素</a></li>
+        <li><a href="#迭代dict的value">迭代dict的value</a></li>
+        <li><a href="#迭代dict的key">迭代dict的key</a></li>
+        <li><a href="#迭代dict的key和value">迭代dict的key和value</a></li>
+      </ul>
+    </li>
+    <li><a href="#列表生成式">列表生成式</a>
+      <ul>
+        <li><a href="#生成列表">生成列表</a></li>
+        <li><a href="#进行条件过滤">进行条件过滤</a></li>
+        <li><a href="#使用多层表达式">使用多层表达式</a></li>
+      </ul>
+    </li>
+    <li><a href="#生成器">生成器</a>
+      <ul>
+        <li><a href="#使用创建生成器">使用<code>()</code>创建生成器</a></li>
+        <li><a href="#使用yield创建生成器">使用<code>yield</code>创建生成器</a></li>
+      </ul>
+    </li>
+    <li><a href="#迭代器">迭代器</a>
+      <ul>
+        <li><a href="#迭代器和可迭代对象的区别">迭代器和可迭代对象的区别</a></li>
+        <li><a href="#把可迭代对象变为迭代器">把可迭代对象变为迭代器</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="python变量和数据类型">Python变量和数据类型</h1>
+<h2 id="数据类型">数据类型</h2>
+<ul>
+<li>整数和浮点数：在计算机内部存储的方式是不同的，整数运算永远是精确的（<strong>除法也是精确的</strong>），而浮点数运算则可能会有四舍五入的误差；</li>
+<li>布尔值：用<code>True</code>、<code>False</code>表示（<strong>注意大小写</strong>）；</li>
+<li>空值：用<code>None</code>表示，<code>None</code><strong>不能理解为0</strong>，因为0是有意义的，而<code>None</code>是一个特殊的空值。</li>
+</ul>
+<h2 id="print语句">Print语句</h2>
+<p>print语句也可以跟上多个字符串，用逗号“,”隔开，print会依次打印每个字符串。<strong>每个逗号“,”会输出一个空格</strong>。</p>
+<h2 id="注释">注释</h2>
+<p>Python的注释以<code>#</code>开头，后面的文字直到行尾都算注释。</p>
+<h2 id="变量">变量</h2>
+<ul>
+<li>变量名必须是大小写英文、数字和_的组合，且不能用数字开头；</li>
+<li><strong>动态语言</strong>：变量本身<strong>类型不固定</strong>的语言，例如Python；</li>
+<li>常量：在Python中，通常用全部大写的变量名表示常量，但<strong>事实上仍然是一个变量</strong>；</li>
+</ul>
+<h2 id="定义字符串">定义字符串</h2>
+<p>字符串可以用<code>'...'</code>或者<code>&quot;...&quot;</code>括起来表示。</p>
+<ol>
+<li>如果字符串本身包含<code>'</code>，可以用<code>&quot;...&quot;</code>括起来表示；</li>
+<li>如果字符串本身包含<code>&quot;</code>，可以用<code>'...'</code>括起来表示；</li>
+<li>如果字符串既包含<code>'</code>又包含<code>&quot;</code>，使用转义字符<code>\</code>。</li>
+</ol>
+<p><strong>注意</strong>：Python区分大小写！</p>
+<h2 id="raw字符串和多行字符串">raw字符串和多行字符串</h2>
+<h3 id="raw字符串">raw字符串</h3>
+<p>在字符串前面加个前缀<code>r</code>， 表示这是一个raw字符串，里面的字符就不需要转义。例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt;print(r&#39;\n\t\\&#39;)
+\n\t\\
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="多行字符串">多行字符串</h3>
+<p>多行字符串，可以用<code>'''...'''</code>表示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="s1">&#39;&#39;&#39;Line1
+</span><span class="s1">Line2
+</span><span class="s1">Line3&#39;&#39;&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上面这个字符串的表示方法和下面的是完全一样的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="s1">&#39;Line 1</span><span class="se">\n</span><span class="s1">Line 2</span><span class="se">\n</span><span class="s1">Line 3&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>注</strong>：还可以在多行字符串前面添加<code>r</code>，把这个多行字符串也变成一个raw字符串：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="sa">r</span><span class="s1">&#39;&#39;&#39;Python is created by &#34;Guido&#34;.
+</span><span class="s1">It is free and easy to learn.
+</span><span class="s1">Let&#39;s start learn Python in imooc!&#39;&#39;&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="字符串编码">字符串编码</h2>
+<h3 id="几种常见的编码">几种常见的编码</h3>
+<ul>
+<li><strong>GB2312</strong>：国标简体中文编码；</li>
+<li><strong>GBK</strong>：GBK是包括中日韩字符的大字符集合，GB2312是GBK的子集；</li>
+<li><strong>Unicode</strong>：Unicode把所有语言都统一到一套编码里；</li>
+<li><strong>UTF-8</strong>：UTF-8编码把一个Unicode字符根据不同的数字大小编码成1-6个字节，是可变长编码；</li>
+</ul>
+<p>默认情况下，Python3<strong>源码文件中使用UTF-8编码</strong>，在内存中使用Unicode编码，即Python3中的<strong>字符串是Unicode编码</strong>的。</p>
+<h3 id="unicode编码与其他编码的转换">Unicode编码与其他编码的转换</h3>
+<p>Unicode编码转换成其他编码时，使用<code>encode</code>方法，参数值为要转换成的编码类型：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;中文&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;gb2312&#39;</span><span class="p">)</span>
+<span class="sa">b</span><span class="s1">&#39;</span><span class="se">\xd6\xd0\xce\xc4</span><span class="s1">&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;中文&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="sa">b</span><span class="s1">&#39;</span><span class="se">\xe4\xb8\xad\xe6\x96\x87</span><span class="s1">&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>其他编码转换成Unicode编码时，使用<code>decode</code>方法，参数值为原编码类型：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">&gt;&gt;&gt; b<span class="s1">&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span>.decode<span class="o">(</span><span class="s1">&#39;utf-8&#39;</span><span class="o">)</span>
+<span class="s1">&#39;中文&#39;</span>
+&gt;&gt;&gt; b<span class="s1">&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span>.decode<span class="o">(</span><span class="s1">&#39;gb2312&#39;</span><span class="o">)</span>
+Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
+  File <span class="s2">&#34;&lt;pyshell#96&gt;&#34;</span>, line 1, in &lt;module&gt;
+    b<span class="s1">&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span>.decode<span class="o">(</span><span class="s1">&#39;gb2312&#39;</span><span class="o">)</span>
+UnicodeDecodeError: <span class="s1">&#39;gb2312&#39;</span> codec can<span class="err">&#39;</span>t decode byte 0xad in position 2: illegal multibyte sequence
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="数据类型-1">数据类型</h2>
+<p>python中数有四种类型：整数、长整数、浮点数和复数。</p>
+<ul>
+<li>整数：如<code>1</code>, 二进制<code>0b1001</code>, 十六进制<code>0x2E</code>；</li>
+<li>长整数：是比较大的整数；</li>
+<li>浮点数：如<code>1.23</code>、<code>3E-2</code>；</li>
+<li>复数：如<code>1+2j</code>、<code>1.1+2.2j</code>；</li>
+</ul>
+<h2 id="布尔类型">布尔类型</h2>
+<ol>
+<li>Python把<strong>0</strong>、<strong>None</strong>、<strong>空字符串、空list、空tuple、空dict和空set</strong>看成<code>False</code>，<strong>其他数值</strong>和<strong>非空数据类型</strong>都看成<code>True</code>。</li>
+<li>and 和 or 运算的重要法则——<strong>短路计算</strong></li>
+</ol>
+<ul>
+<li>在计算<code>a and b</code>时，如果 a 是 False，则根据与运算法则，整个结果必定为 False，因此返回 a；如果 a 是 True，则整个计算结果必定取决与 b，因此返回 b；</li>
+<li>在计算<code>a or b</code>时，如果 a 是 True，则根据或运算法则，整个计算结果必定为 True，因此返回 a；如果 a 是 False，则整个计算结果必定取决于 b，因此返回 b。</li>
+</ul>
+<p><strong>注</strong>：利用这一点，<strong>可以通过 or 运算，把空字符串“变成”默认字符串，而非空字符串保持不变</strong>。</p>
+<h1 id="list和tuple类型">List和Tuple类型</h1>
+<h2 id="list">List</h2>
+<h3 id="创建list">创建list</h3>
+<p>list是一种<strong>有序</strong>的列表，可以随时添加和删除其中的元素。用 <code>[ ] </code>把list的所有元素括起来就构造了一个list对象。list中包含的元素可以是不同种数据类型。一个元素也没有的list是<strong>空list</strong>。list中元素<strong>可重复</strong>。</p>
+<h3 id="按照索引访问list">按照索引访问list</h3>
+<ol>
+<li>索引从 0 开始，格式为<code>L[0]</code>；</li>
+<li>使用索引时，千万注意<strong>不要越界</strong>，否则报错<code>IndexError</code>。</li>
+</ol>
+<h3 id="倒序访问list">倒序访问list</h3>
+<ol>
+<li>用 -1 这个索引来表示最后一个元素，即<code>L[-1]</code>；类似的，倒数第二用 -2 表示，倒数第三用 -3 表示。</li>
+<li>使用倒序索引时，也要注意<strong>不要越界</strong>，否则同样报错<code>IndexError</code>。</li>
+</ol>
+<h3 id="添加新元素">添加新元素</h3>
+<ul>
+<li>用 list 的<code>append()</code>方法把新元素添加到 list 的<strong>尾部</strong>；</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Paul&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="s1">&#39;Paul&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>用list的<code>insert()</code>方法把新元素添加到<strong>除尾部的其他位置</strong>，它有两个参数，第一个参数是索引位置，第二个参数是待添加的新元素；</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Paul&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">&#39;Paul&#39;</span><span class="p">,</span> <span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>注意</strong>：使用<code>insert()</code>方法，，可以认为是插入到了索引位置的前面。使用倒序索引时注意：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="c1">#元素插入到了倒序索引位置为-1的前面</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="从list删除元素">从list删除元素</h3>
+<ul>
+<li>用list的<code>pop()</code>方法删掉list的<strong>末尾元素</strong>，返回值是被删掉的元素；</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="s1">&#39;Paul&#39;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+<span class="s1">&#39;Paul&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>用list的<code>pop(x)</code>方法删掉list的<strong>任意位置元素</strong>，参数x为索引（<strong>可倒序索引</strong>），返回值是被删掉的元素；</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Paul&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="s1">&#39;Paul&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="替换元素">替换元素</h3>
+<p>对list中的某一个索引（<strong>可倒序索引</strong>）赋值，就可以直接用新的元素替换掉原来的元素，list包含的元素个数保持不变。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Paul&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+<span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Paul&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="tuple">Tuple</h2>
+<h3 id="创建tuple">创建tuple</h3>
+<p>tuple是另一种<strong>有序</strong>的列表，中文翻译为“元组”。创建tuple使用<code>()</code>。tuple一旦创建完毕就<strong>不能修改</strong>。tuple没有append()方法，也没有insert()和pop()方法。可以<strong>使用索引方式访问</strong>元素，但是<strong>不能对其中的元素赋值</strong>。</p>
+<h3 id="创建单元素tuple">创建单元素tuple</h3>
+<ol>
+<li>包含 0 个元素的 tuple，也就是空tuple，直接用 ()表示，即<code>t = ()</code>；</li>
+<li>因为()既可以表示tuple，又可以作为括号表示运算时的优先级，用()定义单元素的tuple有歧义。所以 Python 规定，单元素 tuple 要多加一个逗号“,”避免歧义：</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="可变的tuple">“可变”的tuple</h3>
+<p>tuple所谓的“不变”是说，tuple的每个元素，指向永远不变，即<strong>指向&rsquo;a&rsquo;，就不能改成指向&rsquo;b&rsquo;</strong>。指向一个list，就不能改成指向其他对象，但指向的这个list本身是可变的！</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;X&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">])</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="条件判断和循环">条件判断和循环</h1>
+<p><strong>Python代码的缩进规则</strong>：</p>
+<ol>
+<li>具有相同缩进的代码被视为代码块。</li>
+<li>缩进为<strong>4个空格</strong>，不要使用Tab，更不要混合Tab和空格，否则很容易造成因为缩进引起的语法错误。</li>
+</ol>
+<h2 id="条件判断语句">条件判断语句</h2>
+<h3 id="if语句">if语句</h3>
+<p>if 语句后接条件表达式，然后用<code>:</code>表示代码块开始。</p>
+<h3 id="if-else">if-else</h3>
+<p>如果条件判断是**“非此即彼”**的，即要么符合条件1，要么符合条件2，可以用一个<code>if ... else ...</code>语句把它们统一起来。根据条件表达式的值为 True 或者 False ，分别执行 if 代码块或者 else 代码块。**注意else后面有个“:”**。</p>
+<h3 id="if-elif-else">if-elif-else</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">if</span> <span class="o">&lt;</span><span class="err">条件判断</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="err">执行</span><span class="mi">1</span><span class="o">&gt;</span>
+<span class="k">elif</span> <span class="o">&lt;</span><span class="err">条件判断</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="err">执行</span><span class="mi">2</span><span class="o">&gt;</span>
+<span class="k">elif</span> <span class="o">&lt;</span><span class="err">条件判断</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="err">执行</span><span class="mi">3</span><span class="o">&gt;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="err">执行</span><span class="mi">4</span><span class="o">&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>注意</strong>：这一系列条件判断会从上到下依次判断，如果某个判断为 True，执行完对应的代码块，后面的条件判断就直接忽略，不再执行了。</p>
+<h2 id="循环">循环</h2>
+<h3 id="forin循环--range函数">for&hellip;in循环 &amp; range()函数</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Michael&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Tracy&#39;</span><span class="p">]</span> <span class="c1">#names也可以是tuple类型</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>name 这个变量是在 for 循环中定义的，意思是，依次取出list中的每一个元素，并把元素赋值给 name，然后执行for循环体（就是缩进的代码块）。</p>
+<p><code>range(x)</code>函数生成一个整数序列list，元素是从0开始到x-1的整数。例如求1-100的整数和：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">101</span><span class="p">):</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">+</span> <span class="n">x</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="while循环">while循环</h3>
+<p>while 循环不会迭代 list 或 tuple 的元素，而是根据表达式判断循环是否结束。while循环每次先判断条件表达式，如果为True，则执行循环体的代码块，否则，退出循环。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">while</span> <span class="o">&lt;</span><span class="err">条件判断</span><span class="o">&gt;</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="err">执行</span><span class="o">&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>注意</strong>：要特别留意while循环的退出条件。</p>
+<h3 id="break退出循环">break退出循环</h3>
+<p>用 for 循环或者 while 循环时，如果要在循环体内直接退出循环，可以使用 break 语句。<strong>break语句生效时，其后面的循环体语句将不会执行。</strong></p>
+<h3 id="continue继续循环">continue继续循环</h3>
+<p>在循环过程中，可以用continue跳过后续循环代码，结束本次循环，继续下一次循环。<strong>continue语句生效时，其后面的循环体语句将不会执行。</strong></p>
+<h3 id="多重循环">多重循环</h3>
+<p>在循环内部，还可以嵌套循环。</p>
+<h1 id="dict和set类型">Dict和Set类型</h1>
+<h2 id="dict">Dict</h2>
+<h3 id="什么是dict">什么是dict</h3>
+<p>dict全称dictionary，在其他语言中也称为map，使用键-值（key-value）存储，具有极快的查找速度。dict用<code>{ }</code>表示，元素按照<code>key: value</code>写出来即可。<strong>最后一个<code>key: value</code>的逗号可以省略。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">key1</span><span class="p">:</span> <span class="n">value1</span><span class="p">,</span>
+    <span class="n">key2</span><span class="p">:</span> <span class="n">value2</span><span class="p">,</span>
+    <span class="n">key3</span><span class="p">:</span> <span class="n">value3</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="访问dict">访问dict</h3>
+<ul>
+<li>使用<code>d[key]</code>的形式来查找对应的 value，如果key 存在，dict就返回对应的value。这和 list 的不同之处是，<strong>list 使用索引返回对应的元素，而dict使用key</strong>。
+<strong>注意</strong>：使用时要先用<strong>in操作符</strong>判断一下 key 是否存在，否则会报错<code>KeyError</code>！</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Adam&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span>
+    <span class="s1">&#39;Lisa&#39;</span><span class="p">:</span> <span class="mi">85</span><span class="p">,</span>
+    <span class="s1">&#39;Bart&#39;</span><span class="p">:</span> <span class="mi">59</span>
+<span class="p">}</span>
+<span class="k">if</span> <span class="s1">&#39;Paul&#39;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>	<span class="c1">#使用in运算符判断key存在否</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;Paul&#39;</span><span class="p">])</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>使用dict提供的一个<strong>get方法</strong>，在Key不存在的时候，返回<code>None</code>或者自己指定的value。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Bart&#39;</span><span class="p">))</span>
+<span class="mi">59</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Paul&#39;</span><span class="p">))</span>
+<span class="bp">None</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Paul&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="o">-</span><span class="mi">1</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="dict的特点">dict的特点</h3>
+<ol>
+<li>
+<p><strong>查找速度快</strong>。无论dict有10个元素还是10万个元素，查找速度都一样。但代价是dict <strong>占用内存大</strong>。（由于dict是按 key 查找，所以<strong>key不能重复</strong>。）</p>
+</li>
+<li>
+<p><strong>存储的key-value序对是没有顺序的</strong>。print的顺序不一定是我们创建时的顺序，而且，不同的机器打印的顺序都可能不同，这说明dict内部是无序的，<strong>不能用dict存储有序的集合</strong>。</p>
+</li>
+<li>
+<p><strong>key只能是不可变对象</strong>。Python的基本类型如字符串、整数、浮点数都是不可变的，都可以作为key。但是list是可变的，就不能作为key。</p>
+</li>
+</ol>
+<h3 id="更新dict">更新dict</h3>
+<ul>
+<li><strong>添加元素</strong>：可以用<code>d[NewKey] = NewValue</code>往dict中添加新的 key-value。如果 key 已经存在，则赋值会用新的 value <strong>替换</strong>掉原来的 value。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Adam&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span>
+    <span class="s1">&#39;Lisa&#39;</span><span class="p">:</span> <span class="mi">85</span><span class="p">,</span>
+    <span class="s1">&#39;Bart&#39;</span><span class="p">:</span> <span class="mi">59</span>
+<span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;Paul&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">72</span> <span class="c1">#添加新元素</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;Lisa&#39;</span><span class="p">:</span> <span class="mi">85</span><span class="p">,</span> <span class="s1">&#39;Paul&#39;</span><span class="p">:</span> <span class="mi">72</span><span class="p">,</span> <span class="s1">&#39;Adam&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">:</span> <span class="mi">59</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><strong>删除元素</strong>：要删除一个key，用<code>pop(key)</code>方法（返回值是value），对应的value也会从dict中删除：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">d</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;Paul&#39;</span><span class="p">)</span>
+<span class="mi">72</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">d</span>
+<span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Adam&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">:</span> <span class="mi">85</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">:</span> <span class="mi">59</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="遍历dict">遍历dict</h3>
+<p>直接使用for循环可以遍历 dict 的 key。又由于通过 key 可以获取对应的 value，因此在循环体内可以获取到value的值。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Adam&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">:</span> <span class="mi">85</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">:</span> <span class="mi">59</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+<span class="o">...</span>     <span class="k">print</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+<span class="o">...</span>
+<span class="n">Lisa</span><span class="p">:</span> <span class="mi">85</span>
+<span class="n">Adam</span><span class="p">:</span> <span class="mi">95</span>
+<span class="n">Bart</span><span class="p">:</span> <span class="mi">59</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="set">Set</h2>
+<h3 id="什么是set">什么是set</h3>
+<p>set和dict类似，也是一组key的集合，但<strong>不存储value</strong>。由于key不能重复，所以，<strong>在set中key不重复、无序且是确定的</strong>。set相当于数学上定义的集合。</p>
+<p>创建 set 的方式是使用<code>set()</code>函数并传入一个可迭代对象，可迭代对象的元素将作为set的元素。当包含重复元素时，set会自动去掉重复的元素。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="mi">3</span> <span class="c1">#重复的元素被删除</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>注意</strong>：上述打印的形式类似 list，但它不是 list；打印的顺序和原始 list 的顺序有可能是不同的，因为set内部存储的元素是<strong>无序的</strong>。</p>
+<h3 id="遍历set">遍历set</h3>
+<p>由于 set 也是一个集合，所以，遍历 set 和遍历 list 类似，通过 for 循环实现。</p>
+<p><strong>注意</strong>： for循环在遍历set时，元素的顺序和list的顺序很可能是不同的，而且不同的机器上运行的结果也可能不同。</p>
+<h3 id="更新set">更新set</h3>
+<p>更新set主要做两件事：</p>
+<ol>
+<li><strong>添加元素</strong>：用set的<code>add()</code>方法。可以直接添加，元素已经存在则不会添加。</li>
+<li><strong>删除元素</strong>：用set的<code>remove()</code>方法。如果删除的元素不存在会报错<code>KeyError</code>，因此<code>remove()</code>前需要判断。</li>
+</ol>
+<h1 id="函数">函数</h1>
+<h2 id="调用函数">调用函数</h2>
+<p>调用一个函数，需要知道函数的<strong>名称</strong>和<strong>参数</strong>。调用函数的时候，如果传入的参数数量不对，或者参数类型不能被函数所接受，会报<code>TypeError</code>的错误。</p>
+<h2 id="编写函数">编写函数</h2>
+<p>定义函数要使用<code>def</code>语句，依次写出<strong>函数名</strong>、<strong>括号</strong>、括号中的<strong>参数</strong>和<strong>冒号</strong>，然后，在缩进中编写函数体，函数的返回值用<code>return</code>语句返回。</p>
+<p><strong>注意</strong>：</p>
+<ol>
+<li>函数体内部的语句在执行时，一旦执行到<code>return</code>时，函数就执行完毕，并将结果返回；</li>
+<li>如果没有<code>return</code>语句，函数执行完毕后也会返回结果，只是结果为<code>None</code>；</li>
+<li><strong>return None可以简写为return</strong>；</li>
+</ol>
+<h2 id="返回多值">返回多值</h2>
+<p>在函数体中，使用<code>return x, y</code>的形式来返回多个值，<strong>实际返回值是一个tuple</strong>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">math</span>
+<span class="k">def</span> <span class="nf">cal</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
+    <span class="n">nx</span> <span class="o">=</span> <span class="nb">len</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+    <span class="n">ny</span> <span class="o">=</span> <span class="nb">len</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这样我们就可以同时获得返回值：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="mf">8.66025403784</span> <span class="mf">5.0</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>但其实这只是一种假象，Python函数返回的仍然是单一值——<strong>一个tuple</strong>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="p">(</span><span class="mf">8.66025403784</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在语法上，<strong>返回一个tuple可以省略括号</strong>，而多个变量可以同时接收一个tuple，按位置赋给对应的值，所以，Python的函数返回多值其实就是返回一个tuple，但写起来更方便。</p>
+<h2 id="递归函数">递归函数</h2>
+<ol>
+<li>
+<p>如果一个函数在内部调用自身本身，这个函数就是<strong>递归函数</strong>。</p>
+</li>
+<li>
+<p>递归函数的优点是<strong>定义简单，逻辑清晰</strong>。理论上，所有的递归函数都可以写成循环的方式，但循环的逻辑不如递归清晰。</p>
+</li>
+<li>
+<p>使用递归函数需要<strong>注意防止栈溢出</strong>。在计算机中，函数调用是通过栈（stack）这种数据结构实现的，每当进入一个函数调用，栈就会加一层栈帧，每当函数返回，栈就会减一层栈帧。由于栈的大小不是无限的，所以，递归调用的次数过多，会导致栈溢出。尾递归可以有效防止栈溢出，但是Python并不支持:)</p>
+</li>
+</ol>
+<blockquote>
+<p><a href="http://baike.baidu.com/view/191666.htm" target="_blank" rel="noopener noreffer">汉诺塔</a>的移动可以看做是递归函数。我们对柱子编号为a, b, c，将所有圆盘从a移到c可以描述为：如果a只有一个圆盘，可以直接移动到c；如果a有N个圆盘，可以看成a有1个圆盘（底盘） + (N-1)个圆盘，首先需要把 (N-1) 个圆盘移动到 b，然后，将 a的最后一个圆盘移动到c，再将b的(N-1)个圆盘移动到c。请编写一个函数move(n, a, b, c)，给定输入 n, a, b, c，打印出移动的步骤。
+例如，输入 move(2, &lsquo;A&rsquo;, &lsquo;B&rsquo;, &lsquo;C&rsquo;)，打印出：
+A &ndash;&gt; B
+A &ndash;&gt; C
+B &ndash;&gt; C</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">--&gt;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">move</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="n">move</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        <span class="n">move</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="函数的参数">函数的参数</h2>
+<h3 id="定义默认参数">定义默认参数</h3>
+<p><strong>默认参数的作用是简化调用</strong>，你只要把必须的参数传进去。但在必要的时候，又可以传入额外的参数来覆盖默认参数值。<strong>默认参数必须指向不变对象</strong>。</p>
+<p>由于函数的参数按从左到右的顺序匹配，所以<strong>默认参数只能定义在必需参数的后面</strong>——<code>def function(a, b=1, c=2)</code>。b和c即是默认参数。</p>
+<p>设置原则：当函数有多个参数时，把变化大的参数放前面，变化小的参数放后面。变化小的参数就可以作为默认参数。</p>
+<h3 id="定义可变参数">定义可变参数</h3>
+<p><strong>可变参数的目的也是为了简化调用</strong>。一个可变参数能让一个函数<strong>接受任意个参数</strong>。</p>
+<p>可变参数的名字前面有个<code>*</code>号，我们可以传入0个、1个或多个参数给可变参数。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">calc</span><span class="p">(</span><span class="o">*</span><span class="n">numbers</span><span class="p">):</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+        <span class="nb">sum</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">+</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span>
+    <span class="k">return</span> <span class="nb">sum</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>在函数内部，参数numbers接收到的是一个tuple</strong>。</p>
+<p>函数调用时，在list或者tuple前加一个<code>*</code>，可以把list或tuple的元素变成可变参数传进去。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">calc</span><span class="p">(</span><span class="o">*</span><span class="n">nums</span><span class="p">)</span>
+<span class="mi">14</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="关键字参数">关键字参数</h3>
+<p>关键字参数允许你传入0个或任意个含参数名的参数，这些关键字参数在函数内部自动<strong>组装为一个dict</strong>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">person</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;name:&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;age:&#39;</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="s1">&#39;other:&#39;</span><span class="p">,</span> <span class="n">kw</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">person</span><span class="p">(</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="n">gender</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="n">job</span><span class="o">=</span><span class="s1">&#39;Engineer&#39;</span><span class="p">)</span>
+<span class="n">name</span><span class="p">:</span> <span class="n">Adam</span> <span class="n">age</span><span class="p">:</span> <span class="mi">45</span> <span class="n">other</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="s1">&#39;job&#39;</span><span class="p">:</span> <span class="s1">&#39;Engineer&#39;</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>和可变参数类似，也可以先组装出一个dict，然后，把该dict转换为关键字参数传进去：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">extra</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;city&#39;</span><span class="p">:</span> <span class="s1">&#39;Beijing&#39;</span><span class="p">,</span> <span class="s1">&#39;job&#39;</span><span class="p">:</span> <span class="s1">&#39;Engineer&#39;</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">person</span><span class="p">(</span><span class="s1">&#39;Jack&#39;</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="o">**</span><span class="n">extra</span><span class="p">)</span>
+<span class="n">name</span><span class="p">:</span> <span class="n">Jack</span> <span class="n">age</span><span class="p">:</span> <span class="mi">24</span> <span class="n">other</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;city&#39;</span><span class="p">:</span> <span class="s1">&#39;Beijing&#39;</span><span class="p">,</span> <span class="s1">&#39;job&#39;</span><span class="p">:</span> <span class="s1">&#39;Engineer&#39;</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>**extra</code>表示把<code>extra</code>这个dict的所有key-value用关键字参数传入到函数的<code>**kw</code>参数，<code>kw</code>将获得一个dict，注意<code>kw</code>获得的dict是<code>extra</code>的一份拷贝，对<code>kw</code>的改动不会影响到函数外的<code>extra</code>。</p>
+<h3 id="命名关键字参数">命名关键字参数</h3>
+<p>命名关键字参数用来<strong>限制传入函数的关键字参数的名字，只接收指定名字的参数</strong>。</p>
+<p>命名关键字参数需要一个特殊分隔符<code>*</code>，<code>*</code>后面的参数被视为命名关键字参数。<strong>命名关键字参数必须传入参数名</strong>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">person</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">job</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">job</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">person</span><span class="p">(</span><span class="s1">&#39;Jack&#39;</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">city</span><span class="o">=</span><span class="s1">&#39;Beijing&#39;</span><span class="p">,</span> <span class="n">job</span><span class="o">=</span><span class="s1">&#39;Engineer&#39;</span><span class="p">)</span>
+<span class="n">Jack</span> <span class="mi">24</span> <span class="n">Beijing</span> <span class="n">Engineer</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果函数定义中已经有了一个可变参数，后面跟着的命名关键字参数就不再需要一个特殊分隔符<code>*</code>了：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">person</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">job</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">job</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>命名关键字参数可以有默认值，此时调用时可以不传入该参数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">person</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">city</span><span class="o">=</span><span class="s1">&#39;Beijing&#39;</span><span class="p">,</span> <span class="n">job</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">job</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="参数组合">参数组合</h3>
+<p><strong>参数定义的顺序必须是：必选参数、默认参数、可变参数、命名关键字参数和关键字参数。</strong></p>
+<p>对于任意函数，都可以通过类似<code>func(*args, **kw)</code>的形式调用它，无论它的参数是如何定义的。</p>
+<h1 id="切片">切片</h1>
+<h2 id="对listtuple进行切片">对list/tuple进行切片</h2>
+<p>Python提供切片（Slice）操作符用于取<strong>list/tuple指定索引范围</strong>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="s1">&#39;Paul&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>L[0:3]</code>表示，从索引0开始取，直到索引3为止，但不包括索引3。即索引0，1，2。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>如果第一个索引是0，还可以省略：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>只用一个<code>:</code>，表示从头到尾取全部元素（实际上复制出了一个新list。）：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">[:]</span>
+<span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="s1">&#39;Paul&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>切片操作还可以指定第三个参数。第三个参数表示每N个取一个，上面的 L[::2] 会每两个元素取出一个来，也就是隔一个取一个。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>对list切片的结果是list，对tuple切片的结果是tuple。</strong></p>
+<h2 id="倒序切片">倒序切片</h2>
+<p><strong>倒序切片也是包含起始索引，不包含结束索引。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="s1">&#39;Paul&#39;</span><span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+<span class="p">[</span><span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="s1">&#39;Paul&#39;</span><span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="err">👎</span><span class="mi">2</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="对字符串切片">对字符串切片</h2>
+<p>字符串<code>'xxx'</code>可以看成是一种list，每个元素就是一个字符。因此，<strong>字符串也可以用切片操作，操作结果仍是字符串</strong>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;ABCDEFG&#39;</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+<span class="s1">&#39;ABC&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;ABCDEFG&#39;</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
+<span class="s1">&#39;EFG&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;ABCDEFG&#39;</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+<span class="s1">&#39;ACEG&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="迭代">迭代</h1>
+<h2 id="什么是迭代">什么是迭代</h2>
+<p>在Python中，迭代操作就是对于一个集合，无论该集合是有序还是无序，我们用 for 循环遍历这个集合，依次取出集合的每一个元素，这种遍历我们称为<strong>迭代</strong>（Iteration）。</p>
+<blockquote>
+<p><strong>注意</strong>：集合是指包含一组元素的数据结构，我们已经介绍的包括：</p>
+<ol>
+<li>有序集合：list，tuple，str；</li>
+<li>无序集合：set</li>
+<li>无序集合并且具有 key-value 对：dict</li>
+</ol>
+</blockquote>
+<p>Python的for循环抽象程度要高于Java的<code>for</code>循环。Python的<code>for</code>循环不仅可以用在<code>list</code>或<code>tuple</code>上，还可以作用在其他可迭代对象上。</p>
+<h2 id="判断可迭代对象">判断可迭代对象</h2>
+<p>通过<code>collections</code>模块的<code>Iterable</code>类型可以判断。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Iterable</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">Iterable</span><span class="p">)</span> <span class="c1"># list可迭代</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">(</span><span class="mi">123</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="c1"># 整数不可迭代</span>
+<span class="bp">False</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="迭代list的下标和元素">迭代list的下标和元素</h2>
+<p>Python内置的<code>enumerate</code>函数可以把一个list变成“(索引, 元素)”形式的tuple组成的可迭代对象，这样就可以在for循环中同时迭代索引和元素本身：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">]):</span>
+<span class="o">...</span>     <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="mi">0</span> <span class="o">-</span> <span class="n">A</span>
+<span class="mi">1</span> <span class="o">-</span> <span class="n">B</span>
+<span class="mi">2</span> <span class="o">-</span> <span class="n">C</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="迭代dict的value">迭代dict的value</h2>
+<p>dict 对象有一个<code>values()</code>方法，可以用来迭代dict的value，注意dict是无序的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="迭代dict的key">迭代dict的key</h2>
+<p>默认情况下，dict迭代的是key。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="迭代dict的key和value">迭代dict的key和value</h2>
+<p>dict对象的<code>items()</code>方法可以用来同时迭代key和value。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">d</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;Adam&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">:</span> <span class="mi">85</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">:</span> <span class="mi">59</span> <span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="o">...</span>     <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+<span class="o">...</span>
+<span class="n">Adam</span><span class="p">:</span> <span class="mi">95</span>
+<span class="n">Bart</span><span class="p">:</span> <span class="mi">59</span>
+<span class="n">Lisa</span><span class="p">:</span> <span class="mi">85</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="列表生成式">列表生成式</h1>
+<h2 id="生成列表">生成列表</h2>
+<p>如果要生成[1x1, 2x2, 3x3, &hellip;, 10x10]，方法一是循环，但是循环太繁琐；方法二是写列表生成式。</p>
+<p>写列表生成式时，把要生成的元素 x * x 放到前面，后面跟 <code>for</code> 循环，就可以把list创建出来。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">81</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="进行条件过滤">进行条件过滤</h2>
+<p>列表生成式的 <code>for</code> 循环后面还可以加上 <code>if</code> 判断，只有 <code>if</code> 判断为 <code>True</code> 的时候，才把循环的当前元素添加到列表中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="使用多层表达式">使用多层表达式</h2>
+<p><code>for</code>循环可以嵌套，因此，在列表生成式中，也可以用多层 <code>for</code> 循环来生成列表。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="n">m</span> <span class="o">+</span> <span class="n">n</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="s1">&#39;ABC&#39;</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="s1">&#39;123&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">,</span> <span class="s1">&#39;A2&#39;</span><span class="p">,</span> <span class="s1">&#39;A3&#39;</span><span class="p">,</span> <span class="s1">&#39;B1&#39;</span><span class="p">,</span> <span class="s1">&#39;B2&#39;</span><span class="p">,</span> <span class="s1">&#39;B3&#39;</span><span class="p">,</span> <span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="s1">&#39;C3&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="生成器">生成器</h1>
+<p>通过列表生成式，我们可以直接创建一个列表。但是，受到内存限制，列表容量肯定是有限的。而且，创建一个包含100万个元素的列表，不仅占用很大的存储空间，如果我们仅仅需要访问前面几个元素，那后面绝大多数元素占用的空间都白白浪费了。</p>
+<p>所以，如果列表元素可以按照某种算法推算出来，那我们是否可以在循环的过程中不断推算出后续的元素呢？这样就不必创建完整的list，从而节省大量的空间。在Python中，这种一边循环一边计算的机制，称为<strong>生成器</strong>（Generator）。</p>
+<h2 id="使用创建生成器">使用<code>()</code>创建生成器</h2>
+<p>把一个列表生成式的<code>[]</code>改成<code>()</code>，就创建了一个generator。如果要一个一个打印出generator的元素，可以通过<code>next()</code>函数。generator保存的是算法，每次调用<code>next()</code>，就计算出下一个元素的值，直到计算到最后一个元素，没有更多的元素时，抛出<code>StopIteration</code>的错误。
+当然，上面这种不断调用<code>next()</code>函数实在是太变态了，正确的方法是使用<code>for</code>循环，因为<strong>generator也是可迭代对象</strong>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">g</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">g</span>
+<span class="o">&lt;</span><span class="n">generator</span> <span class="nb">object</span> <span class="o">&lt;</span><span class="n">genexpr</span><span class="o">&gt;</span> <span class="n">at</span> <span class="mh">0x1021e0a98</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">next</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<span class="mi">0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">next</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">next</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&#34;&lt;stdin&gt;&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">StopIteration</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="使用yield创建生成器">使用<code>yield</code>创建生成器</h2>
+<ul>
+<li>如果一个函数定义中包含<code>yield</code>关键字，那么这个函数就不再是一个普通函数，而是一个generator。**变成generator的函数，在每次调用<code>next()</code>的时候执行，遇到<code>yield</code>语句返回，再次执行时从上次返回的<code>yield</code>语句处继续执行。**同样的，把函数改成generator后，我们基本上从来不会用<code>next()</code>来调用它，而是直接使用<code>for</code>循环来迭代。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; def fib(max):
+...     n, a, b = 0, 0, 1
+...     while n &lt; max:
+...         yield b
+...         a, b = b, a + b
+...         n = n + 1
+...
+&gt;&gt;&gt; g = fib(6)
+&gt;&gt;&gt; g
+&lt;generator object fib at 0x101166a50&gt;
+&gt;&gt;&gt; for i in g:
+...     print(i)
+...
+1
+1
+2
+3
+5
+8
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="迭代器">迭代器</h1>
+<p>可以被<code>next()</code>函数调用并不断返回下一个值的对象称为<strong>迭代器</strong>：<code>Iterator</code>。</p>
+<p>通过<code>collections</code>模块的<code>Iterator</code>类型可以判断是否是迭代器。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Iterator</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">((</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)),</span> <span class="n">Iterator</span><span class="p">)</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">)</span>
+<span class="bp">False</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="迭代器和可迭代对象的区别">迭代器和可迭代对象的区别</h2>
+<p><strong>迭代器一定是可迭代对象，可迭代对象不一定是迭代器。两者是包含与被包含的关系。</strong></p>
+<p><strong>生成器都是<code>Iterator</code>对象，但list、dict、str虽然是<code>Iterable</code>，却不是<code>Iterator</code>。</strong></p>
+<p><code>Iterator</code>的计算是惰性的，只有在需要返回下一个数据时它才会计算。<code>Iterator</code>甚至可以表示一个无限大的数据流，例如全体自然数</p>
+<h2 id="把可迭代对象变为迭代器">把可迭代对象变为迭代器</h2>
+<p>把list、dict、str等<code>Iterable</code>变成<code>Iterator</code>可以使用<code>iter()</code>函数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">iter</span><span class="p">([]),</span> <span class="n">Iterator</span><span class="p">)</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">),</span> <span class="n">Iterator</span><span class="p">)</span>
+<span class="bp">True</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Python的for循环本质上就是通过不断调用<code>next()</code>函数实现的。</p>
+<hr>
+<p>写于2015年5月，2017年2月整理为Python3版本。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2017-08-16</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/a0773/" class="prev" rel="prev" title="用Python写网络爬虫(1)-网络爬虫简介"><i class="fas fa-angle-left fa-fw"></i>用Python写网络爬虫(1)-网络爬虫简介</a>
+            <a href="/posts/9d5d8/" class="next" rel="next" title="常用git命令">常用git命令<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2017-08-16T00:12:16+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"慕课网Python3入门课程笔记"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

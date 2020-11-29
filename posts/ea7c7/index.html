@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>使用Python操作ESCPOS协议热敏打印机 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="使用Python操作ESCPOS协议热敏打印机" />
+<meta property="og:description" content="前期准备 硬件软件安装 硬件： 芯烨(Xprinter) XP-58IIQ USB接口热敏打印机，兼容ESC/POS打印协议； 软件： python-escpos==3" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/ea7c7/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2017-10-30T22:03:26+08:00" />
+<meta property="article:modified_time" content="2017-10-30T22:03:26+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="使用Python操作ESCPOS协议热敏打印机"/>
+<meta name="twitter:description" content="前期准备 硬件软件安装 硬件： 芯烨(Xprinter) XP-58IIQ USB接口热敏打印机，兼容ESC/POS打印协议； 软件： python-escpos==3"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/ea7c7/" /><link rel="prev" href="https://mrchi.cc/posts/ac7c7/" /><link rel="next" href="https://mrchi.cc/posts/ce467/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "使用Python操作ESCPOS协议热敏打印机",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/ea7c7\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  5022 ,
+        "url": "https:\/\/mrchi.cc\/posts\/ea7c7\/","datePublished": "2017-10-30T22:03:26+08:00","dateModified": "2017-10-30T22:03:26+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Invoker"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">使用Python操作ESCPOS协议热敏打印机</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Invoker</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/python/"><i class="far fa-folder fa-fw"></i>Python</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2017-10-30">2017-10-30</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5022 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 11 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#前期准备">前期准备</a>
+      <ul>
+        <li><a href="#硬件软件安装">硬件软件安装</a></li>
+        <li><a href="#访问权限设置">访问权限设置</a></li>
+      </ul>
+    </li>
+    <li><a href="#定义打印机实例">定义打印机实例</a>
+      <ul>
+        <li><a href="#usb打印机">USB打印机</a></li>
+        <li><a href="#网络打印机">网络打印机</a></li>
+        <li><a href="#串口打印机">串口打印机</a></li>
+        <li><a href="#文件系统打印机">文件系统打印机</a></li>
+        <li><a href="#虚拟打印机">虚拟打印机</a></li>
+      </ul>
+    </li>
+    <li><a href="#escpos-api详解">ESC/POS API详解</a>
+      <ul>
+        <li><a href="#打印qr码">打印QR码</a></li>
+        <li><a href="#打印图片">打印图片</a></li>
+        <li><a href="#打印条形码">打印条形码</a></li>
+        <li><a href="#打印文本">打印文本</a></li>
+        <li><a href="#设置格式">设置格式</a></li>
+        <li><a href="#硬件操作">硬件操作</a>
+          <ul>
+            <li><a href="#切纸">切纸</a></li>
+            <li><a href="#打开钱箱">打开钱箱</a></li>
+            <li><a href="#其他">其他</a></li>
+          </ul>
+        </li>
+        <li><a href="#查询状态">查询状态</a></li>
+      </ul>
+    </li>
+    <li><a href="#打印中文兼容性">打印中文兼容性</a>
+      <ul>
+        <li><a href="#芯烨-xp-58iiq">芯烨 XP-58IIQ</a></li>
+        <li><a href="#复坤-fk-pos58gp-2">复坤 FK-POS58GP-2</a></li>
+        <li><a href="#复坤-fk-pos80gp-2">复坤 FK-POS80GP-2</a></li>
+        <li><a href="#佳博-s-u804">佳博 S-U804</a></li>
+      </ul>
+    </li>
+    <li><a href="#写在最后">写在最后</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="前期准备">前期准备</h1>
+<h2 id="硬件软件安装">硬件软件安装</h2>
+<p>硬件：</p>
+<ul>
+<li>芯烨(Xprinter) XP-58IIQ USB接口热敏打印机，兼容ESC/POS打印协议；</li>
+</ul>
+<p>软件：</p>
+<ul>
+<li><a href="https://github.com/python-escpos/python-escpos" target="_blank" rel="noopener noreffer">python-escpos</a>==3.0a3，是一个alpha测试版本，接口在将来可能会变动。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">pip install python-escpos
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>如果在树莓派上使用，需要先安装 <code>libjpeg8-dev</code> 包</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">sudo apt-get install libjpeg8-dev
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="访问权限设置">访问权限设置</h2>
+<p>插上USB打印机，执行<code>dmesg</code>命令，会有新USB设备连接的信息，成功的被识别为了打印机usblp0。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># dmesg</span>
+<span class="o">[</span>100271.364954<span class="o">]</span> usb 1-1.4: new full-speed USB device number <span class="m">6</span> using dwc_otg
+<span class="o">[</span>100271.498310<span class="o">]</span> usb 1-1.4: New USB device found, <span class="nv">idVendor</span><span class="o">=</span>0483, <span class="nv">idProduct</span><span class="o">=</span>070b
+<span class="o">[</span>100271.498327<span class="o">]</span> usb 1-1.4: New USB device strings: <span class="nv">Mfr</span><span class="o">=</span>1, <span class="nv">Product</span><span class="o">=</span>2, <span class="nv">SerialNumber</span><span class="o">=</span><span class="m">3</span>
+<span class="o">[</span>100271.498338<span class="o">]</span> usb 1-1.4: Product: USB Printing Support
+<span class="o">[</span>100271.498348<span class="o">]</span> usb 1-1.4: Manufacturer: Printer-58
+<span class="o">[</span>100271.498377<span class="o">]</span> usb 1-1.4: SerialNumber: ÿ
+<span class="o">[</span>100271.509441<span class="o">]</span> usblp 1-1.4:1.0: usblp0: USB Bidirectional printer dev <span class="m">6</span> <span class="k">if</span> <span class="m">0</span> alt <span class="m">0</span> proto <span class="m">2</span> vid 0x0483 pid 0x070B
+</code></pre></td></tr></table>
+</div>
+</div><p>执行<code>ls /dev/usb</code>，可以看到有一个lp0打印机设备</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># ls /dev/usb</span>
+lp0
+</code></pre></td></tr></table>
+</div>
+</div><p>查看打印机设备权限，为660。拥有者是root，拥有组是lp，当前用户pi无法访问打印机</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># stat /dev/usb/lp0</span>
+  File: /dev/usb/lp0
+  Size: <span class="m">0</span>         	Blocks: <span class="m">0</span>          IO Block: <span class="m">4096</span>   character special file
+Device: 6h/6d	Inode: <span class="m">48155</span>       Links: <span class="m">1</span>     Device type: b4,0
+Access: <span class="o">(</span>0660/crw-rw----<span class="o">)</span>  Uid: <span class="o">(</span>    0/    root<span class="o">)</span>   Gid: <span class="o">(</span>    7/      lp<span class="o">)</span>
+Access: 2017-10-30 20:47:05.762879696 +0800
+Modify: 2017-10-30 20:47:05.762879696 +0800
+Change: 2017-10-30 20:47:05.762879696 +0800
+ Birth: -
+</code></pre></td></tr></table>
+</div>
+</div><p>把当前用户加入到lp组，使其能够访问打印机</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo usermod -a -G lp pi
+</code></pre></td></tr></table>
+</div>
+</div><p>测试，如果正常打印，则权限已设置好</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s2">&#34;hello&#34;</span> &gt;&gt; /dev/usb/lp0
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="定义打印机实例">定义打印机实例</h1>
+<p>所有的打印机类都定义于<code>escpos.printer</code>文件中。</p>
+<h2 id="usb打印机">USB打印机</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">escpos</span><span class="o">.</span><span class="n">printer</span><span class="o">.</span><span class="n">Usb</span><span class="p">(</span><span class="n">idVendor</span><span class="p">,</span> <span class="n">idProduct</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">in_ep</span><span class="o">=</span><span class="mi">130</span><span class="p">,</span> <span class="n">out_ep</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在创建打印机实例之前，你需要获取一些打印机的参数。</p>
+<p>使用lsusb命令，在输出中得到VendorID和Product ID，它们的格式是<code>xxxx:xxxx</code>，位置在设备名之前。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># lsusb</span>
+Bus <span class="m">001</span> Device 004: ID 148f:5370 Ralink Technology, Corp. RT5370 Wireless Adapter
+Bus <span class="m">001</span> Device 006: ID 0483:070b STMicroelectronics
+Bus <span class="m">001</span> Device 003: ID 0424:ec00 Standard Microsystems Corp. SMSC9512/9514 Fast Ethernet Adapter
+Bus <span class="m">001</span> Device 002: ID 0424:9514 Standard Microsystems Corp. SMC9514 Hub
+Bus <span class="m">001</span> Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+</code></pre></td></tr></table>
+</div>
+</div><p>根据Vendor ID和Product ID，可以得到“EndPoint”地址。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># lsusb -vvv -d 0483:070b | grep bEndpointAddress</span>
+        bEndpointAddress     0x81  EP <span class="m">1</span> IN
+        bEndpointAddress     0x02  EP <span class="m">2</span> OUT
+</code></pre></td></tr></table>
+</div>
+</div><p>得到：“EndPoint”地址IN方向为0x81，OUT方向为0x02。</p>
+<p>用这些参数可以新建一个Usb类实例。timeout参数表示等待USB接口超时时间，默认为0。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">escpos</span> <span class="kn">import</span> <span class="n">printer</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">printer</span><span class="o">.</span><span class="n">Usb</span><span class="p">(</span><span class="mh">0x1a2b</span><span class="p">,</span> <span class="mh">0x1a2b</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">in_ep</span><span class="o">=</span><span class="mh">0x81</span><span class="p">,</span> <span class="n">out_ep</span><span class="o">=</span><span class="mh">0x02</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>该类使用pyusb和libusb与USB接口打印机通信，不适用于USB转串口适配器设备，只适用于原生USB驱动。</p>
+<h2 id="网络打印机">网络打印机</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">escpos</span><span class="o">.</span><span class="n">printer</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">9100</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>一般情况下只需要IP地址</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">escpos</span> <span class="kn">import</span> <span class="n">printer</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">printer</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&#34;192.168.1.99&#34;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="串口打印机">串口打印机</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">escpos</span><span class="o">.</span><span class="n">printer</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span><span class="n">devfile</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;/dev/ttyS0&#39;</span><span class="p">,</span> <span class="n">baudrate</span><span class="o">=</span><span class="mi">9600</span><span class="p">,</span> <span class="n">bytesize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">parity</span><span class="o">=</span><span class="s1">&#39;N&#39;</span><span class="p">,</span> <span class="n">stopbits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xonxoff</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">dsrdtr</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>大多数串口打印机都使用默认设置，只要知道连接哪个串口就可以了。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">escpos</span> <span class="kn">import</span> <span class="n">printer</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">printer</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span><span class="sa">r</span><span class="s2">&#34;/dev/tty0&#34;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="文件系统打印机">文件系统打印机</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">escpos</span><span class="o">.</span><span class="n">printer</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">devfile</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;/dev/usb/lp0&#39;</span><span class="p">,</span> <span class="n">auto_flush</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>有些打印机使用上述类不能正常初始化（通常是使用printcap的打印机），如果你知道设备名，可以直接尝试用设备节点名来定义打印机实例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">escpos</span> <span class="kn">import</span> <span class="n">printer</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">printer</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="sa">r</span><span class="s2">&#34;/dev/usb/lp1&#34;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="虚拟打印机">虚拟打印机</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">escpos</span><span class="o">.</span><span class="n">printer</span><span class="o">.</span><span class="n">Dummy</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>此虚拟打印机用于不需要向实际打印机发送命令的情况，可以将原生命令输出保存到变量。可以用于生成print jobs供以后使用，或者测试打印输出。使用该类的output参数获取原生命令。</p>
+<h1 id="escpos-api详解">ESC/POS API详解</h1>
+<p>所有的打印机类都继承自<code>escpos.escpos.Escpos</code>，该Escpos抽象基类定义了打印时的各种方法。</p>
+<p>先来个demo吧：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">escpos.printer</span> <span class="kn">import</span> <span class="n">Usb</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">Usb</span><span class="p">(</span><span class="mh">0x0483</span><span class="p">,</span> <span class="mh">0x070b</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mh">0x81</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">hw</span><span class="p">(</span><span class="s1">&#39;INIT&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">textln</span><span class="p">(</span><span class="s1">&#39;Hello, world!&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="s1">&#39;mafengwo.png&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="s1">&#39;https://i.senguo.cc&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">7</span><span class="p">,)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">barcode</span><span class="p">(</span><span class="s1">&#39;9787111436737&#39;</span><span class="p">,</span> <span class="s1">&#39;EAN13&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="打印qr码">打印QR码</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">qr</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">native</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>根据传入的字符串打印QR码，一般情况下为先生成QR码图片然后传给打印机打印图片。</p>
+<p>参数说明：</p>
+<ul>
+<li><strong>content</strong> - 二维码的内容，数字数据能够被更高效地压缩。</li>
+<li><strong>ec</strong> - 容错能力，取值如下：<code>QR_ECLEVEL_L</code>=0、<code>QR_ECLEVEL_M</code>=1、<code>QR_ECLEVEL_Q</code>=2或<code>QR_ECLEVEL_H</code>=3，默认值为0。相对而言，容错能力越高，QR码图形面积越大。</li>
+<li><strong>size</strong> - QR码大小等级，取值范围为1-16，默认值为3。实际打印大小取决于QR码的内容，实测打印内容为<code>https://i.senguo.cc/</code>时在58mm打印纸上最大等级为14。</li>
+<li><strong>model</strong> - QR码格式，取值如下：<code>QR_MODEL_1</code>=1、<code>QR_MODEL_2</code> =2或<code>QR_MICRO</code>=3，默认值为2。不是所有的打印机都支持<code>QR_MICRO</code>格式。（XP-58IIQ只支持<code>QR_MODEL_2</code>）。</li>
+<li><strong>native</strong> - 原生打印模式，为True时给打印机传代码，False时给打印机传生成的QR码图片，默认值False</li>
+<li><strong>center</strong> - 是否居中，默认值False。（当前并不生效，还是要先用set方法设置居中）</li>
+</ul>
+<h2 id="打印图片">打印图片</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">image</span><span class="p">(</span><span class="n">img_source</span><span class="p">,</span> <span class="n">high_density_vertical</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">high_density_horizontal</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">impl</span><span class="o">=</span><span class="s1">&#39;bitImageRaster&#39;</span><span class="p">,</span> <span class="n">fragment_height</span><span class="o">=</span><span class="mi">960</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>你可以选择是否使用高密度模式打印，默认为高密度模式。如果以低密度模式打印，图像将被拉伸（低密度模式即是倍宽、倍高模式）。</p>
+<p>ESC/POS提供了几个打印命令，本方法支持其中的三个。如果你打印图片有问题，可以尝试其他打印命令。</p>
+<p>可用的打印实现有：</p>
+<ul>
+<li><em>bitImageRaster</em>：使用<code>GS v 0</code>命令打印；</li>
+<li><em>graphics</em>：使用<code>GS ( L</code>命令打印；</li>
+<li><em>bitImageColumn</em>：使用<code>ESC *</code>命令打印；</li>
+</ul>
+<p>参数列表：</p>
+<ul>
+<li><strong>img_source</strong> - PIL image对象或者文件名字符串，支持jpg、gif、png和bmp格式图像。</li>
+<li><strong>high_density_vertical</strong> - 在垂直方向使用高密度打印模式，默认值True；</li>
+<li><strong>high_density_horizontal</strong> - 在水平方向使用高密度打印模式，默认值True；</li>
+<li><strong>impl</strong> - 打印实现模式，可选值如上所述，默认值为<code>bitImageRaster</code>；</li>
+<li><strong>fragment_height</strong> - 图片高度大于该值的将会被分为多片段打印，默认值为960；</li>
+<li><strong>center</strong> - 是否居中，默认值False。（当前并不生效，还是要先用set方法设置居中）</li>
+</ul>
+<h2 id="打印条形码">打印条形码</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">barcode</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">bc</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s1">&#39;BELOW&#39;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="n">align_ct</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">function_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>该方法用于打印条形码，条形码打印是大部分打印机原生支持的功能。默认情况下，该方法会检查传入的条形码文本是否正确，即ESCPOS协议支持的条形码的字符和长度。使用 <em>check=False</em> 参数可以禁用检查，但是不正确的条形码可能会导致打印机的未知行为。条形码功能有两种类型，默认使用类型A，但类型A条码较少，类型B有更多的选择。</p>
+<p>使用参数 <em>height</em> 和 <em>width</em> 调整条码尺寸。请注意，条码如果在可打印区域外将不会被打印。（一般来讲这是不会出现的，因此这个信息可能在调试时更有用。）</p>
+<p>如果你不想让条形码居中显示可以设置参数 <em>align_ct=False</em>，将会禁用自动居中。请注意，如果设置了条码居中显示，那么在此之后打印文字也将是居中的，你需要在打印完条码后手动设置对齐方式。</p>
+<p>参数列表：</p>
+<ul>
+<li>
+<p><strong>code</strong> - 要打印为条形码的字母数字数据；</p>
+</li>
+<li>
+<p><strong>bc</strong> - 条形码格式，type A的格式有：</p>
+<ul>
+<li>UPC-A</li>
+<li>UPC-E</li>
+<li>EAN13</li>
+<li>EAN8</li>
+<li>CODE39</li>
+<li>ITF</li>
+<li>NW7</li>
+</ul>
+<p>type B的格式有：</p>
+<ul>
+<li>所有Type A中的格式；</li>
+<li>CODE93</li>
+<li>CODE128</li>
+<li>GS1-128</li>
+<li>GS1 DataBar Omnidirectional</li>
+<li>GS1 DataBar Truncated</li>
+<li>GS1 DataBar Limited</li>
+<li>GS1 DataBar Expanded</li>
+</ul>
+<p>如果没有传该参数，会抛出<code>BarcodeTypeError</code>异常。</p>
+</li>
+<li>
+<p><strong>height</strong> - 条码高度，取值范围1-255，默认值64。</p>
+</li>
+<li>
+<p><strong>width</strong> - 条码宽度，取值范围2-6，默认值3。</p>
+</li>
+<li>
+<p><strong>pos</strong> - 文字相对于条形码的位置，默认值<code>BELOW</code>在条码下方，可取值：</p>
+<ul>
+<li>ABOVE</li>
+<li>BELOW</li>
+<li>BOTH</li>
+<li>OFF</li>
+</ul>
+</li>
+<li>
+<p><strong>font</strong> - 选择字体A或B，默认值A。</p>
+</li>
+<li>
+<p><strong>align_ct</strong> - 条码是否居中，默认True。如果为False，将不会发送对齐方式指令。</p>
+</li>
+<li>
+<p><strong>function_type</strong> - 根据打印机是否支持支持和所需条形码，在ESCPOS功能类型A或B之间进行选择。如果没有给出，打印机将尝试根据当前配置文件自动选择正确的功能。 默认值：A。</p>
+</li>
+<li>
+<p><strong>check</strong> - 如果设置为True，将会检查条形码格式，已确保其符合esc/pos文档中的要求。默认值True。更多信息见<em>escpos.Escpos.check_barcode</em>方法。</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">soft_barcode</span><span class="p">(</span><span class="n">barcode_type</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">impl</span><span class="o">=</span><span class="s1">&#39;bitImageColumn&#39;</span><span class="p">,</span> <span class="n">module_height</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">module_width</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">text_distance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>“软打印”条形码。类似打印QR码，该方法将数据先转化为图片，再发送给打印机打印。暂时没有文档。</p>
+<h2 id="打印文本">打印文本</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">text</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>打印字母和数字文本，传入txt为Unicode编码格式。但是这样无法打印中文，会乱码。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">ln</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>打印n个换行，默认打印1个换行。count不能小于0。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">textln</span><span class="p">(</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>打印字母数字文本并换行，调用<code>text(txt)</code>方法实现。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">block_text</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>打印文本到指定的列，即打印columns列后就自动换到下一行继续打印。注意在最后不会打印换行符，所以最后一行的文本打印不出来。</p>
+<h2 id="设置格式">设置格式</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="nb">set</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span>
+    <span class="n">font</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;a&#39;</span><span class="p">,</span>
+    <span class="n">bold</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">underline</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">density</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+    <span class="n">invert</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">smooth</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">flip</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">double_width</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">double_height</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">custom_size</span><span class="o">=</span><span class="bp">False</span>
+<span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>设置文本属性。</p>
+<p>参数列表：</p>
+<ul>
+<li><strong>align</strong> (<em>str</em>) - 设置水平位置，可选值<code>center</code>、<code>left</code>和<code>right</code>。默认值<code>left</code>。</li>
+<li><strong>font</strong> (<em>str</em>) - 设置字体，可以使用字体名，&lsquo;a&rsquo;和&rsquo;b&rsquo;，或者0和1。（貌似并没有用）</li>
+<li><strong>bold</strong> (<em>bool</em>) - 设置文本加粗，默认值False。</li>
+<li><strong>underline</strong> (<em>int</em>) - 设置文本下划线，取值范围0-2，0没有下划线，1和2有下划线，2时下划线颜色较深，仅英文有效，默认值0。</li>
+<li><strong>double_height</strong> (<em>bool</em>) - 设置文字倍高，默认值False。</li>
+<li><strong>double_width</strong> (<em>bool</em>) – 设置文字倍宽，默认值False。</li>
+<li><strong>custom_size</strong> (<em>bool</em>) – 使用由width和height参数定义的大小，此时double_height和double_width参数不生效。默认值False。</li>
+<li><strong>width</strong> (<em>int</em>) – 当custom_size为True时用于设定文本宽度，取值范围1-8，默认值1。</li>
+<li><strong>height</strong> (<em>int</em>) – 当custom_size为True时用于设定文本高度，取值范围1-8，默认值1。</li>
+<li><strong>density</strong> (<em>int</em>) – 打印密度，取值范围0-8，当前版本未生效</li>
+<li><strong>invert</strong> (<em>bool</em>) – 设置反色打印, 默认值: False</li>
+<li><strong>smooth</strong> (<em>bool</em>) – 开启字体平滑，只对4x4及以上大小的文本有效，默认值: False</li>
+<li><strong>flip</strong> (<em>bool</em>) – 开启倒置打印，当前版本无效，默认值：False</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">line_spacing</span><span class="p">(</span><span class="n">spacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">divisor</span><span class="o">=</span><span class="mi">180</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>设置行距，如果不传参数，行距会被设置为默认值。</p>
+<p>有几种不同的命令可以设置行距，它们分别使用了不同的分母divisor：</p>
+<ul>
+<li>&ldquo;+&rdquo;: 一英寸的line_spacing/360，其中0 &lt;= line_spacing &lt;= 255；</li>
+<li>&ldquo;3&rdquo;: 一英寸的line_spacing/180，其中0 &lt;= line_spacing &lt;= 255；</li>
+<li>&ldquo;A&rdquo;: 一英寸的line_spacing/60，其中0 &lt;= line_spacing &lt;= 85。</li>
+</ul>
+<p>有些打印机不支持上述所有类型，请使用最通常的方式，也就是180做分母的方式。（xp-58IIQ支持180模式）</p>
+<h2 id="硬件操作">硬件操作</h2>
+<h3 id="切纸">切纸</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">cut</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;FULL&#39;</span><span class="p">,</span> <span class="n">feed</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>默认不传任何参数时，切纸会完全切断。当mode传&quot;PART&quot;是，将会尝试部分切纸。不是所有的打印机都支持切纸和部分切纸。</p>
+<p>参数列表：</p>
+<ul>
+<li><strong>mode</strong> - 可选&quot;PART&quot;或者&quot;FULL&rdquo;，默认值&quot;FULL&rdquo;；</li>
+<li><strong>feed</strong> - 在切纸前“打印并进纸”，默认为True。</li>
+</ul>
+<h3 id="打开钱箱">打开钱箱</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">cashdraw</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>发送打开钱箱指令脉冲。</p>
+<p>传入2或5或一个十进制数组成的list，表示脉冲序列。</p>
+<h3 id="其他">其他</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">hw</span><span class="p">(</span><span class="n">hw</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>硬件操作，可选值&quot;INIT&rdquo;，&ldquo;SELECT&quot;或&quot;RESET&rdquo;。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">print_and_feed</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>打印缓冲区数据，并进纸n行。n的取值范围为0-255，默认为1。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">panel_buttons</span><span class="p">(</span><span class="n">enable</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>是否使能控制面板按钮。默认True。该设置持续到打印机initialized, reset or power-cycled。</p>
+<p>禁用按钮对有些打印机无效。</p>
+<h2 id="查询状态">查询状态</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">is_online</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这个，不用解释了吧，返回True或者False。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">paper_status</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>查询打印纸状态。返回int型，2有纸，1有纸但纸快没了，0没纸。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">query_status</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>查询打印机状态，返回一个数组。mode取值<code>RT_STATUS_ONLINE</code>或<code>RT_STATUS_PAPER</code>，分别查询打印机在线状态和打印纸状态，但返回数组意义不明。</p>
+<h1 id="打印中文兼容性">打印中文兼容性</h1>
+<p>可以写一个自定义类，继承自Usb类（假如你是Usb打印机的话）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">MyUsb</span><span class="p">(</span><span class="n">Usb</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;docstring for MyUsb&#34;&#34;&#34;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MyUsb</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">charcode</span><span class="p">(</span><span class="s1">&#39;CP1252&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">txt</span><span class="p">):</span>
+        <span class="n">txt</span> <span class="o">=</span> <span class="n">txt</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;gb2312&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;l1&#39;</span><span class="p">)</span>
+        <span class="n">txt</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">magic</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="芯烨-xp-58iiq">芯烨 XP-58IIQ</h2>
+<ol>
+<li>设置字符代码表为&quot;CP1252&rdquo;；</li>
+<li>打印机默认使用GB2312编码，将中文文本用GB2312编码后使用latin1解码。</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">p</span><span class="o">.</span><span class="n">charcode</span><span class="p">(</span><span class="s1">&#39;CP1252&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">textln</span><span class="p">(</span><span class="s1">&#39;中文&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;gb2312&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;latin1&#39;</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="复坤-fk-pos58gp-2">复坤 FK-POS58GP-2</h2>
+<ol>
+<li>设置字符代码表为&quot;ISO_8859-2&rdquo;；</li>
+<li>打印机默认使用UTF-8编码，将中文文本用UTF-8编码后使用latin2解码。</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">p</span><span class="o">.</span><span class="n">charcode</span><span class="p">(</span><span class="s1">&#39;ISO_8859-2&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">textln</span><span class="p">(</span><span class="s1">&#39;中文&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;latin2&#39;</span><span class="p">))</span> <span class="c1"># encode不传参数即编码为utf-8</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="复坤-fk-pos80gp-2">复坤 FK-POS80GP-2</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">p</span><span class="o">.</span><span class="n">charcode</span><span class="p">(</span><span class="s1">&#39;CP1252&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">textln</span><span class="p">(</span><span class="s1">&#39;中文&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;gb2312&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;latin1&#39;</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="佳博-s-u804">佳博 S-U804</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">p</span><span class="o">.</span><span class="n">charcode</span><span class="p">(</span><span class="s1">&#39;ISO_8859-15&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">textln</span><span class="p">(</span><span class="s1">&#39;中文&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;gb2312&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;latin2&#39;</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="写在最后">写在最后</h1>
+<p>目前来看，escpos库的3.0版本将会很不错，但是发布时间并不确定，目前已经处于alpha测试10个月了= =只能先用着3.0a3测试版本，等正式版本出来后再更新笔记。</p>
+<p>热敏打印机的应用，想到几个：</p>
+<ul>
+<li>打印开发任务上线的checklist；</li>
+<li>作为一个输出设备，用来输出一些需要对比历史数据、不重要的、看过就可以扔的输出；</li>
+<li>也许哪天SG要用Pyton操作打印机了也说不定呢😄（中了！）</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2017-10-30</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/ac7c7/" class="prev" rel="prev" title="Python-Markdown学习笔记"><i class="fas fa-angle-left fa-fw"></i>Python-Markdown学习笔记</a>
+            <a href="/posts/ce467/" class="next" rel="next" title="在VPS上搭建ShadowSocks服务">在VPS上搭建ShadowSocks服务<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2017-10-30T22:03:26+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"使用Python操作ESCPOS协议热敏打印机"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

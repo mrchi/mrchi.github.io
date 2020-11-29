@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Linux创客实战 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="Linux创客实战" />
+<meta property="og:description" content="本文是《Linux 创客实战》一书的笔记，主要涉及 Linux 和树莓派的知识点。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/a3348/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2019-12-29T19:39:05+08:00" />
+<meta property="article:modified_time" content="2019-12-29T19:39:05+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="Linux创客实战"/>
+<meta name="twitter:description" content="本文是《Linux 创客实战》一书的笔记，主要涉及 Linux 和树莓派的知识点。"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/a3348/" /><link rel="prev" href="https://mrchi.cc/posts/f5d56/" /><link rel="next" href="https://mrchi.cc/posts/a9208/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Linux创客实战",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/a3348\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  1682 ,
+        "url": "https:\/\/mrchi.cc\/posts\/a3348\/","datePublished": "2019-12-29T19:39:05+08:00","dateModified": "2019-12-29T19:39:05+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "MrChi"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Linux创客实战</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>MrChi</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/infrastructure/"><i class="far fa-folder fa-fw"></i>Infrastructure</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2019-12-29">2019-12-29</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1682 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#linux-知识">Linux 知识</a>
+      <ul>
+        <li><a href="#信号">信号</a></li>
+        <li><a href="#shell">shell</a></li>
+        <li><a href="#ctrlz-和-fg">Ctrl+Z、&amp; 和 fg</a></li>
+        <li><a href="#输出重定向">输出重定向</a></li>
+        <li><a href="#同时运行多个命令">同时运行多个命令</a></li>
+        <li><a href="#ls-命令">ls 命令</a></li>
+        <li><a href="#top-命令">top 命令</a></li>
+        <li><a href="#ps-命令">ps 命令</a></li>
+        <li><a href="#grep-命令">grep 命令</a></li>
+      </ul>
+    </li>
+    <li><a href="#树莓派知识">树莓派知识</a>
+      <ul>
+        <li><a href="#树莓派重启和关机">树莓派重启和关机</a></li>
+        <li><a href="#实现开机启动">实现开机启动</a></li>
+        <li><a href="#gpio-操作">GPIO 操作</a></li>
+        <li><a href="#播放音频和视频">播放音频和视频</a></li>
+      </ul>
+    </li>
+    <li><a href="#其他">其他</a></li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>本文是《Linux 创客实战》一书的笔记，主要涉及 Linux 和树莓派的知识点。</p>
+<h1 id="linux-知识">Linux 知识</h1>
+<h2 id="信号">信号</h2>
+<ul>
+<li><code>Ctrl+T</code>：发送 SIGINFO 信号，在执行 dd 命令时可以检查进度。</li>
+<li><code>kill PID</code>：发送正常终止的信号。</li>
+<li><code>kill -1 PID</code> 发送一个重启信号；</li>
+<li><code>kill -2 PID</code> 发送中断信号，与按 <code>Ctrl+C</code> 相同；</li>
+<li><code>kill -9 PID</code> 发送 SIGKILL 信号，并立即关闭进程；</li>
+</ul>
+<h2 id="shell">shell</h2>
+<p>在 bash 脚本中，反引号表示执行其中的代码，例如输出当前时间：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">echo</span> <span class="sb">`</span>date<span class="sb">`</span>
+<span class="c1"># Sun Dec 29 11:51:50 CST 2019</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="ctrlz-和-fg">Ctrl+Z、&amp; 和 fg</h2>
+<p><code>Ctrl+Z</code> 暂停程序执行（进入睡眠），<code>fg</code> 命令可以恢复到前台运行。</p>
+<p>在命令的末尾加 <code>&amp;</code> 字符可以让程序启动后在后台运行，但日志仍然会输出到控制台。<code>fg</code> 命令可以将程序拉到前台执行。</p>
+<h2 id="输出重定向">输出重定向</h2>
+<ul>
+<li>
+<p><code>command &gt; file</code> 将输出重定向到文件；</p>
+</li>
+<li>
+<p><code>command &gt;&gt; file</code> 将输出以追加的方式重定向到文件。</p>
+</li>
+<li>
+<p><code>command &amp;&gt; file</code> 相当于 <code>command &gt; file 2&gt;&amp;1</code>；</p>
+</li>
+<li>
+<p><code>command &amp;&gt;&gt; file</code> 相当于 <code>command &gt;&gt; file 2&gt;&amp;1</code>。</p>
+</li>
+</ul>
+<p><code>2&gt;&amp;1</code> 表示将 stderr 重定向到 stdout。</p>
+<h2 id="同时运行多个命令">同时运行多个命令</h2>
+<ul>
+<li><code>A &amp;&amp; B</code> 操作符，相当于逻辑与，只有 A 命令执行成功才会运行 B 命令；</li>
+<li><code>A || B</code> 操作符，相当于逻辑或，只有 A 命令执行失败才会运行 B 命令；</li>
+<li><code>A;B</code> 连续运行 A 和 B 命令，不管命令的结果。</li>
+</ul>
+<h2 id="ls-命令">ls 命令</h2>
+<p><code>ls</code> 命令输出的文件特殊权限选项有：</p>
+<ul>
+<li><code>d</code> 表示目录；</li>
+<li><code>l</code> 表示链接；</li>
+<li><code>s</code> 表示文件应该以所有者权限运行；</li>
+<li><code>t</code> 表示只有所有者可以删除或重命名文件；</li>
+<li><code>-</code> 表示一般文件；</li>
+</ul>
+<p><code>ls</code> 命令输出的 <code>total 160</code> 表示所有文件使用的磁盘区块的总数；</p>
+<p><code>ls</code> 命令选项：</p>
+<ul>
+<li><code>-X</code> 按扩展名排序；</li>
+<li><code>-S</code> 按文件大小排序；</li>
+</ul>
+<h2 id="top-命令">top 命令</h2>
+<p>top 命令的含义是 table of processes，即进程表。</p>
+<p>僵尸进程（zombie process）通常是已完成正在执行的操作的子进程，但是必须等待其父进程退出才能从进程列表中清除。</p>
+<p>top 第一行的 load average 指的是平均 CPU 负载。</p>
+<p>Cpu 行各部分含义：</p>
+<ul>
+<li><code>us</code> 用于运行正常用户进程的时间百分比；</li>
+<li><code>sy</code> 用于运行系统内核的进程的时间百分比；</li>
+<li><code>ni</code> 用于运行优先级或降优先级进程上的时间百分比；</li>
+<li><code>id</code> 闲置的时间百分比；</li>
+<li><code>wa</code> 用于等待 I/O 完成的时间百分比；</li>
+<li><code>hi</code> 硬件中断时间的百分比；</li>
+<li><code>si</code> 软件中断时间的百分比；</li>
+<li><code>st</code> 仅适用于虚拟化系统，只是从系统中偷走的时间百分比，因为主机系统忙于执行其他操作；</li>
+</ul>
+<p>内存 Mem 和虚拟内存 Swap 行的含义：</p>
+<ul>
+<li><code>total</code> 总量</li>
+<li><code>used</code> 使用量</li>
+<li><code>free</code> 可用量</li>
+<li><code>buffers</code> 当系统挂载或访问连接到系统本身的文件系统时使用的内存；</li>
+<li><code>cached mem</code> 来自文件和程序的实际数据。</li>
+</ul>
+<p>进程行的含义：</p>
+<ul>
+<li><code>PR</code> 进程的当前优先级；</li>
+<li><code>NI</code> 进程的 nice 值或用户自定义的优先级；</li>
+<li><code>VIRT</code> 进程需要用到的内存总量；</li>
+<li><code>RES</code> 进程实际用到的内存量；</li>
+<li><code>SHR</code> 进程可用的共享内存量；</li>
+<li><code>S</code> 进程的当前状态，D 不间断睡眠，R 运行，S 睡眠，T 追踪或停止，Z 僵尸。</li>
+</ul>
+<p>常用操作快捷键：</p>
+<ul>
+<li><code>x</code> 突出显示当前的排序字段；</li>
+<li><code>P</code> 按 <code>%CPU</code> 排序（默认）；</li>
+<li><code>M</code> 按 <code>%MEM</code> 排序；</li>
+<li><code>N</code> 按 PID 排序；</li>
+<li><code>T</code> 按 TIME 排序；</li>
+<li><code>k</code> 杀死进程；</li>
+<li><code>h</code> 帮助；</li>
+<li><code>q</code> 退出。</li>
+</ul>
+<h2 id="ps-命令">ps 命令</h2>
+<p>ps 命令默认只显示当前用户正在运行的进程，若要获取所有进程的列表，请使用 <code>-ef</code> 选项。</p>
+<h2 id="grep-命令">grep 命令</h2>
+<p>常用的选项：</p>
+<p><code>-e</code> 同时搜索多个术语（逻辑或的关系），例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">cat run.log <span class="p">|</span> grep -e <span class="s2">&#34;a&#34;</span> -e <span class="s2">&#34;i&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>-i</code> 选项不区分大小写，例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">cat run.log <span class="p">|</span> grep -i <span class="s2">&#34;simple&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>-c</code> 计算多少行包含搜索项，例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">cat run.log <span class="p">|</span> grep -c <span class="s2">&#34;is&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="树莓派知识">树莓派知识</h1>
+<h2 id="树莓派重启和关机">树莓派重启和关机</h2>
+<p>使用 shutdown 命令，以 root 权限执行。</p>
+<p>关机</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">sudo shutdown -h now
+</code></pre></td></tr></table>
+</div>
+</div><p>重启</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">sudo shutdown -r now
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="实现开机启动">实现开机启动</h2>
+<p>将脚本或程序添加到 <code>/etc/rc.local</code> 中执行；</p>
+<h2 id="gpio-操作">GPIO 操作</h2>
+<p>操作 GPIO 有两个模块，其中一个是 RPi.GPIO，另一个是 pigpio。后者以服务器的形式在系统中运行，并且能够被 C 和 Python 程序调用，甚至通过网络被另一台树莓派调用。</p>
+<p>I2C 协议和 SPI 协议都是串行通信协议，I2C 协议的通信速度比 SPI 慢，但是只需要两根线，SPI 设备需要至少 4 根线。</p>
+<h2 id="播放音频和视频">播放音频和视频</h2>
+<p>推荐使用 omxplayer，理由有：</p>
+<ol>
+<li>包含在树莓派的发行版中；</li>
+<li>可以使用 GPU 解码；</li>
+<li>支持许多数字格式。</li>
+</ol>
+<p>播放：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">omxplayer -o [local|hdmi] filename
+</code></pre></td></tr></table>
+</div>
+</div><p>设置音量：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">omxplayer -o [local|hdmi] --vol &lt;millibels&gt; filename
+</code></pre></td></tr></table>
+</div>
+</div><p>millibels 表示在 500（大声）和 -4000（非常安静）之间的一个数字，而 0 是正常的。</p>
+<p>在命令行中控制树莓派全局音量，可以使用 alsamixer 程序。</p>
+<h1 id="其他">其他</h1>
+<p>构建系统时，应该遵循 KISS 规则，即”Keep It Simple, Stupid!“</p>
+<p>TTY 来自 TeleType 这个词，指的是一种与电脑通信的方法。在计算机的早期，你需要使用电传打字机或电传打印机来打出想要进入计算机的信息。</p>
+<p>VNC 是 Virtual Network Computing 的缩写，虚拟网络计算。</p>
+<h1 id="参考链接">参考链接</h1>
+<ul>
+<li><a href="https://www.amazon.cn/dp/B07HH53PQG/" target="_blank" rel="noopener noreffer">《Linux创客实战》 亚伦·纽科姆（Aaron Newcomb）, 刘端阳 书评 简介 电子书下载 Kindle电子书</a></li>
+</ul></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2019-12-29</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/f5d56/" class="prev" rel="prev" title="在Jupyter中执行asyncio代码"><i class="fas fa-angle-left fa-fw"></i>在Jupyter中执行asyncio代码</a>
+            <a href="/posts/a9208/" class="next" rel="next" title="用电视棒接收民航客机ADS-B信号">用电视棒接收民航客机ADS-B信号<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2019-12-29T19:39:05+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"Linux创客实战"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

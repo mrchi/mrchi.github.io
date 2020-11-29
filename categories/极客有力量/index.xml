@@ -1,0 +1,78 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>极客有力量 - 分类 - Déjà vu</title>
+        <link>https://mrchi.cc/categories/%E6%9E%81%E5%AE%A2%E6%9C%89%E5%8A%9B%E9%87%8F/</link>
+        <description>极客有力量 - 分类 - Déjà vu</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>chiqingjun@gmail.com (MrChi)</managingEditor>
+            <webMaster>chiqingjun@gmail.com (MrChi)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 29 Nov 2020 12:30:40 &#43;0800</lastBuildDate><atom:link href="https://mrchi.cc/categories/%E6%9E%81%E5%AE%A2%E6%9C%89%E5%8A%9B%E9%87%8F/" rel="self" type="application/rss+xml" /><item>
+    <title>在 Home Assistant 中集成 69 元 3 个的米家蓝牙温湿度计 2</title>
+    <link>https://mrchi.cc/posts/b5ee0/</link>
+    <pubDate>Sun, 29 Nov 2020 12:30:40 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/b5ee0/</guid>
+    <description><![CDATA[<p>本文记录如何把米家蓝牙温湿度计 2（型号<code>LYWSD03MMC</code>）集成到 Home Assistant 中。</p>]]></description>
+</item><item>
+    <title>树莓派zero的USB ethernet gadget配置</title>
+    <link>https://mrchi.cc/posts/edd5c/</link>
+    <pubDate>Thu, 11 Jun 2020 13:46:30 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/edd5c/</guid>
+    <description><![CDATA[<p>树莓派 zero w 是一个非常小巧的树莓派型号，既没有以太网口，也没有 USB-A 口，只有 micro USB 接口 和 Mini HDMI。若没有各种转接线，想要连接树莓派只能靠 配置无线网络。但是，假如需要使用 zero w 的无线网卡做一些嗅探抓包之类的功能，就不太方便了。</p>]]></description>
+</item><item>
+    <title>Home Assistant-开源智能家居系统</title>
+    <link>https://mrchi.cc/posts/dbf6a/</link>
+    <pubDate>Mon, 08 Jun 2020 00:04:22 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/dbf6a/</guid>
+    <description><![CDATA[<p>Home Assistant（简称 HA）是一个开源的智能家居平台，可以运行在树莓派或者服务器上。目前已经能够接入许多品牌的智能设备，包括米家和 Yeelight。同时，还支持 Apple HomeKit、Google Assistant 和 Amazon Alexa 等智能家居控制平台。通过 Home Assistant，不需要米家网关，也能方便地使用 Siri 控制米家的智能设备。</p>]]></description>
+</item><item>
+    <title>在Mac上使用USB转串口调试树莓派</title>
+    <link>https://mrchi.cc/posts/32e91/</link>
+    <pubDate>Mon, 08 Jun 2020 00:04:22 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/32e91/</guid>
+    <description><![CDATA[安装PL2303驱动 下载官方驱动：PL2303 Mac OS X Driver Download 安装驱动，安装完成后重启电脑； 检测安装成功： 插上USB转串口模块，打开终端执行以下命]]></description>
+</item><item>
+    <title>在树莓派上安装HAP-NodeJS</title>
+    <link>https://mrchi.cc/posts/e9313/</link>
+    <pubDate>Mon, 08 Jun 2020 00:04:22 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/e9313/</guid>
+    <description><![CDATA[<p>HAP-NodeJS是国外大神逆向了Apple的HomeKit Application Protocol协议后（HomeKit开发不对个人开发者开放），使用node.js实现的HomeKit Accessory Server，在树莓派上安装后，能够以树莓派作为Bridge，将自定义的设备接入Apple HomeKit，进而使用Siri控制设备，无需MFi认证。</p>]]></description>
+</item><item>
+    <title>在树莓派上安装OpenWrt</title>
+    <link>https://mrchi.cc/posts/71093/</link>
+    <pubDate>Mon, 08 Jun 2020 00:04:22 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/71093/</guid>
+    <description><![CDATA[认识 OpenWrt 来自官网的介绍 The OpenWrt Project is a Linux operating system targeting embedded devices. Instead of trying to create a single, static firmware, OpenWrt provides a fully writable filesystem with package management. This frees you from the application selection and configuration provided by the vendor and allows you to customize the device through the use of packages to suit any application. For developers,]]></description>
+</item><item>
+    <title>小米路由器4A刷openwrt</title>
+    <link>https://mrchi.cc/posts/b0ebf/</link>
+    <pubDate>Mon, 08 Jun 2020 00:04:22 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/b0ebf/</guid>
+    <description><![CDATA[<p>闲逛看到 openwrt 支持小米路由器 4A，并且现在 4A 的二手价格十分美丽，遂决定淘一个二手小米路由器 4A 刷 openwrt，解放目前在使用的树莓派。</p>]]></description>
+</item><item>
+    <title>树莓派安装Raspbian系统后的一些设置</title>
+    <link>https://mrchi.cc/posts/51779/</link>
+    <pubDate>Mon, 08 Jun 2020 00:04:22 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/51779/</guid>
+    <description><![CDATA[在启动前开启SSH For headless setup, SSH can be enabled by placing a file named ssh, without any extension, onto the boot partition of the SD card. When the Pi boots, it looks for the ‘ssh’ file. If it is found, SSH is enabled, and the file is deleted. The content of the file does not matter: it could contain]]></description>
+</item><item>
+    <title>树莓派扩展文件系统使用SD卡所有存储空间</title>
+    <link>https://mrchi.cc/posts/2845d/</link>
+    <pubDate>Mon, 08 Jun 2020 00:04:22 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/2845d/</guid>
+    <description><![CDATA[raspi-config 最简单的方式，使用 raspi-config 工具，选择 Advanced Options - Expand Filesystem 即可。 1 sudo raspi-config 手动扩展 原理 SD 卡一般被分为两个分区，mmcblk0p1 是启动分区，mmcblk0p2 是]]></description>
+</item><item>
+    <title>用电视棒接收民航客机ADS-B信号</title>
+    <link>https://mrchi.cc/posts/a9208/</link>
+    <pubDate>Mon, 08 Jun 2020 00:04:22 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/a9208/</guid>
+    <description><![CDATA[硬件准备 淘宝来的电视棒（RTL2832U+R820T），接收的频率范围为24 ~ 1766 MHz； 树莓派2B，或其他Linux主机； 软件安装 把电视棒插]]></description>
+</item></channel>
+</rss>

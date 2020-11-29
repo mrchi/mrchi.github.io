@@ -1,0 +1,78 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>工欲善其事 - 分类 - Déjà vu</title>
+        <link>https://mrchi.cc/categories/%E5%B7%A5%E6%AC%B2%E5%96%84%E5%85%B6%E4%BA%8B/</link>
+        <description>工欲善其事 - 分类 - Déjà vu</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>chiqingjun@gmail.com (MrChi)</managingEditor>
+            <webMaster>chiqingjun@gmail.com (MrChi)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sat, 13 Jun 2020 12:10:02 &#43;0800</lastBuildDate><atom:link href="https://mrchi.cc/categories/%E5%B7%A5%E6%AC%B2%E5%96%84%E5%85%B6%E4%BA%8B/" rel="self" type="application/rss+xml" /><item>
+    <title>自己部署Bitwarden服务</title>
+    <link>https://mrchi.cc/posts/88980/</link>
+    <pubDate>Sat, 13 Jun 2020 12:10:02 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/88980/</guid>
+    <description><![CDATA[<p>Bitwarden 是一个开源的密码管理器解决方案，拥有多个平台的客户端。它采用的方式是云端数据库、客户端同步和离线使用的模式，类似现在的 1password。其优势在于：</p>]]></description>
+</item><item>
+    <title>在Jupyter中执行asyncio代码</title>
+    <link>https://mrchi.cc/posts/f5d56/</link>
+    <pubDate>Tue, 17 Dec 2019 23:15:52 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/f5d56/</guid>
+    <description><![CDATA[问题 在 Jupyter 中，如果执行 asyncio 的代码，例如 1 2 3 4 5 6 7 8 9 from requests_html import AsyncHTMLSession session = AsyncHTMLSession() async def get_google(): r = await session.get(&#39;https://google.com/&#39;) return r session.run(get_google) 会报错： 1 RuntimeError: This event loop is already running 解决 具体原因是因为 asyncio 不允许嵌套]]></description>
+</item><item>
+    <title>在Ubuntu上开发Android</title>
+    <link>https://mrchi.cc/posts/473e0/</link>
+    <pubDate>Sat, 07 Dec 2019 10:33:07 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/473e0/</guid>
+    <description><![CDATA[<p>在 Ubuntu 16.04 LTS 上安装一个 kotlin 语言的 Android 开发和调试环境。</p>]]></description>
+</item><item>
+    <title>SSH端口转发</title>
+    <link>https://mrchi.cc/posts/246b1/</link>
+    <pubDate>Tue, 03 Dec 2019 22:16:10 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/246b1/</guid>
+    <description><![CDATA[<p>SSH 端口转发又称为 SSH 隧道，是通过 SSH 协议建立隧道，实现本地主机和远程主机的端口绑定，数据由 SSH 协议进行加密传输。</p>]]></description>
+</item><item>
+    <title>解决Ubuntu和Windows双系统时间不一致</title>
+    <link>https://mrchi.cc/posts/573b0/</link>
+    <pubDate>Fri, 11 Oct 2019 21:54:17 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/573b0/</guid>
+    <description><![CDATA[问题描述 安装了 Windows 10 和 Ubuntu 16.04.5 LTS 的双系统，都设置在东八区后，发现 Ubuntu 时间总是比 Windows 的时间快 8 个小时。 如果把 Ubuntu 的时间调整成北京时间，那么 Windows 的时间就会比北]]></description>
+</item><item>
+    <title>Ubuntu开发环境搭建</title>
+    <link>https://mrchi.cc/posts/505b5/</link>
+    <pubDate>Sat, 17 Nov 2018 16:05:04 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/505b5/</guid>
+    <description><![CDATA[<p>环境：Ubuntu 16.04.5 LTS。</p>]]></description>
+</item><item>
+    <title>MacBook外接2K显示器开启HiDPI</title>
+    <link>https://mrchi.cc/posts/a49ce/</link>
+    <pubDate>Sun, 11 Nov 2018 23:03:00 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/a49ce/</guid>
+    <description><![CDATA[<p>MacBook 使用 Retina 技术的屏幕，用久了之后外接的 2K 显示屏（分辨率 2560 * 1440）字很小，感觉很模糊。如果开启显示器的 HiDPI，分辨率会降到 1920 * 1080，但能获得和 MacBook 内置的 Retina 屏幕相似的显示效果。</p>]]></description>
+</item><item>
+    <title>Git生成patch和合并patch</title>
+    <link>https://mrchi.cc/posts/426bb/</link>
+    <pubDate>Sat, 04 Aug 2018 18:25:28 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/426bb/</guid>
+    <description><![CDATA[<p>git patch 可以将项目中的一些 commit 提取出来，生成 .patch 文件。其他分支或其他项目可以合并这些 .patch 文件，并生成与原 commit 一致的提交记录。</p>]]></description>
+</item><item>
+    <title>在git项目中引用另一个git项目</title>
+    <link>https://mrchi.cc/posts/b1129/</link>
+    <pubDate>Thu, 05 Apr 2018 17:01:08 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/b1129/</guid>
+    <description><![CDATA[适用场景 各个项目共用一个库，而这个库正在快速迭代更新的过程中。 操作 假设有项目P1、P2，同时共用项目S的代码。 添加remote 在P1项目中添]]></description>
+</item><item>
+    <title>Mac开发环境搭建</title>
+    <link>https://mrchi.cc/posts/19945/</link>
+    <pubDate>Mon, 05 Feb 2018 22:45:42 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/19945/</guid>
+    <description><![CDATA[翻墙 下载 ShadowsocksX-NG 客户端，配置好服务器。打开 https://google.com/ 测试代理生效。 在执行以下安装命令时，如果新开的shell，先为shell设置代理： 1 export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087; Xcode Command Line Tools 打开]]></description>
+</item></channel>
+</rss>

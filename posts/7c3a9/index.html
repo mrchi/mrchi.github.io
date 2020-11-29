@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>whoosh和jieba实现中文全文检索 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="whoosh和jieba实现中文全文检索" />
+<meta property="og:description" content="截止目前（2018-8-5），Whoosh 项目已经整整一年没有更新（最后提交于 2017-07-16），作者可能已经弃坑。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/7c3a9/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2018-08-13T09:50:41+08:00" />
+<meta property="article:modified_time" content="2018-08-13T09:50:41+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="whoosh和jieba实现中文全文检索"/>
+<meta name="twitter:description" content="截止目前（2018-8-5），Whoosh 项目已经整整一年没有更新（最后提交于 2017-07-16），作者可能已经弃坑。"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/7c3a9/" /><link rel="prev" href="https://mrchi.cc/posts/be138/" /><link rel="next" href="https://mrchi.cc/posts/383cb/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "whoosh和jieba实现中文全文检索",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/7c3a9\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  2342 ,
+        "url": "https:\/\/mrchi.cc\/posts\/7c3a9\/","datePublished": "2018-08-13T09:50:41+08:00","dateModified": "2018-08-13T09:50:41+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Invoker"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">whoosh和jieba实现中文全文检索</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Invoker</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/python/"><i class="far fa-folder fa-fw"></i>Python</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2018-08-13">2018-08-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2342 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#简介">简介</a></li>
+    <li><a href="#快速上手">快速上手</a>
+      <ul>
+        <li><a href="#环境准备">环境准备</a></li>
+        <li><a href="#简单示例">简单示例</a></li>
+      </ul>
+    </li>
+    <li><a href="#创建-schema">创建 Schema</a></li>
+    <li><a href="#创建索引">创建索引</a></li>
+    <li><a href="#添加文档">添加文档</a></li>
+    <li><a href="#检索结果">检索结果</a></li>
+    <li><a href="#在-flask-中使用-whoosh">在 Flask 中使用 Whoosh</a></li>
+    <li><a href="#jieba-延迟加载机制">Jieba 延迟加载机制</a></li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>截止目前（2018-8-5），<a href="https://bitbucket.org/mchaput/whoosh/overview" target="_blank" rel="noopener noreffer">Whoosh</a> 项目已经整整一年没有更新（最后提交于 2017-07-16），作者可能已经弃坑。</p>
+<h1 id="简介">简介</h1>
+<p><a href="https://bitbucket.org/mchaput/whoosh/overview" target="_blank" rel="noopener noreffer">Whoosh</a> 是一个纯 Python 实现的全文检索引擎，虽然不如 <a href="https://www.elastic.co/" target="_blank" rel="noopener noreffer">Elasticsearch</a>，但好处是纯 Python 实现易于集成，在小项目中应用广泛。</p>
+<p>Whoosh 自带的分词器不支持中文分词。<a href="https://github.com/fxsjy/jieba" target="_blank" rel="noopener noreffer">jieba</a> 是一个中文分词组件，实现了一个供 Whoosh 调用的中文分词器。两者结合使用即可以实现中文全文检索。</p>
+<h1 id="快速上手">快速上手</h1>
+<h2 id="环境准备">环境准备</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">pip3 install jieba
+pip3 install whoosh
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="简单示例">简单示例</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># coding=utf-8</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">whoosh.index</span> <span class="kn">import</span> <span class="n">create_in</span>
+<span class="kn">from</span> <span class="nn">whoosh.fields</span> <span class="kn">import</span> <span class="n">TEXT</span><span class="p">,</span> <span class="n">ID</span><span class="p">,</span> <span class="n">Schema</span>
+<span class="kn">from</span> <span class="nn">jieba.analyse</span> <span class="kn">import</span> <span class="n">ChineseAnalyzer</span>
+
+<span class="c1"># 创建 jieba 中文分词器对象</span>
+<span class="n">analyzer</span> <span class="o">=</span> <span class="n">ChineseAnalyzer</span><span class="p">()</span>
+
+<span class="c1"># 创建schema，使用 jieba 分词器对象</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">Schema</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="n">TEXT</span><span class="p">(</span><span class="n">stored</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">analyzer</span><span class="o">=</span><span class="n">analyzer</span><span class="p">),</span>
+    <span class="n">path</span><span class="o">=</span><span class="n">ID</span><span class="p">(</span><span class="n">stored</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+    <span class="n">content</span><span class="o">=</span><span class="n">TEXT</span><span class="p">(</span><span class="n">stored</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">analyzer</span><span class="o">=</span><span class="n">analyzer</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># 存储schema信息至 indexdir 目录下</span>
+<span class="n">indexdir</span> <span class="o">=</span> <span class="s2">&#34;indexdir/&#34;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">indexdir</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">indexdir</span><span class="p">)</span>
+<span class="n">ix</span> <span class="o">=</span> <span class="n">create_in</span><span class="p">(</span><span class="n">indexdir</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+
+<span class="c1"># 按照schema定义信息，增加需要建立索引的文档</span>
+<span class="n">writer</span> <span class="o">=</span> <span class="n">ix</span><span class="o">.</span><span class="n">writer</span><span class="p">()</span>
+<span class="n">writer</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&#34;第一篇文档&#34;</span><span class="p">,</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&#34;/a&#34;</span><span class="p">,</span>
+    <span class="n">content</span><span class="o">=</span><span class="s2">&#34;这是我们增加的第一篇文档&#34;</span>
+<span class="p">)</span>
+<span class="n">writer</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&#34;第二篇文档&#34;</span><span class="p">,</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&#34;/b&#34;</span><span class="p">,</span>
+    <span class="n">content</span><span class="o">=</span><span class="s2">&#34;第二篇文档也很interesting！&#34;</span>
+<span class="p">)</span>
+<span class="n">writer</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="c1"># 创建一个检索器</span>
+<span class="n">searcher</span> <span class="o">=</span> <span class="n">ix</span><span class="o">.</span><span class="n">searcher</span><span class="p">()</span>
+
+<span class="c1"># 检索标题中出现“文档”的文档</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">searcher</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;title&#34;</span><span class="p">,</span> <span class="s2">&#34;文档&#34;</span><span class="p">)</span>
+
+<span class="c1"># 检索出来的第一个结果</span>
+<span class="n">firstdoc</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fields</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">firstdoc</span><span class="p">)</span>                         <span class="c1"># 打印出检索出的文档全部内容</span>
+<span class="k">print</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">highlights</span><span class="p">(</span><span class="s2">&#34;title&#34;</span><span class="p">))</span>   <span class="c1"># 高亮标题中的检索词</span>
+<span class="k">print</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">score</span><span class="p">)</span>                 <span class="c1"># bm25分数</span>
+
+<span class="n">searcher</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输出结果：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">{&#39;content&#39;: &#39;这是我们增加的第一篇文档&#39;, &#39;title&#39;: &#39;第一篇文档&#39;}
+第一篇&lt;b class=&#34;match term0&#34;&gt;文档&lt;/b&gt;
+0.5945348918918356
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="创建-schema">创建 Schema</h1>
+<p>使用 Whoosh 进行检索需要创建索引对象（index object），而索引对象的结构由 Schema 定义。</p>
+<p>Schema 会列出索引对象的字段（field），字段是文档（document）中的一条信息，例如标题或者文本内容。字段可以通过参数，设置是否被搜索，是否在搜索结果中与被索引的字段一起返回。</p>
+<p>类比 SQL 数据库表：</p>
+<table>
+<thead>
+<tr>
+<th>Whoosh 索引</th>
+<th>SQL 数据库表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schema</td>
+<td>表结构</td>
+</tr>
+<tr>
+<td>field 字段</td>
+<td>字段 field</td>
+</tr>
+<tr>
+<td>document 文档</td>
+<td>记录 record</td>
+</tr>
+<tr>
+<td>索引对象</td>
+<td>整个表</td>
+</tr>
+</tbody>
+</table>
+<p>举个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">whoosh.fields</span> <span class="kn">import</span> <span class="n">TEXT</span><span class="p">,</span> <span class="n">Schema</span>
+<span class="kn">from</span> <span class="nn">jieba.analyse</span> <span class="kn">import</span> <span class="n">ChineseAnalyzer</span>
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">Schema</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="n">TEXT</span><span class="p">(</span><span class="n">stored</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">analyzer</span><span class="o">=</span><span class="n">ChineseAnalyzer</span><span class="p">()),</span>
+    <span class="nb">id</span><span class="o">=</span><span class="n">ID</span><span class="p">(</span><span class="n">stored</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
+    <span class="n">content</span><span class="o">=</span><span class="n">TEXT</span><span class="p">(</span><span class="n">stored</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
+<span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上面的代码创建了一个 Schema，由 title、id 和 content 三个 filed 组成。title 和 content 的类型为 <code>TEXT</code>，id 的类型为 <code>ID</code>。</p>
+<p>Whoosh 中为 field 预定义了以下类型：</p>
+<ul>
+<li><code>whoosh.fields.TEXT</code> 用于正文。默认使用 <code>whoosh.analysis.StandardAnalyzer</code> 分词并索引，但不在检索结果中返回。 <code>analyzer</code> 参数指定分词器，<code>stored</code> 参数指定是否在检索结果中返回，<code>phrase</code> 参数指定是否允许分词检索。</li>
+<li><code>whoosh.fields.KEYWORD</code> 用于以空格或逗号分隔的关键字。默认索引，不在检索结果中返回，不能分词。</li>
+<li><code>whoosh.fields.ID</code> 用于日期、路径、URL，分类等等。字段的值作为整体被索引，默认不返回，不能分词。</li>
+<li><code>whoosh.fields.STORED</code> 用于在检索结果中展示的信息。不会被索引且无法检索，会在检索结果中返回。</li>
+<li><code>whoosh.fields.NUMERIC</code> 用于数字，可以存储整数或浮点数。</li>
+<li><code>whoosh.fields.DATETIME</code> 用于 <code>datetime</code> 对象。</li>
+<li><code>whoosh.fields.BOOLEAN</code> 用于布尔值。</li>
+</ul>
+<p>其中 <code>TEXT</code> 和 <code>ID</code> 比较常用。</p>
+<h1 id="创建索引">创建索引</h1>
+<p>有了 Schema 之后，就可以通过 Schema 创建索引。Whoosh 的索引使用文件存储，创建时传入目录名，索引文件就会存储在该目录下。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">whoosh.index</span> <span class="kn">import</span> <span class="n">create_in</span><span class="p">,</span> <span class="n">exists_in</span>
+
+<span class="n">indexdir</span> <span class="o">=</span> <span class="s2">&#34;indexdir/&#34;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">indexdir</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">indexdir</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">exists_in</span><span class="p">(</span><span class="n">indexdir</span><span class="p">):</span>
+    <span class="n">ix</span> <span class="o">=</span> <span class="n">create_in</span><span class="p">(</span><span class="n">indexdir</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>exists_in</code> 返回目录下是否存在索引，<code>create_in</code> 创建索引。如果在一个已经存在索引文件的目录下调用 <code>create_in</code> 创建索引，原索引会丢失。</p>
+<p><code>exists_in</code> 和 <code>create_in</code> 函数都可以传入 <code>indexname</code> 参数，指定创建的索引名称。</p>
+<h1 id="添加文档">添加文档</h1>
+<p>有了索引对象后，就可以添加文档数据到索引中。</p>
+<p>首先，获取索引对象：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">whoosh.index</span> <span class="kn">import</span> <span class="n">open_dir</span>
+
+<span class="n">ix</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">open_dir</span><span class="p">(</span><span class="n">indexdir</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>open_dir</code> 函数用于从指定目录中获取索引对象，该函数也可以传入 <code>indexname</code> 参数指定索引名称。</p>
+<p>通过索引对象新建一个 IndexWriter 对象，该对象会锁住索引以进行写入，保证同时只有一个进程/线程进行写操作。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">writer</span> <span class="o">=</span> <span class="n">ix</span><span class="o">.</span><span class="n">writer</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>通过该 IndexWriter 对象的 <code>add_document</code> 方法添加 document，该方法接受关键字参数，与 Schema 定义保持一致。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">writer</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&#34;第一篇文档&#34;</span><span class="p">,</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&#34;/a&#34;</span><span class="p">,</span>
+    <span class="n">content</span><span class="o">=</span><span class="s2">&#34;这是我们增加的第一篇文档&#34;</span>
+<span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>所有 docment 添加完成后，调用 <code>commit</code> 方法写入索引。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">writer</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="检索结果">检索结果</h1>
+<p>首先通过索引对象创建一个 Searcher 对象，该对象使用完成后应该被关闭，可以使用 Python 中的 <code>with</code> 语法。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">with</span> <span class="n">ix</span><span class="o">.</span><span class="n">searcher</span><span class="p">()</span> <span class="k">as</span> <span class="n">searcher</span><span class="p">:</span>
+    <span class="c1"># 查询操作</span>
+    <span class="k">pass</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>可以直接使用 <code>find</code> 方法进行检索：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">with</span> <span class="n">ix</span><span class="o">.</span><span class="n">searcher</span><span class="p">()</span> <span class="k">as</span> <span class="n">searcher</span><span class="p">:</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">searcher</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;title&#34;</span><span class="p">,</span> <span class="s2">&#34;文档&#34;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>或者先构造 QueryParser 对象，再使用 <code>search</code> 方法检索：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">whoosh.qparser</span> <span class="kn">import</span> <span class="n">QueryParser</span>
+
+<span class="n">qp</span> <span class="o">=</span> <span class="n">QueryParser</span><span class="p">(</span><span class="s2">&#34;content&#34;</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">myindex</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">qp</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="sa">u</span><span class="s2">&#34;hello world&#34;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">ix</span><span class="o">.</span><span class="n">searcher</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>search</code> 方法可以使用 <code>limit</code> 参数指定返回结果的个数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">results</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>search_page</code> 方法可以分页返回结果，默认每页 10 条结果，可以通过参数设置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># 每页20条结果，返回第 5 页的结果</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">search_page</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">pagelen</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>查询结果 results 对象类似 list，使用索引可以访问单个结果。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">result</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>单个结果的 <code>score</code> 属性可以得到对该 document 的权重评分，<code>highlights</code> 方法可以对指定 field 中的检索词进行高亮（加 b 标签）。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">result</span><span class="o">.</span><span class="n">score</span>
+<span class="n">result</span><span class="o">.</span><span class="n">highlights</span><span class="p">(</span><span class="s2">&#34;title&#34;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="在-flask-中使用-whoosh">在 Flask 中使用 Whoosh</h1>
+<p>在 Flask 中使用 Whoosh 最好用的扩展是 <a href="https://github.com/gyllstromk/Flask-WhooshAlchemy" target="_blank" rel="noopener noreffer">Flask-WhooshAlchemy</a>，与 Flask-SQLAlchemy 无缝集成。可以直接索引数据库中的记录并通过数据库查询检索。</p>
+<p>但这个项目已经许久没有更新，PyPI 上的版本竟然不支持 Python3，这里推荐使用从 Flask-WhooshAlchemy fork 开发的 <a href="https://github.com/Revolution1/Flask-WhooshAlchemyPlus" target="_blank" rel="noopener noreffer">Flask-WhooshAlchemyPlus</a> 扩展，使用起来也非常简单，只需要以下步骤：</p>
+<ol>
+<li>在 Flask 配置文件中定义 <code>WHOOSH_BASE</code>，即 Whoosh 索引文件的存储路径；</li>
+<li>在定义数据库模型时指定 whoosh 索引字段和分词器；</li>
+<li>调用扩展的 <code>init_app(app)</code> 方法初始化；</li>
+<li>在查询中使用 <code>whoosh_search</code> 进行检索，返回的结果为 query 对象，可以继续进行筛选，排序等，最后返回数据库记录；</li>
+</ol>
+<p>详细请参考 Flask-WhooshAlchemyPlus 的文档。</p>
+<h1 id="jieba-延迟加载机制">Jieba 延迟加载机制</h1>
+<blockquote>
+<p>jieba 采用延迟加载，<code>import jieba</code> 和 <code>jieba.Tokenizer()</code> 不会立即触发词典的加载，一旦有必要才开始加载词典构建前缀字典。</p>
+</blockquote>
+<p>由于此机制，在初次查询时才会触发词典加载（大约 1 秒钟时间）。我们可以手动加载词典：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">jieba</span>
+<span class="n">jieba</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在 Flask 应用中，可以在创建 app 时调用上述代码。</p>
+<h1 id="参考链接">参考链接</h1>
+<ul>
+<li><a href="http://www.jeyzhang.com/realization-of-full-chinese-text-search-using-whoosh-and-jieba.html" target="_blank" rel="noopener noreffer">whoosh+jieba：python下实现中文全文检索 | Jey Zhang</a></li>
+<li><a href="https://lezhimeng.coding.me/2017/05/30/whoosh/" target="_blank" rel="noopener noreffer">whoosh使用笔记 | 程序媛</a></li>
+<li><a href="http://whoosh.readthedocs.io/en/latest/index.html" target="_blank" rel="noopener noreffer">Whoosh 2.7.4 documentation — Whoosh 2.7.4 documentation</a></li>
+<li><a href="https://github.com/Revolution1/Flask-WhooshAlchemyPlus" target="_blank" rel="noopener noreffer">GitHub - Revolution1/Flask-WhooshAlchemyPlus</a></li>
+</ul></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2018-08-13</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/be138/" class="prev" rel="prev" title="学习Docker(5)-Docker服务管理"><i class="fas fa-angle-left fa-fw"></i>学习Docker(5)-Docker服务管理</a>
+            <a href="/posts/383cb/" class="next" rel="next" title="PEP8命名规范">PEP8命名规范<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2018-08-13T09:50:41+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"whoosh和jieba实现中文全文检索"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Tornado异步非阻塞请求 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="Tornado异步非阻塞请求" />
+<meta property="og:description" content="什么是异步 同步 IO 我们知道，CPU 的速度远远快于磁盘、网络等 IO。在一个线程中，当遇到 IO 操作时，如读写文件、发送网络请求，就需要等待 IO 操作完成" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/b95cd/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2018-05-03T19:07:56+08:00" />
+<meta property="article:modified_time" content="2018-05-03T19:07:56+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="Tornado异步非阻塞请求"/>
+<meta name="twitter:description" content="什么是异步 同步 IO 我们知道，CPU 的速度远远快于磁盘、网络等 IO。在一个线程中，当遇到 IO 操作时，如读写文件、发送网络请求，就需要等待 IO 操作完成"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/b95cd/" /><link rel="prev" href="https://mrchi.cc/posts/b1129/" /><link rel="next" href="https://mrchi.cc/posts/96944/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Tornado异步非阻塞请求",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/b95cd\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  3168 ,
+        "url": "https:\/\/mrchi.cc\/posts\/b95cd\/","datePublished": "2018-05-03T19:07:56+08:00","dateModified": "2018-05-03T19:07:56+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Invoker"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Tornado异步非阻塞请求</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Invoker</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/python/"><i class="far fa-folder fa-fw"></i>Python</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2018-05-03">2018-05-03</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3168 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 7 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#什么是异步">什么是异步</a>
+      <ul>
+        <li><a href="#同步-io">同步 IO</a></li>
+        <li><a href="#异步-io">异步 IO</a></li>
+        <li><a href="#协程">协程</a></li>
+        <li><a href="#关于异步概念的误区">关于异步概念的误区</a></li>
+      </ul>
+    </li>
+    <li><a href="#python3-的异步实现">Python3 的异步实现</a>
+      <ul>
+        <li><a href="#asyncio">asyncio</a></li>
+        <li><a href="#asyncawait">async/await</a></li>
+      </ul>
+    </li>
+    <li><a href="#tornado-的异步实现">Tornado 的异步实现</a>
+      <ul>
+        <li><a href="#异步-handler">异步 handler</a>
+          <ul>
+            <li><a href="#tornadowebasynchronous">tornado.web.asynchronous</a></li>
+            <li><a href="#tornadogencoroutine">tornado.gen.coroutine</a></li>
+          </ul>
+        </li>
+        <li><a href="#异步网络请求">异步网络请求</a>
+          <ul>
+            <li><a href="#requests--threadpoolexecutor">Requests + ThreadPoolExecutor</a></li>
+          </ul>
+        </li>
+        <li><a href="#多异步请求并发">多异步请求并发</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="什么是异步">什么是异步</h1>
+<h2 id="同步-io">同步 IO</h2>
+<p>我们知道，CPU 的速度远远快于磁盘、网络等 IO。在一个线程中，当遇到 IO 操作时，如读写文件、发送网络请求，就需要等待 IO 操作完成，才能继续进行下一步的操作。这种称之为 <strong>同步 IO</strong>。</p>
+<p>同步 IO 会在进行 IO 操作时，挂起当前线程，导致其他需要 CPU 执行的代码无法被当前线程处理，CPU的高速执行能力和IO设备的龟速（与 CPU 相比）严重不匹配。为此，我们可以使用多进程和多线程解决，也可以使用 <strong>异步 IO</strong>。</p>
+<h2 id="异步-io">异步 IO</h2>
+<p>异步 IO 的工作模式是，当代码需要执行一个耗时的 IO 操作时，它只发出 IO 指令，并不等待 IO 结果，然后就去执行其他代码。一段时间后，当 IO 返回结果时，再通知 CPU 进行处理。</p>
+<p>异步 IO 模型需要一个消息循环，在消息循环中，主线程不断重复“读取消息-处理消息”这一过程。</p>
+<h2 id="协程">协程</h2>
+<p>协程，又称微线程，纤程，英文 coroutine。</p>
+<p>协程的概念可以和函数调用来类比理解：</p>
+<ul>
+<li>子函数的入口只有一个，一旦退出即完成了函数的执行，子函数的一个实例只会返回一次。子函数与父函数之间是被调用者与调用者的关系；</li>
+<li>协程可以通过 yield 调用其它协程。通过 yield 方式转移执行权的携程之间不是调用者与被调用者的关系，而是彼此对称、平等的。</li>
+<li>函数调用的声明周期遵循后进先出（最后一个被调用的子例程最先返回）；相反，协程的生命周期完全由他们的使用需要决定。</li>
+</ul>
+<p>以下是一个协程实现的生产者-消费者模型，生产者生产消息后，通过 yield 跳转到消费者开始执行，待消费者执行完毕后，切回生产者继续生产。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">consumer</span><span class="p">():</span>
+    <span class="s2">&#34;&#34;&#34;消费者&#34;&#34;&#34;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">r</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">return</span>
+       	<span class="k">print</span><span class="p">(</span><span class="s2">&#34;[CONSUMER] Consuming </span><span class="si">%s</span><span class="s2"> ...&#34;</span> <span class="o">%</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="s2">&#34;200 OK&#34;</span>
+
+<span class="k">def</span> <span class="nf">producer</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;生产者&#34;&#34;&#34;</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;[PRODUCER] Producing </span><span class="si">%s</span><span class="s1">...&#39;</span> <span class="o">%</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;[PRODUCER] Consumer return: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">r</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">consumer</span><span class="p">()</span>
+<span class="n">produce</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输出为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">[PRODUCER] Producing 1...
+[CONSUMER] Consuming 1...
+[PRODUCER] Consumer return: 200 OK
+[PRODUCER] Producing 2...
+[CONSUMER] Consuming 2...
+[PRODUCER] Consumer return: 200 OK
+[PRODUCER] Producing 3...
+[CONSUMER] Consuming 3...
+[PRODUCER] Consumer return: 200 OK
+[PRODUCER] Producing 4...
+[CONSUMER] Consuming 4...
+[PRODUCER] Consumer return: 200 OK
+[PRODUCER] Producing 5...
+[CONSUMER] Consuming 5...
+[PRODUCER] Consumer return: 200 OK
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="关于异步概念的误区">关于异步概念的误区</h2>
+<ol>
+<li><strong>异步不能提升单个IO操作任务（web 请求）的响应速度</strong>。异步通过在等待 IO 操作时执行其他代码，提高了 CPU 的利用率，进而提升了整体的运行效率，但是对单个任务（web 请求）来说，还是需要等待 IO 返回结果后才能继续操作（返回 HTTP 响应），不能提升单个任务的响应速度。</li>
+<li><strong>同步程序不能通过协程异步封装的形式变为异步程序</strong>。要写出有异步效果的程序，只有协程是不够的，还需要有底层 IO 的支持。在发生 IO 时，要将 IO 操作交给异步实现去执行，并让渡出协程的执行权，由调度去调度执行其他协程。因此如果底层 IO 未对协程调用做处理，其结果仍然会阻塞这个协程，不能实现异步的效果，比如 SQLAlchemy。</li>
+</ol>
+<h1 id="python3-的异步实现">Python3 的异步实现</h1>
+<h2 id="asyncio">asyncio</h2>
+<p><code>asyncio </code> 是 Python 3.4 版本引入的标准库，直接内置了对异步 IO 的支持。</p>
+<p><code>asyncio </code> 的编程模型就是一个消息循环。我们从 <code>asyncio</code> 模块中直接获取一个 <code>EventLoop</code> 的引用，然后把需要执行的协程扔到 <code>EventLoop</code> 中执行，就实现了异步 IO。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="c1"># @asyncio.coroutine把一个generator标记为coroutine类型</span>
+<span class="nd">@asyncio.coroutine</span>
+<span class="k">def</span> <span class="nf">hello</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Hello world! (</span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">threading</span><span class="o">.</span><span class="n">currentThread</span><span class="p">())</span>
+    <span class="c1"># 把asyncio.sleep(1)看成是一个耗时1秒的IO操作</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">yield</span> <span class="kn">from</span> <span class="nn">asyncio.sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Hello again! (</span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">threading</span><span class="o">.</span><span class="n">currentThread</span><span class="p">())</span>
+
+<span class="c1"># 获取event_loop引用</span>
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="c1"># 把coroutine扔到EventLoop中执行</span>
+<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">hello</span><span class="p">(),</span> <span class="n">hello</span><span class="p">()]</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">tasks</span><span class="p">))</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>tasks 中的第一个 <code>hello()</code> 执行时，首先打印出 &ldquo;Hello, world&hellip;&quot;，然后 <code>yield from</code> 语法可以让我们方便地调用另一个 generator，即 <code>asyncio.sleep()</code>。</li>
+<li>由于 <code>asyncio.sleep()</code> 也是一个 coroutine，所以线程不会等待 <code>asyncio.sleep()</code>，而是直接中断并执行下一个消息循环，即 tasks 中的第二个 <code>hello()</code>。</li>
+<li>第二个 <code>hello()</code> 的执行同第一个 <code>hello()</code> 一样。</li>
+<li>当 <code>asyncio.sleep()</code> 返回时，线程就可以从 <code>yield from</code> 拿到返回值（此处是 <code>None</code> ），然后接着执行下一行语句，打印出 &ldquo;Hello, again&hellip;&rdquo;</li>
+</ol>
+<p>执行结果如下，两个 <code>coroutine</code> 是由同一个线程“并发”执行的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Hello world! (&lt;_MainThread(MainThread, started 140735195337472)&gt;)
+Hello world! (&lt;_MainThread(MainThread, started 140735195337472)&gt;)
+(暂停约1秒)
+Hello again! (&lt;_MainThread(MainThread, started 140735195337472)&gt;)
+Hello again! (&lt;_MainThread(MainThread, started 140735195337472)&gt;)
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="asyncawait">async/await</h2>
+<p>为了简化并更好地标识异步 IO，从 Python 3.5 开始引入了新的语法 <code>async</code> 和 <code>await</code>，可以让 coroutine 的代码更简洁易读。</p>
+<p>要使用新的语法，只需要做两步简单的替换：</p>
+<ol>
+<li>把 <code>@asyncio.coroutine</code> 替换为 <code>async</code>；</li>
+<li>把 <code>yield from</code> 替换为 <code>await</code>。</li>
+</ol>
+<p>举个🌰</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="nd">@asyncio.coroutine</span>
+<span class="k">def</span> <span class="nf">hello</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Hello world!&#34;</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">yield</span> <span class="kn">from</span> <span class="nn">asyncio.sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Hello again!&#34;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>用新语法可以编写为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">async</span> <span class="k">def</span> <span class="nf">hello</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Hello world!&#34;</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Hello again!&#34;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>其他代码保持不变。</p>
+<h1 id="tornado-的异步实现">Tornado 的异步实现</h1>
+<p>Tornado 是一个 Python Web 开发框架，也是异步网络请求库。通过使用非阻塞网络 IO，号称能够承载 10K 的请求量。</p>
+<blockquote>
+<p>Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed. By using non-blocking network I/O, Tornado can scale to tens of thousands of open connections, making it ideal for long polling, WebSockets, and other applications that require a long-lived connection to each user.</p>
+</blockquote>
+<p>常见的情况是，在 request handler 可能需要进行网络请求。此时我们应尽量使用异步 handler 和异步网络请求，以提高并发量和 Web 服务器效率。</p>
+<h2 id="异步-handler">异步 handler</h2>
+<p>异步 handler 实现主要有两种方式：<code>tornado.web.asynchronous</code> 和 <code>tornado.gen.coroutine</code>。</p>
+<p><strong>推荐使用 <code>tornado.gen.coroutine</code> 方式，不需要写回调函数，改造已有的同步代码也相对简单。</strong></p>
+<h3 id="tornadowebasynchronous">tornado.web.asynchronous</h3>
+<p>使用 <code>tornado.web.asynchronous</code> 装饰器修饰 handler，直接调用异步代码并使用回调函数处理响应。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">tornado.web</span>
+<span class="kn">import</span> <span class="nn">tornado.httpclient</span>
+
+<span class="k">class</span> <span class="nc">MyRequestHandler</span><span class="p">(</span><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="nd">@tornado.web.asynchronous</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;异步 handler 方法&#34;&#34;&#34;</span>
+        <span class="n">http_client</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">httpclient</span><span class="o">.</span><span class="n">AsyncHTTPClient</span><span class="p">()</span>
+        <span class="n">http_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s2">&#34;https://google.com/&#34;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_download</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_on_download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;回调方法&#34;&#34;&#34;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&#34;Downloaded!&#34;</span><span class="p">)</span>
+        <span class="c1"># 使用了 asynchronous 需要手动 finish，否则一直 pending</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="tornadogencoroutine">tornado.gen.coroutine</h3>
+<p>使用 <code>tornado.gen.asynchr</code> 装饰器修饰 handler，使用 yield 调用异步代码并获取响应。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">tornado.gen</span>
+<span class="kn">import</span> <span class="nn">tornado.web</span>
+<span class="kn">import</span> <span class="nn">tornado.httpclient</span>
+
+<span class="k">class</span> <span class="nc">MyRequestHandler</span><span class="p">(</span><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="nd">@tornado.gen.coroutine</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;异步 handler 方法&#34;&#34;&#34;</span>
+        <span class="n">http_client</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">httpclient</span><span class="o">.</span><span class="n">AsyncHTTPClient</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">http_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s2">&#34;https://google.com/&#34;</span><span class="p">)</span>
+        <span class="n">retunr</span> <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="异步网络请求">异步网络请求</h2>
+<p>在 Tornado 中进行异步网络请求，可以使用 Tornado 自带的 <code>tornado.httpclient.AsyncHTTPClient</code>。</p>
+<p>但在实际开发中，我们一般使用<code>Requests</code>库进行网络请求，相比前者，简直不能更好用。因此这里我们介绍一种将同步代码封装为“异步代码”的方法。</p>
+<h3 id="requests--threadpoolexecutor">Requests + ThreadPoolExecutor</h3>
+<p>Python3 中的 <code>concurrent.futures.ThreadPoolExecutor</code> 是对多线程的更高级封装，其内部实现中，返回的是 <code>concurrent.futures.Future </code>对象。</p>
+<p>Future 是常见的一种并发设计模式，在多个其他语言中都可以见到这种解决方案。一个 Future 对象代表了一些尚未就绪（完成）的结果，在「将来」的某个时间就绪了之后就可以获取到这个结果。<strong>在 Future 模式下，调用方式改为异步</strong>。</p>
+<p>我们使用 <code>ThreadPoolExecutor</code> 对requests库进行封装，启动一个线程来执行阻塞的网络请求，假装自己是一个异步 IO。<code>ThreadPoolExecutor</code> 的接口比 <code>threading</code> 模块要简单，有利于写出高效、异步、非阻塞的并行代码。</p>
+<p>首先封装 requests 库</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+
+<span class="kn">import</span> <span class="nn">tornado.gen</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+
+<span class="k">class</span> <span class="nc">AsyncRequests</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;异步网络请求类
+</span><span class="s2">
+</span><span class="s2">    使用线程池将同步网络请求转换为异步网络请求。
+</span><span class="s2">    使用requests进行网络请求，实现了get/post/put请求方法。
+</span><span class="s2">    &#34;&#34;&#34;</span>
+
+    <span class="n">thread_pool</span> <span class="o">=</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@tornado.gen.coroutine</span>
+    <span class="k">def</span> <span class="nf">aget</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;http get&#34;&#34;&#34;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="k">yield</span> <span class="bp">cls</span><span class="o">.</span><span class="n">thread_pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在异步 handler 中调用异步网络请求 <code>AsyncRequests.aget</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">tornado.web</span>
+<span class="kn">import</span> <span class="nn">tornado.gen</span>
+
+<span class="k">class</span> <span class="nc">StatisticPlatformData</span><span class="p">(</span><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;采购用户数据累计&#34;&#34;&#34;</span>
+    <span class="nd">@tornado.web.authenticated</span>
+    <span class="nd">@tornado.gen.coroutine</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;https://httpbin.org/get&#34;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">AsyncAPIRequests</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">jsondata</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">jsondata</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="多异步请求并发">多异步请求并发</h2>
+<p>有时需要在一个 handler 里面同时进行多个网络请求，如果我们像下面这样写，那么网络请求是串行执行的，HTTP 响应时间会比较长。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">tornado.gen</span>
+
+<span class="nd">@tornado.gen.coroutine</span>
+<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;https://httpbin.org/get&#34;</span>
+
+    <span class="n">resp1</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">AsyncAPIRequests</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">resp2</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">AsyncAPIRequests</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">resp3</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">AsyncAPIRequests</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&#34;haha&#34;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>多异步请求并发执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">tornado.gen</span>
+
+<span class="nd">@tornado.gen.coroutine</span>
+<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">()</span>
+
+    <span class="c1"># 使用 list 方式</span>
+    <span class="n">response1</span><span class="p">,</span> <span class="n">response2</span> <span class="o">=</span> <span class="k">yield</span> <span class="p">[</span><span class="n">http_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">url1</span><span class="p">),</span>
+                                  <span class="n">http_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">url2</span><span class="p">)]</span>
+
+    <span class="c1"># 使用 dict 方式</span>
+    <span class="n">response_dict</span> <span class="o">=</span> <span class="k">yield</span> <span class="nb">dict</span><span class="p">(</span><span class="n">response3</span><span class="o">=</span><span class="n">http_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">url3</span><span class="p">),</span>
+                               <span class="n">response4</span><span class="o">=</span><span class="n">http_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">url4</span><span class="p">))</span>
+    <span class="n">response3</span> <span class="o">=</span> <span class="n">response_dict</span><span class="p">[</span><span class="s1">&#39;response3&#39;</span><span class="p">]</span>
+    <span class="n">response4</span> <span class="o">=</span> <span class="n">response_dict</span><span class="p">[</span><span class="s1">&#39;response4&#39;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="参考链接">参考链接</h1>
+<ul>
+<li><a href="https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00143208573480558080fa77514407cb23834c78c6c7309000" target="_blank" rel="noopener noreffer">异步IO - 廖雪峰的官方网站</a></li>
+<li><a href="http://blog.p2hp.com/archives/2277" target="_blank" rel="noopener noreffer">协程：异步与并发</a></li>
+<li><a href="http://www.dongwm.com/archives/shi-yong-tornadorang-ni-de-qing-qiu-yi-bu-fei-zu-sai/" target="_blank" rel="noopener noreffer">使用tornado让你的请求异步非阻塞 - 董伟明博客</a></li>
+<li><a href="http://www.dongwm.com/archives/%E4%BD%BF%E7%94%A8Python%E8%BF%9B%E8%A1%8C%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-PoolExecutor%E7%AF%87/" target="_blank" rel="noopener noreffer">使用Python进行并发编程-PoolExecutor篇 - 董伟明博客</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%8D%8F%E7%A8%8B#Python_%E5%AE%9E%E7%8E%B0" target="_blank" rel="noopener noreffer">协程 - 维基百科</a></li>
+<li><a href="http://www.tornadoweb.org/en/stable/gen.html" target="_blank" rel="noopener noreffer">Tornado.gen - Generator-based coroutines</a></li>
+<li><a href="http://www.tornadoweb.org/en/stable/guide/async.html" target="_blank" rel="noopener noreffer">Asynchronous and non-Blocking I/O</a></li>
+<li><a href="https://hexiangyu.me/2017/01/29/real-tornado-async-noblocking/" target="_blank" rel="noopener noreffer">真正的 Tornado 异步非阻塞</a></li>
+<li><a href="https://www.zhihu.com/question/19732473" target="_blank" rel="noopener noreffer">怎样理解阻塞非阻塞与同步异步的区别？- 知乎</a></li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2018-05-03</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/b1129/" class="prev" rel="prev" title="在git项目中引用另一个git项目"><i class="fas fa-angle-left fa-fw"></i>在git项目中引用另一个git项目</a>
+            <a href="/posts/96944/" class="next" rel="next" title="Linux存储操作">Linux存储操作<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2018-05-03T19:07:56+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"Tornado异步非阻塞请求"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

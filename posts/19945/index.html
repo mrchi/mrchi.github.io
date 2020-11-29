@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Mac开发环境搭建 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="Mac开发环境搭建" />
+<meta property="og:description" content="翻墙 下载 ShadowsocksX-NG 客户端，配置好服务器。打开 https://google.com/ 测试代理生效。 在执行以下安装命令时，如果新开的shell，先为shell设置代理： 1 export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087; Xcode Command Line Tools 打开" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/19945/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2018-02-05T22:45:42+08:00" />
+<meta property="article:modified_time" content="2019-08-26T19:08:52+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="Mac开发环境搭建"/>
+<meta name="twitter:description" content="翻墙 下载 ShadowsocksX-NG 客户端，配置好服务器。打开 https://google.com/ 测试代理生效。 在执行以下安装命令时，如果新开的shell，先为shell设置代理： 1 export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087; Xcode Command Line Tools 打开"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/19945/" /><link rel="prev" href="https://mrchi.cc/posts/c29fb/" /><link rel="next" href="https://mrchi.cc/posts/91ce2/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Mac开发环境搭建",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/19945\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  1530 ,
+        "url": "https:\/\/mrchi.cc\/posts\/19945\/","datePublished": "2018-02-05T22:45:42+08:00","dateModified": "2019-08-26T19:08:52+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Invoker"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Mac开发环境搭建</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Invoker</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%B7%A5%E6%AC%B2%E5%96%84%E5%85%B6%E4%BA%8B/"><i class="far fa-folder fa-fw"></i>工欲善其事</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2018-02-05">2018-02-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1530 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#翻墙">翻墙</a></li>
+    <li><a href="#xcode-command-line-tools">Xcode Command Line Tools</a></li>
+    <li><a href="#homebrew">Homebrew</a>
+      <ul>
+        <li><a href="#安装-homebrew">安装 Homebrew</a></li>
+        <li><a href="#brew-bundle">brew bundle</a></li>
+      </ul>
+    </li>
+    <li><a href="#oh-my-zsh">oh-my-zsh</a>
+      <ul>
+        <li><a href="#安装-oh-my-zsh">安装 oh-my-zsh</a></li>
+        <li><a href="#配置-oh-my-zsh">配置 oh-my-zsh</a></li>
+      </ul>
+    </li>
+    <li><a href="#mas">mas</a>
+      <ul>
+        <li><a href="#安装-mas">安装 mas</a></li>
+        <li><a href="#常用操作">常用操作</a></li>
+        <li><a href="#常用-app">常用 App</a></li>
+      </ul>
+    </li>
+    <li><a href="#配置">配置</a>
+      <ul>
+        <li><a href="#zshrc">.zshrc</a></li>
+        <li><a href="#vim">vim</a></li>
+        <li><a href="#gitconfig">.gitconfig</a></li>
+        <li><a href="#typora">Typora</a></li>
+        <li><a href="#iterm2">iTerm2</a></li>
+        <li><a href="#sublime">Sublime</a>
+          <ul>
+            <li><a href="#插件">插件</a></li>
+            <li><a href="#配置-1">配置</a></li>
+            <li><a href="#python-snippets">Python Snippets</a></li>
+          </ul>
+        </li>
+        <li><a href="#vscode">VSCode</a></li>
+      </ul>
+    </li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#卸载oh-my-zsh">卸载oh-my-zsh</a></li>
+        <li><a href="#ubuntu上安装oh-my-zsh依赖">Ubuntu上安装oh-my-zsh依赖</a></li>
+        <li><a href="#ubuntu启用agnoster主题报错">Ubuntu启用agnoster主题报错</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="翻墙">翻墙</h1>
+<p>下载 ShadowsocksX-NG 客户端，配置好服务器。打开 <a href="https://google.com/">https://google.com/</a> 测试代理生效。</p>
+<p>在执行以下安装命令时，如果新开的shell，先为shell设置代理：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">export</span> <span class="nv">http_proxy</span><span class="o">=</span>http://127.0.0.1:1087<span class="p">;</span><span class="nb">export</span> <span class="nv">https_proxy</span><span class="o">=</span>http://127.0.0.1:1087<span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="xcode-command-line-tools">Xcode Command Line Tools</h1>
+<p>打开终端，执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">xcode-select --install
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="homebrew">Homebrew</h1>
+<h2 id="安装-homebrew">安装 Homebrew</h2>
+<p>打开终端，执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">/usr/bin/ruby -e <span class="s2">&#34;</span><span class="k">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span class="k">)</span><span class="s2">&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>更新：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">brew update
+brew upgrade
+brew install mas
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="brew-bundle">brew bundle</h2>
+<p>通过 <code>brew bundle dump</code> 可以在当前目录导出一个 Brewfile 文件，包含了 tap、brew、cask 和 mas 等内容。</p>
+<p>将下面的内容写入到 Brewfile 文件中，并执行 <code>brew bundle</code> 命令导入。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">tap <span class="s2">&#34;homebrew/bundle&#34;</span>
+tap <span class="s2">&#34;homebrew/cask&#34;</span>
+tap <span class="s2">&#34;homebrew/cask-drivers&#34;</span>
+tap <span class="s2">&#34;homebrew/cask-fonts&#34;</span>
+tap <span class="s2">&#34;homebrew/cask-versions&#34;</span>
+tap <span class="s2">&#34;homebrew/core&#34;</span>
+tap <span class="s2">&#34;homebrew/services&#34;</span>
+brew <span class="s2">&#34;autojump&#34;</span>
+brew <span class="s2">&#34;openssl&#34;</span>
+brew <span class="s2">&#34;sqlite&#34;</span>
+brew <span class="s2">&#34;python&#34;</span>
+brew <span class="s2">&#34;flake8&#34;</span>
+brew <span class="s2">&#34;git&#34;</span>
+brew <span class="s2">&#34;go&#34;</span>
+brew <span class="s2">&#34;htop&#34;</span>
+brew <span class="s2">&#34;httpie&#34;</span>
+brew <span class="s2">&#34;ipython&#34;</span>
+brew <span class="s2">&#34;mas&#34;</span>
+brew <span class="s2">&#34;mongodb&#34;</span>, restart_service: <span class="nb">true</span>
+brew <span class="s2">&#34;nginx&#34;</span>
+brew <span class="s2">&#34;nmap&#34;</span>
+brew <span class="s2">&#34;pipenv&#34;</span>
+brew <span class="s2">&#34;postgresql&#34;</span>
+brew <span class="s2">&#34;pyenv&#34;</span>
+brew <span class="s2">&#34;redis&#34;</span>, restart_service: <span class="nb">true</span>
+brew <span class="s2">&#34;siege&#34;</span>
+brew <span class="s2">&#34;swig&#34;</span>
+brew <span class="s2">&#34;tree&#34;</span>
+brew <span class="s2">&#34;you-get&#34;</span>
+brew <span class="s2">&#34;zsh&#34;</span>
+cask <span class="s2">&#34;android-file-transfer&#34;</span>
+cask <span class="s2">&#34;android-platform-tools&#34;</span>
+cask <span class="s2">&#34;charles&#34;</span>
+cask <span class="s2">&#34;cheatsheet&#34;</span>
+cask <span class="s2">&#34;chromedriver&#34;</span>
+cask <span class="s2">&#34;docker&#34;</span>
+cask <span class="s2">&#34;etcher&#34;</span>
+cask <span class="s2">&#34;fliqlo&#34;</span>
+cask <span class="s2">&#34;folx&#34;</span>
+cask <span class="s2">&#34;font-fira-code&#34;</span>
+cask <span class="s2">&#34;font-mononoki&#34;</span>
+cask <span class="s2">&#34;font-source-code-pro&#34;</span>
+cask <span class="s2">&#34;github&#34;</span>
+cask <span class="s2">&#34;google-chrome&#34;</span>
+cask <span class="s2">&#34;gqrx&#34;</span>
+cask <span class="s2">&#34;iina&#34;</span>
+cask <span class="s2">&#34;iterm2&#34;</span>
+cask <span class="s2">&#34;laplock&#34;</span>
+cask <span class="s2">&#34;logitech-options&#34;</span>
+cask <span class="s2">&#34;microsoft-remote-desktop-beta&#34;</span>
+cask <span class="s2">&#34;monitorcontrol&#34;</span>
+cask <span class="s2">&#34;ngrok&#34;</span>
+cask <span class="s2">&#34;omnigraffle&#34;</span>
+cask <span class="s2">&#34;postman&#34;</span>
+cask <span class="s2">&#34;robo-3t&#34;</span>
+cask <span class="s2">&#34;sequel-pro&#34;</span>
+cask <span class="s2">&#34;skype&#34;</span>
+cask <span class="s2">&#34;tunnelblick&#34;</span>
+cask <span class="s2">&#34;typora&#34;</span>
+cask <span class="s2">&#34;virtualbox&#34;</span>
+cask <span class="s2">&#34;visual-studio-code&#34;</span>
+cask <span class="s2">&#34;wechatwebdevtools&#34;</span>
+cask <span class="s2">&#34;wireshark&#34;</span>
+cask <span class="s2">&#34;yyets&#34;</span>
+mas <span class="s2">&#34;QQ&#34;</span>, id: <span class="m">451108668</span>
+mas <span class="s2">&#34;QQ音乐&#34;</span>, id: <span class="m">595615424</span>
+mas <span class="s2">&#34;Reeder&#34;</span>, id: <span class="m">880001334</span>
+mas <span class="s2">&#34;The Unarchiver&#34;</span>, id: <span class="m">425424353</span>
+mas <span class="s2">&#34;Xcode&#34;</span>, id: <span class="m">497799835</span>
+mas <span class="s2">&#34;微信&#34;</span>, id: <span class="m">836500024</span>
+mas <span class="s2">&#34;截图&#34;</span>, id: <span class="m">1059334054</span>
+mas <span class="s2">&#34;熊掌记&#34;</span>, id: <span class="m">1091189122</span>
+mas <span class="s2">&#34;网易云音乐&#34;</span>, id: <span class="m">944848654</span>
+mas <span class="s2">&#34;钉钉&#34;</span>, id: <span class="m">1435447041</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="oh-my-zsh">oh-my-zsh</h1>
+<h2 id="安装-oh-my-zsh">安装 oh-my-zsh</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sh -c <span class="s2">&#34;</span><span class="k">$(</span>curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh<span class="k">)</span><span class="s2">&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置-oh-my-zsh">配置 oh-my-zsh</h2>
+<p>编辑<code>~/.zshrc</code>文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># 以下是修改已经存在的配置</span>
+<span class="nv">ZSH_THEME</span><span class="o">=</span><span class="s2">&#34;agnoster&#34;</span>
+<span class="nv">plugins</span><span class="o">=(</span>git osx autojump sublime docker<span class="o">)</span>
+<span class="nb">export</span> <span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8
+<span class="nb">export</span> <span class="nv">LC_ALL</span><span class="o">=</span>en_US.UTF-8
+
+<span class="c1"># 新增配置</span>
+<span class="nv">DEFAULT_USER</span><span class="o">=</span><span class="s2">&#34;yourusername&#34;</span>
+
+<span class="nb">export</span> <span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8
+<span class="nb">export</span> <span class="nv">LC_ALL</span><span class="o">=</span>en_US.UTF-8
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="mas">mas</h1>
+<p>mas 用来管理 Mac App Store Applications。</p>
+<h2 id="安装-mas">安装 mas</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">brew install mas
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="常用操作">常用操作</h2>
+<p>常用操作与brew基本一致。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">mas search &lt;keyword&gt;
+mas install &lt;ID1&gt; &lt;ID2&gt;
+mas upgrade &lt;ID1&gt; &lt;ID2&gt;
+mas outdated
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="常用-app">常用 App</h2>
+<ul>
+<li>836500024 WeChat (2.3.10)</li>
+<li>497799835 Xcode (9.2)</li>
+<li>409183694 Keynote (7.3.1)</li>
+<li>451108668 QQ (6.3.1)</li>
+<li>944848654 NeteaseMusic (1.5.9)</li>
+<li>截图</li>
+<li>Bear</li>
+<li>Reeder</li>
+</ul>
+<h1 id="配置">配置</h1>
+<h2 id="zshrc">.zshrc</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># brew</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/usr/local/sbin:<span class="nv">$HOME</span>/bin:<span class="nv">$PATH</span>
+
+<span class="c1"># proxy</span>
+<span class="nb">alias</span> <span class="nv">pip</span><span class="o">=</span><span class="s2">&#34;pip3 --proxy 127.0.0.1:1087&#34;</span>
+<span class="nb">alias</span> <span class="nv">ss</span><span class="o">=</span><span class="s2">&#34;export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;&#34;</span>
+<span class="nb">alias</span> <span class="nv">unss</span><span class="o">=</span><span class="s2">&#34;unset http_proxy;unset https_proxy;&#34;</span>
+
+<span class="c1"># quick open</span>
+<span class="nb">alias</span> <span class="nv">md</span><span class="o">=</span><span class="s2">&#34;open -a Typora&#34;</span>
+<span class="nb">alias</span> <span class="nv">idle</span><span class="o">=</span><span class="s2">&#34;idle3 -c &#39;from pprint import pprint;import datetime,time,os,sys,json,collections,math;&#39;&#34;</span>
+
+<span class="c1"># pipenv</span>
+<span class="nb">alias</span> <span class="nv">v</span><span class="o">=</span><span class="s2">&#34;pipenv shell&#34;</span>
+<span class="nb">export</span> <span class="nv">PIPENV_VENV_IN_PROJECT</span><span class="o">=</span><span class="nb">true</span>
+
+<span class="c1"># ssh alias</span>
+<span class="nb">alias</span> <span class="nv">pi</span><span class="o">=</span><span class="s2">&#34;ssh pi@192.168.2.211 -p 3154&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="vim">vim</h2>
+<p>下载 solarized 主题配色</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">mkdir -p ~/.vim/colors
+<span class="nb">cd</span> ~/.vim/colors
+curl -O https://raw.githubusercontent.com/altercation/vim-colors-solarized/master/colors/solarized.vim
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">vi ~/.vimrc
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">syntax on
+<span class="nb">set</span> <span class="nv">background</span><span class="o">=</span>dark
+colorscheme solarized
+<span class="nb">set</span> number
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="gitconfig">.gitconfig</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">[user]
+	name = foo
+	email = name@email.com
+[core]
+	quotepath = false
+</code></pre></td></tr></table>
+</div>
+</div><p><code>quotepath = false</code> 可以使 shell 中的 git 能够显示中文路径和文件名。</p>
+<h2 id="typora">Typora</h2>
+<p>主题：<a href="http://theme.typora.io/theme/Solarized/" target="_blank" rel="noopener noreffer">Solarized</a></p>
+<h2 id="iterm2">iTerm2</h2>
+<ul>
+<li>non-ASCII字体选用 <code>mononoki</code>，Horizontal 90%，Vertical 110%；</li>
+<li>Preferences - Profiles - Colors - Color Presets，修改配色主题为 <code>Solarized Dark</code>；</li>
+<li>Preferences - Keys - Hotkey - Hotkey toggles a dedicated window with profile 勾选；</li>
+<li>Preferences - Profiles - Text - Text Rendering - Draw bold text in bright colors 取消勾选；</li>
+</ul>
+<h2 id="sublime">Sublime</h2>
+<h3 id="插件">插件</h3>
+<ul>
+<li>Package Control</li>
+<li>AdvancedNewFile</li>
+<li>GitGutter</li>
+<li>Theme - One Dark</li>
+<li>nginx</li>
+<li>HTML-CSS-JS Prettify</li>
+</ul>
+<h3 id="配置-1">配置</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+	<span class="nt">&#34;bold_folder_labels&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="nt">&#34;color_scheme&#34;</span><span class="p">:</span> <span class="s2">&#34;Packages/Theme - One Dark/One Dark.tmTheme&#34;</span><span class="p">,</span>
+	<span class="nt">&#34;debounce_delay&#34;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+	<span class="nt">&#34;default_line_ending&#34;</span><span class="p">:</span> <span class="s2">&#34;unix&#34;</span><span class="p">,</span>
+	<span class="nt">&#34;detect_indentation&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+	<span class="nt">&#34;draw_minimap_border&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="nt">&#34;ensure_newline_at_eof_on_save&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="nt">&#34;fade_fold_buttons&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+	<span class="nt">&#34;file_exclude_patterns&#34;</span><span class="p">:</span>
+	<span class="p">[</span>
+		<span class="s2">&#34;*.pyc&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.pyo&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.exe&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.dll&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.obj&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.o&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.a&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.lib&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.so&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.dylib&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.ncb&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.sdf&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.suo&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.pdb&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.idb&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;.DS_Store&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.class&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.psd&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.db&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;*.sublime-workspace&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;.DS_Store&#34;</span>
+	<span class="p">],</span>
+	<span class="nt">&#34;folder_exclude_patterns&#34;</span><span class="p">:</span>
+	<span class="p">[</span>
+		<span class="s2">&#34;.svn&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;.git&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;.hg&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;CVS&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;venv&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;.venv&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;.idea&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;__pycache__&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;.pytest_cache&#34;</span>
+	<span class="p">],</span>
+	<span class="nt">&#34;font_face&#34;</span><span class="p">:</span> <span class="s2">&#34;Source Code Pro&#34;</span><span class="p">,</span>
+	<span class="nt">&#34;font_size&#34;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+	<span class="nt">&#34;highlight_line&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="nt">&#34;hot_exit&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="nt">&#34;ignored_packages&#34;</span><span class="p">:</span>
+	<span class="p">[</span>
+		<span class="s2">&#34;Vintage&#34;</span>
+	<span class="p">],</span>
+	<span class="nt">&#34;line_padding_bottom&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+	<span class="nt">&#34;line_padding_top&#34;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+	<span class="nt">&#34;rulers&#34;</span><span class="p">:</span>
+	<span class="p">[</span>
+		<span class="mi">80</span><span class="p">,</span>
+		<span class="mi">100</span><span class="p">,</span>
+		<span class="mi">120</span>
+	<span class="p">],</span>
+	<span class="nt">&#34;save_on_focus_lost&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="nt">&#34;scroll_past_end&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="nt">&#34;show_encoding&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="nt">&#34;theme&#34;</span><span class="p">:</span> <span class="s2">&#34;One Dark.sublime-theme&#34;</span><span class="p">,</span>
+	<span class="nt">&#34;translate_tabs_to_spaces&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="nt">&#34;trim_trailing_white_space_on_save&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="nt">&#34;word_wrap&#34;</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="python-snippets">Python Snippets</h3>
+<p>snippets存储路径为 <code>~/Library/Application Support/Sublime Text 3/Packages/User</code>；</p>
+<p>snippets扩展名为 <code>.sublime-snippet</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">cd</span> ~/Library/Application Support/Sublime Text 3/Packages/User
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">vi coding.sublime-snippet
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;snippet&gt;</span>
+    <span class="nt">&lt;content&gt;</span><span class="cp">&lt;![CDATA[
+</span><span class="cp"># coding=utf-8
+</span><span class="cp">
+</span><span class="cp">]]&gt;</span><span class="nt">&lt;/content&gt;</span>
+    <span class="c">&lt;!-- Optional: Set a tabTrigger to define how to trigger the snippet --&gt;</span>
+    <span class="nt">&lt;tabTrigger&gt;</span>enc<span class="nt">&lt;/tabTrigger&gt;</span>
+    <span class="c">&lt;!-- Optional: Set a scope to limit where the snippet will trigger --&gt;</span>
+    <span class="nt">&lt;scope&gt;</span>source.python<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/snippet&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">vi shebang.sublime-snippet
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;snippet&gt;</span>
+    <span class="nt">&lt;content&gt;</span><span class="cp">&lt;![CDATA[
+</span><span class="cp">#!/usr/bin/env python3
+</span><span class="cp">
+</span><span class="cp">]]&gt;</span><span class="nt">&lt;/content&gt;</span>
+    <span class="c">&lt;!-- Optional: Set a tabTrigger to define how to trigger the snippet --&gt;</span>
+    <span class="nt">&lt;tabTrigger&gt;</span>env<span class="nt">&lt;/tabTrigger&gt;</span>
+    <span class="c">&lt;!-- Optional: Set a scope to limit where the snippet will trigger --&gt;</span>
+    <span class="nt">&lt;scope&gt;</span>source.python<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/snippet&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="vscode">VSCode</h2>
+<p>扩展列表，通过 <code>code --list-extensions</code> 导出。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">CoenraadS.bracket-pair-colorizer
+eamodio.gitlens
+hangxingliu.vscode-nginx-conf-hint
+mikestead.dotenv
+ms-azuretools.vscode-docker
+ms-python.python
+ms-vscode.Go
+PKief.material-icon-theme
+zhuangtongfa.Material-theme
+</code></pre></td></tr></table>
+</div>
+</div><p>通过 <code>code install-extension 扩展</code> 来安装。</p>
+<h1 id="faq">FAQ</h1>
+<h2 id="卸载oh-my-zsh">卸载oh-my-zsh</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">uninstall_oh_my_zsh
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="ubuntu上安装oh-my-zsh依赖">Ubuntu上安装oh-my-zsh依赖</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">sudo apt update
+sudo apt upgrade
+
+sudo apt install zsh
+sudo apt install git
+sudo apt install autojump
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="ubuntu启用agnoster主题报错">Ubuntu启用agnoster主题报错</h2>
+<ul>
+<li>报错：character not in range</li>
+<li>原因：Ubuntu主机没有正确设置locale，至少应包含一项<code>UTF-8</code>的locale。</li>
+<li>解决：
+<ul>
+<li>检查locale，<code>locale</code>和<code>locale -a</code>命令；</li>
+<li>重新生成locale，在<code>/etc/locale.gen</code>中取消注释，然后执行<code>locale-gen</code>命令；</li>
+</ul>
+</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2019-08-26</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/c29fb/" class="prev" rel="prev" title="在Ubuntu上部署Jupyter"><i class="fas fa-angle-left fa-fw"></i>在Ubuntu上部署Jupyter</a>
+            <a href="/posts/91ce2/" class="next" rel="next" title="加快分页查询大量数据速度的一种方法">加快分页查询大量数据速度的一种方法<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2018-02-05T22:45:42+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"Mac开发环境搭建"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

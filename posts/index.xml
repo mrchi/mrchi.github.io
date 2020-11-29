@@ -1,0 +1,78 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>所有文章 - Déjà vu</title>
+        <link>https://mrchi.cc/posts/</link>
+        <description>所有文章 | Déjà vu</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>chiqingjun@gmail.com (MrChi)</managingEditor>
+            <webMaster>chiqingjun@gmail.com (MrChi)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 29 Nov 2020 12:30:40 &#43;0800</lastBuildDate><atom:link href="https://mrchi.cc/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>在 Home Assistant 中集成 69 元 3 个的米家蓝牙温湿度计 2</title>
+    <link>https://mrchi.cc/posts/b5ee0/</link>
+    <pubDate>Sun, 29 Nov 2020 12:30:40 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/b5ee0/</guid>
+    <description><![CDATA[<p>本文记录如何把米家蓝牙温湿度计 2（型号<code>LYWSD03MMC</code>）集成到 Home Assistant 中。</p>]]></description>
+</item><item>
+    <title>《图解HTTP》笔记</title>
+    <link>https://mrchi.cc/posts/eeefc/</link>
+    <pubDate>Sun, 22 Nov 2020 00:05:39 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/eeefc/</guid>
+    <description><![CDATA[<p>《图解 HTTP》是一本通俗易懂的介绍 HTTP 协议的书，由日本作者上野宣写作于 2014 年。由于写作时间早于 HTTP/2 的正式发布时间——2015 年 5 月，书中对于 HTTP/2 的部分表述可能有所出入。</p>]]></description>
+</item><item>
+    <title>使用Python自己实现Base64</title>
+    <link>https://mrchi.cc/posts/0b6b7/</link>
+    <pubDate>Fri, 20 Nov 2020 00:06:46 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/0b6b7/</guid>
+    <description><![CDATA[<p>不用 Python 的 base64 标准库，如何自己实现一个 Base64 编码函数？</p>]]></description>
+</item><item>
+    <title>Python计算日历星期</title>
+    <link>https://mrchi.cc/posts/0bf3d/</link>
+    <pubDate>Thu, 12 Nov 2020 09:24:24 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/0bf3d/</guid>
+    <description><![CDATA[<p>我们经常会在日历中看到本周是今年的第几周，这是如何定义的？又如何用 Python 来计算呢？</p>]]></description>
+</item><item>
+    <title>解决csv中文乱码</title>
+    <link>https://mrchi.cc/posts/bbe08/</link>
+    <pubDate>Thu, 12 Nov 2020 08:11:14 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/bbe08/</guid>
+    <description><![CDATA[<p>Web 应用程序中经常会有导出文件报表的需求，csv 格式结构简单，Python 无需安装第三方库，标准库即可生成 csv 文件，是导出报表的不二首选。然而，如果没有设置好 csv 文件的编码，在 Microsoft Excel 中打开时，可能是一片乱码。</p>]]></description>
+</item><item>
+    <title>在CentOS上安装supervisor</title>
+    <link>https://mrchi.cc/posts/fcac4/</link>
+    <pubDate>Sun, 27 Sep 2020 09:05:17 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/fcac4/</guid>
+    <description><![CDATA[<p>supervisor 是用 Python 语言实现的一个进程持久化管理工具，可以通过 pip 安装，或某些发行版的包管理器安装。但是在 CentOS 上，能直接 <code>yum install</code> 安装吗？事情并没有这么简单。</p>]]></description>
+</item><item>
+    <title>自己部署Bitwarden服务</title>
+    <link>https://mrchi.cc/posts/88980/</link>
+    <pubDate>Sat, 13 Jun 2020 12:10:02 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/88980/</guid>
+    <description><![CDATA[<p>Bitwarden 是一个开源的密码管理器解决方案，拥有多个平台的客户端。它采用的方式是云端数据库、客户端同步和离线使用的模式，类似现在的 1password。其优势在于：</p>]]></description>
+</item><item>
+    <title>树莓派zero的USB ethernet gadget配置</title>
+    <link>https://mrchi.cc/posts/edd5c/</link>
+    <pubDate>Thu, 11 Jun 2020 13:46:30 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/edd5c/</guid>
+    <description><![CDATA[<p>树莓派 zero w 是一个非常小巧的树莓派型号，既没有以太网口，也没有 USB-A 口，只有 micro USB 接口 和 Mini HDMI。若没有各种转接线，想要连接树莓派只能靠 配置无线网络。但是，假如需要使用 zero w 的无线网卡做一些嗅探抓包之类的功能，就不太方便了。</p>]]></description>
+</item><item>
+    <title>Home Assistant-开源智能家居系统</title>
+    <link>https://mrchi.cc/posts/dbf6a/</link>
+    <pubDate>Mon, 08 Jun 2020 00:04:22 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/dbf6a/</guid>
+    <description><![CDATA[<p>Home Assistant（简称 HA）是一个开源的智能家居平台，可以运行在树莓派或者服务器上。目前已经能够接入许多品牌的智能设备，包括米家和 Yeelight。同时，还支持 Apple HomeKit、Google Assistant 和 Amazon Alexa 等智能家居控制平台。通过 Home Assistant，不需要米家网关，也能方便地使用 Siri 控制米家的智能设备。</p>]]></description>
+</item><item>
+    <title>在Mac上使用USB转串口调试树莓派</title>
+    <link>https://mrchi.cc/posts/32e91/</link>
+    <pubDate>Mon, 08 Jun 2020 00:04:22 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/32e91/</guid>
+    <description><![CDATA[安装PL2303驱动 下载官方驱动：PL2303 Mac OS X Driver Download 安装驱动，安装完成后重启电脑； 检测安装成功： 插上USB转串口模块，打开终端执行以下命]]></description>
+</item></channel>
+</rss>

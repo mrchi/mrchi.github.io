@@ -1,0 +1,78 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Infrastructure - 分类 - Déjà vu</title>
+        <link>https://mrchi.cc/categories/infrastructure/</link>
+        <description>Infrastructure - 分类 - Déjà vu</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>chiqingjun@gmail.com (MrChi)</managingEditor>
+            <webMaster>chiqingjun@gmail.com (MrChi)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 27 Sep 2020 09:05:17 &#43;0800</lastBuildDate><atom:link href="https://mrchi.cc/categories/infrastructure/" rel="self" type="application/rss+xml" /><item>
+    <title>在CentOS上安装supervisor</title>
+    <link>https://mrchi.cc/posts/fcac4/</link>
+    <pubDate>Sun, 27 Sep 2020 09:05:17 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/fcac4/</guid>
+    <description><![CDATA[<p>supervisor 是用 Python 语言实现的一个进程持久化管理工具，可以通过 pip 安装，或某些发行版的包管理器安装。但是在 CentOS 上，能直接 <code>yum install</code> 安装吗？事情并没有这么简单。</p>]]></description>
+</item><item>
+    <title>Linux创客实战</title>
+    <link>https://mrchi.cc/posts/a3348/</link>
+    <pubDate>Sun, 29 Dec 2019 19:39:05 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/a3348/</guid>
+    <description><![CDATA[<p>本文是《Linux 创客实战》一书的笔记，主要涉及 Linux 和树莓派的知识点。</p>]]></description>
+</item><item>
+    <title>DNS服务原理入门</title>
+    <link>https://mrchi.cc/posts/af3ff/</link>
+    <pubDate>Thu, 14 Mar 2019 13:20:10 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/af3ff/</guid>
+    <description><![CDATA[<p>DNS（Domain Name System，域名系统）是互联网的一项服务，提供根据域名查询 IP 地址，默认使用 TCP 和 UDP 的 53 端口。</p>]]></description>
+</item><item>
+    <title>制作deb包</title>
+    <link>https://mrchi.cc/posts/e2e73/</link>
+    <pubDate>Sat, 02 Feb 2019 16:38:45 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/e2e73/</guid>
+    <description><![CDATA[<p>deb 是 Debian 软件包格式，文件扩展名为 <code>.deb</code>，在 Debian 和 Ubuntu 中广泛使用。将应用打包成 deb 软件包可以方便分发、安装和卸载，提供更好的用户体验。</p>]]></description>
+</item><item>
+    <title>PostgreSQL基础操作</title>
+    <link>https://mrchi.cc/posts/8e9fa/</link>
+    <pubDate>Fri, 30 Nov 2018 12:20:46 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/8e9fa/</guid>
+    <description><![CDATA[连接数据库 1 psql -U &lt;USERNAME&gt; -d &lt;DBNAME&gt; -h &lt;HOSTNAME&gt; -p &lt;PORT&gt; 默认端口 5432。 psql命令存在简写形式。如果当前Linux系统用户，同时也是PostgreSQL用户，则可]]></description>
+</item><item>
+    <title>学习Docker(6)-Docker Compose</title>
+    <link>https://mrchi.cc/posts/b6f79/</link>
+    <pubDate>Wed, 05 Sep 2018 18:19:13 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/b6f79/</guid>
+    <description><![CDATA[简介 Compose 项目是 Docker 官方的开源项目，负责实现对 Docker 容器集群的快速编排。Compose 可以使用 YAML 文件来配置应用程序的服务，然后可以从配置中使用单个命令]]></description>
+</item><item>
+    <title>减少MySQL内存占用</title>
+    <link>https://mrchi.cc/posts/d61e3/</link>
+    <pubDate>Wed, 05 Sep 2018 13:31:50 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/d61e3/</guid>
+    <description><![CDATA[<p>适用于 MySQL 5.6 和 MySQL 5.7 版本，其他版本未测试。</p>]]></description>
+</item><item>
+    <title>学习Docker(5)-Docker服务管理</title>
+    <link>https://mrchi.cc/posts/be138/</link>
+    <pubDate>Sat, 11 Aug 2018 23:40:30 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/be138/</guid>
+    <description><![CDATA[Docker 容器的网络连接 Docker 客户端和守护进程 Docker 为 c/s 架构，客户端和守护进程支持以下三种socket： unix:///var/run/docker.sock tcp://host:port fd://socket 自定义的 Docker 客户端 可以通过 Remote API 与 Docker守护]]></description>
+</item><item>
+    <title>学习Docker(4)-构建镜像</title>
+    <link>https://mrchi.cc/posts/d9d3c/</link>
+    <pubDate>Fri, 10 Aug 2018 17:40:45 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/d9d3c/</guid>
+    <description><![CDATA[<p>镜像是生成容器的模版，镜像应该是无状态的，不包含具体的配置。</p>]]></description>
+</item><item>
+    <title>学习Docker(3)-镜像基本操作</title>
+    <link>https://mrchi.cc/posts/9fa19/</link>
+    <pubDate>Thu, 09 Aug 2018 19:13:46 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://mrchi.cc/posts/9fa19/</guid>
+    <description><![CDATA[docker images 列出镜像列表。 1 docker images [OPTIONS] [REPOSITORY[:TAG]] --all -a 列出所有镜像（默认会隐藏中间层镜像）； —-no-trunc 显示完整的信息，如完整的 ID； --quiet -q 只列出镜像 ID。]]></description>
+</item></channel>
+</rss>

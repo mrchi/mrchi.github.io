@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>《图解HTTP》笔记 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="《图解HTTP》笔记" />
+<meta property="og:description" content="《图解 HTTP》是一本通俗易懂的介绍 HTTP 协议的书，由日本作者上野宣写作于 2014 年。由于写作时间早于 HTTP/2 的正式发布时间——2015 年 5 月，书中对于 HTTP/2 的部分表述可能有所出入。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/eeefc/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2020-11-22T00:05:39+08:00" />
+<meta property="article:modified_time" content="2020-11-22T00:15:36+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="《图解HTTP》笔记"/>
+<meta name="twitter:description" content="《图解 HTTP》是一本通俗易懂的介绍 HTTP 协议的书，由日本作者上野宣写作于 2014 年。由于写作时间早于 HTTP/2 的正式发布时间——2015 年 5 月，书中对于 HTTP/2 的部分表述可能有所出入。"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/eeefc/" /><link rel="prev" href="https://mrchi.cc/posts/0b6b7/" /><link rel="next" href="https://mrchi.cc/posts/b5ee0/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "《图解HTTP》笔记",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/eeefc\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  12158 ,
+        "url": "https:\/\/mrchi.cc\/posts\/eeefc\/","datePublished": "2020-11-22T00:05:39+08:00","dateModified": "2020-11-22T00:15:36+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Mr.Chi"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">《图解HTTP》笔记</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Mr.Chi</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/web-%E5%BC%80%E5%8F%91/"><i class="far fa-folder fa-fw"></i>Web 开发</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-11-22">2020-11-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 12158 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 25 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#了解-web-及网络基础">了解 Web 及网络基础</a>
+      <ul>
+        <li><a href="#网络基础-tcpip-协议族">网络基础 TCP/IP 协议族</a></li>
+        <li><a href="#与-http-关系密切的协议iptcp-和-dns">与 HTTP 关系密切的协议：IP、TCP 和 DNS</a></li>
+        <li><a href="#uri-和-url">URI 和 URL</a></li>
+      </ul>
+    </li>
+    <li><a href="#简单的-http-协议">简单的 HTTP 协议</a>
+      <ul>
+        <li><a href="#请求报文和响应报文">请求报文和响应报文</a></li>
+        <li><a href="#http-方法">HTTP 方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#http-报文内的-http-信息">HTTP 报文内的 HTTP 信息</a>
+      <ul>
+        <li><a href="#编码提升传输速率">编码提升传输速率</a></li>
+        <li><a href="#multipart">multipart</a></li>
+        <li><a href="#获取部分内容的范围请求">获取部分内容的范围请求</a></li>
+        <li><a href="#内容协商返回最合适的内容">内容协商返回最合适的内容</a></li>
+      </ul>
+    </li>
+    <li><a href="#返回结果的-http-状态码">返回结果的 HTTP 状态码</a>
+      <ul>
+        <li><a href="#2xx-成功">2XX 成功</a></li>
+        <li><a href="#3xx-重定向">3XX 重定向</a></li>
+        <li><a href="#4xx-客户端错误">4XX 客户端错误</a></li>
+        <li><a href="#5xx-服务器错误">5XX 服务器错误</a></li>
+      </ul>
+    </li>
+    <li><a href="#与-http-协作的-web-服务器">与 HTTP 协作的 Web 服务器</a>
+      <ul>
+        <li><a href="#代理网关和隧道">代理、网关和隧道</a></li>
+      </ul>
+    </li>
+    <li><a href="#http-首部">HTTP 首部</a>
+      <ul>
+        <li><a href="#http-报文首部">HTTP 报文首部</a></li>
+        <li><a href="#http-首部字段">HTTP 首部字段</a></li>
+        <li><a href="#http11-通用首部字段">HTTP/1.1 通用首部字段</a>
+          <ul>
+            <li><a href="#cache-control">Cache-Control</a></li>
+            <li><a href="#connection">Connection</a></li>
+            <li><a href="#transfer-encoding">Transfer-Encoding</a></li>
+            <li><a href="#upgrade">Upgrade</a></li>
+            <li><a href="#via">Via</a></li>
+          </ul>
+        </li>
+        <li><a href="#请求首部字段">请求首部字段</a></li>
+        <li><a href="#响应首部字段">响应首部字段</a></li>
+        <li><a href="#实体首部字段">实体首部字段</a></li>
+        <li><a href="#为-cookie-服务的首部字段">为 Cookie 服务的首部字段</a></li>
+        <li><a href="#其他首部字段">其他首部字段</a></li>
+      </ul>
+    </li>
+    <li><a href="#确保-web-安全的-https">确保 Web 安全的 HTTPS</a>
+      <ul>
+        <li><a href="#http-的缺点">HTTP 的缺点</a></li>
+        <li><a href="#http--加密--认证--完整性保护--https">HTTP + 加密 + 认证 + 完整性保护 = HTTPS</a></li>
+        <li><a href="#https-数字证书">HTTPS 数字证书</a></li>
+        <li><a href="#https-的通信步骤">HTTPS 的通信步骤</a></li>
+      </ul>
+    </li>
+    <li><a href="#确认访问用户身份的认证">确认访问用户身份的认证</a>
+      <ul>
+        <li><a href="#basic-认证">BASIC 认证</a></li>
+        <li><a href="#digest-认证">DIGEST 认证</a></li>
+        <li><a href="#ssl-客户端认证">SSL 客户端认证</a></li>
+        <li><a href="#基于表单认证">基于表单认证</a></li>
+      </ul>
+    </li>
+    <li><a href="#基于-http-的功能追加协议">基于 HTTP 的功能追加协议</a>
+      <ul>
+        <li><a href="#ajaxcomet-和-spdy">Ajax、Comet 和 SPDY</a></li>
+        <li><a href="#使用浏览器进行全双工通信的-websocket">使用浏览器进行全双工通信的 WebSocket</a></li>
+        <li><a href="#web-服务器管理文件的-webdav">Web 服务器管理文件的 WebDAV</a></li>
+      </ul>
+    </li>
+    <li><a href="#构建-web-内容的技术">构建 Web 内容的技术</a>
+      <ul>
+        <li><a href="#cgi-和-servlet">CGI 和 Servlet</a></li>
+        <li><a href="#数据发布的格式及语言">数据发布的格式及语言</a></li>
+      </ul>
+    </li>
+    <li><a href="#web-的攻击技术">Web 的攻击技术</a>
+      <ul>
+        <li><a href="#对-web-应用的攻击模式">对 Web 应用的攻击模式</a></li>
+        <li><a href="#因输出值转义不完全引发的安全漏洞">因输出值转义不完全引发的安全漏洞</a>
+          <ul>
+            <li><a href="#跨站脚本攻击">跨站脚本攻击</a></li>
+            <li><a href="#sql-注入">SQL 注入</a></li>
+            <li><a href="#os-命令注入">OS 命令注入</a></li>
+            <li><a href="#http-首部注入">HTTP 首部注入</a></li>
+            <li><a href="#邮件首部注入">邮件首部注入</a></li>
+            <li><a href="#目录遍历">目录遍历</a></li>
+          </ul>
+        </li>
+        <li><a href="#因设置或设计上的缺陷引发的安全漏洞">因设置或设计上的缺陷引发的安全漏洞</a>
+          <ul>
+            <li><a href="#强制浏览">强制浏览</a></li>
+            <li><a href="#不正确的错误消息处理">不正确的错误消息处理</a></li>
+            <li><a href="#开放重定向">开放重定向</a></li>
+          </ul>
+        </li>
+        <li><a href="#因会话管理疏忽引发的安全漏洞">因会话管理疏忽引发的安全漏洞</a>
+          <ul>
+            <li><a href="#会话劫持">会话劫持</a></li>
+            <li><a href="#会话固定攻击">会话固定攻击</a></li>
+            <li><a href="#跨站点请求伪造">跨站点请求伪造</a></li>
+          </ul>
+        </li>
+        <li><a href="#其他安全漏洞">其他安全漏洞</a>
+          <ul>
+            <li><a href="#密码破解攻击">密码破解攻击</a></li>
+            <li><a href="#点击劫持">点击劫持</a></li>
+            <li><a href="#dos-攻击">DoS 攻击</a></li>
+            <li><a href="#后门程序">后门程序</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>《图解 HTTP》是一本通俗易懂的介绍 HTTP 协议的书，由日本作者上野宣写作于 2014 年。由于写作时间早于 HTTP/2 的正式发布时间——2015 年 5 月，书中对于 HTTP/2 的部分表述可能有所出入。</p>
+<h1 id="了解-web-及网络基础">了解 Web 及网络基础</h1>
+<h2 id="网络基础-tcpip-协议族">网络基础 TCP/IP 协议族</h2>
+<p>TCP/IP 协议族由上至下分为 4 层：应用层、传输层、网络层、数据链路层。</p>
+<p>利用 TCP/IP 协议族进行网络通信时，会通过分层顺序与对方进行通信。发送端从应用层往下走，接收端则往应用层往上走。</p>
+<p>发送端在层与层之间传输数据时，每经过一层时必定会被打上一个该层所属的首部信息。反之，接收端在层与层传输数据时，每经过一层时会把对应的首部消去。这种把数据信息包装起来的做法称为<strong>封装（encapsulate）</strong>。</p>
+<h2 id="与-http-关系密切的协议iptcp-和-dns">与 HTTP 关系密切的协议：IP、TCP 和 DNS</h2>
+<p>IP（Internet Protocol）网际协议位于网络层，IP 协议的作用是把各种数据包传送给对方。</p>
+<p>路由选择（routing），没有计算机设备能够掌握互联网中的细节。</p>
+<p>字节流服务（Byte Stream Service）是指，为了方便传输，将大块数据分割成以报文段（segment）为单位的数据包进行管理。</p>
+<h2 id="uri-和-url">URI 和 URL</h2>
+<p>URL（<strong>Uniform Resource Locator</strong>，<strong>统一资源定位符</strong>）。URL 正是使用 Web 浏览器等访问 Web 页面时需要输入的网页地址。</p>
+<p>URI 是 <strong>Uniform Resource Identifier</strong> 的缩写，称为<strong>统一资源标识符</strong>。</p>
+<ul>
+<li>Uniform：规定统一的格式；</li>
+<li>Resource：资源的定义是“可标识的任何东西”。</li>
+<li>Identifier：表示可标识的对象。也称为标识符。</li>
+</ul>
+<p>综上所述，URI 就是由某个协议方案表示的资源的定位标识符。</p>
+<p>标准的 URI 协议方案有 30 种左右，由隶属于国际互联网资源管理的非营利社团 ICANN（Internet Corporation for Assigned Names and Numbers，互联网名称与数字地址分配机构 ）的 IANA（Internet Assigned Numbers Authority，互联网号码分配局）管理颁布。</p>
+<p>URI 用字符串标识某一互联网资源，而 URL 表示资源的地点（互联网上所处的位置）。可见 <strong>URL 是 URI 的子集</strong>。</p>
+<h1 id="简单的-http-协议">简单的 HTTP 协议</h1>
+<h2 id="请求报文和响应报文">请求报文和响应报文</h2>
+<p>请求报文是由请求方法、请求 URI、协议版本、可选的请求首部字段和内容实体构成的。</p>
+<p>响应报文基本上由协议版本、状态码（表示请求成功或失败的数字代码）、用以解释状态码的原因短语、可选的响应首部字段以及实体主体构成。</p>
+<h2 id="http-方法">HTTP 方法</h2>
+<ul>
+<li><strong>GET</strong> 获取资源；</li>
+<li><strong>POST</strong> 传输实体；</li>
+<li><strong>PUT</strong> 传输文件，HTTP/1.1 的 PUT 方法自身不带验证机制；</li>
+<li><strong>HEAD</strong> 与 GET 一样，但不返回报文主体内容；</li>
+<li><strong>OPTIONS</strong> 用来查询支持的方法。</li>
+<li><strong>TRACE</strong> 让 Web 服务器端将之前的请求通信环回给客户端的方法。</li>
+<li><strong>CONNECT</strong> 要求在与代理服务器通信时建立隧道，实现用隧道协议进行 TCP 通信。</li>
+</ul>
+<h1 id="http-报文内的-http-信息">HTTP 报文内的 HTTP 信息</h1>
+<h2 id="编码提升传输速率">编码提升传输速率</h2>
+<p>压缩传输的内容编码：把实体压缩后传送。主要有：</p>
+<ul>
+<li>gzip（GNU zip）</li>
+<li>compress（UNIX 系统的标准压缩）</li>
+<li>deflate（zlib）</li>
+<li>identity（不进行编码）</li>
+</ul>
+<p>分割发送的分块传输编码：在传输大容量数据时，把数据分割成多块传送。</p>
+<h2 id="multipart">multipart</h2>
+<ul>
+<li><code>multipart/form-data</code> 在 Web 表单文件上传时使用。</li>
+<li><code>multipart/byteranges</code> 状态码 206（Partial Content，部分内容）响应报文包含了多个范围的内容时使用。</li>
+</ul>
+<p>使用时会在 header 中加上 <code>Content-type</code> 字段，并在其中指明 boundary 字符串，来划分多部分对象集合指明的各类实体。在 boundary 字符串指定的各个实体的起始行之前插入<code>--</code>标记，而在多部分对象集合对应的字符串的最后插入<code>--</code>标记。多部分对象集合的每个部分类型中，都可以含有首部字段。</p>
+<p>举个栗子（from <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST" target="_blank" rel="noopener noreffer">POST - HTTP | MDN</a>）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">POST /test HTTP/1.1
+Host: foo.example
+Content-Type: multipart/form-data;boundary=&#34;boundary&#34;
+
+--boundary
+Content-Disposition: form-data; name=&#34;field1&#34;
+
+value1
+--boundary
+Content-Disposition: form-data; name=&#34;field2&#34;; filename=&#34;example.txt&#34;
+
+value2
+--boundary--
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="获取部分内容的范围请求">获取部分内容的范围请求</h2>
+<p>指定所请求实体的范围发送的请求叫做<strong>范围请求（Range Request）</strong>。</p>
+<p>执行范围请求时，会用到首部字段 Range 来指定资源的 byte 范围。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Range: bytes=5001-10000
+</code></pre></td></tr></table>
+</div>
+</div><p>针对范围请求，响应会返回状态码为 206 Partial Content 的响应报文。</p>
+<p>如果服务器端无法响应范围请求，则会返回状态码 200 OK 和完整的实体内容。</p>
+<h2 id="内容协商返回最合适的内容">内容协商返回最合适的内容</h2>
+<ul>
+<li>内容协商（Content Negotiation）</li>
+<li>服务器驱动协商（Server-driven Negotiation）</li>
+<li>客户端驱动协商（Agent-driven Negotiation）</li>
+<li>透明协商（Transparent Negotiation）</li>
+</ul>
+<h1 id="返回结果的-http-状态码">返回结果的 HTTP 状态码</h1>
+<p>状态码以 3 位数字和原因短语组成，例如 <code>200 OK</code>。</p>
+<h2 id="2xx-成功">2XX 成功</h2>
+<p><code>204 No Content</code> 该状态码代表服务器接收的请求已成功处理，但在返回的响应报文中不含实体的主体部分。另外，也不允许返回任何实体的主体。</p>
+<p><code>206 Partial Content</code> 该状态码表示客户端进行了范围请求，而服务器成功执行了这部分的 GET 请求。响应报文中包含由 Content-Range 指定范围的实体内容。</p>
+<h2 id="3xx-重定向">3XX 重定向</h2>
+<p><code>303 See Other</code> 303 状态码和 302 Found 状态码有着相同的功能，但 303 状态码明确表示客户端应当采用 GET 方法获取资源，这点与 302 状态码有区别。301、302 标准是禁止将 POST 方法改变成 GET 方法的，但实际使用时大家都会这么做。</p>
+<p><code>307 Temporary Redirect</code> 和 302 Found 状态码有着相同的含义，但 307 会遵照浏览器标准，不会从 POST 变成 GET。</p>
+<h2 id="4xx-客户端错误">4XX 客户端错误</h2>
+<p><code>401 Unauthorized</code> 该状态码表示发送的请求需要有通过 HTTP 认证（BASIC 认证、DIGEST 认证）的认证信息。返回含有 401 的响应必须包含一个适用于被请求资源的 WWW-Authenticate 首部用以质询（challenge）用户信息。也就是说，不采用 HTTP 认证的 Web 系统不应该使用该状态码。</p>
+<h2 id="5xx-服务器错误">5XX 服务器错误</h2>
+<p>当返回 503 时，如果事先得知解除以上状况需要的时间，最好写入 Retry-After 首部字段再返回给客户端。</p>
+<h1 id="与-http-协作的-web-服务器">与 HTTP 协作的 Web 服务器</h1>
+<h2 id="代理网关和隧道">代理、网关和隧道</h2>
+<p>HTTP 通信过程中，转发时，需要附加 <code>Via</code> 首部字段以标记出经过的主机信息。</p>
+<p>代理：</p>
+<ul>
+<li><strong>缓存代理（Caching Proxy）</strong> 会预先将资源的副本（缓存）保存在代理服务器上</li>
+<li><strong>透明代理（Transparent Proxy）</strong> 转发请求或响应时，不对报文做任何加工的代理。反之，对报文内容进行加工的代理被称为非透明代理。</li>
+</ul>
+<p>网关能使通信线路上的服务器提供非 HTTP 协议服务。</p>
+<p>隧道的目的是确保客户端能与服务器进行安全的通信，隧道本身不会去解析 HTTP 请求。</p>
+<h1 id="http-首部">HTTP 首部</h1>
+<h2 id="http-报文首部">HTTP 报文首部</h2>
+<p>在请求中，HTTP 报文由方法、URI、HTTP 版本、HTTP 首部字段等部分构成。</p>
+<p>在响应中，HTTP 报文由 HTTP 版本、状态码（数字和原因短语）、HTTP 首部字段 3 部分构成。</p>
+<h2 id="http-首部字段">HTTP 首部字段</h2>
+<p>根据实际用途被分为以下 4 种类型：</p>
+<ul>
+<li>通用首部字段（General Header Fields）</li>
+<li>请求首部字段（Request Header Fields）</li>
+<li>响应首部字段（Response Header Fields）</li>
+<li>实体首部字段（Entity Header Fields）</li>
+</ul>
+<p>实体首部字段是针对请求报文和响应报文的实体部分使用的首部。补充了资源内容更新时间等与实体有关的信息。</p>
+<p>首部字段的主要定义在 <a href="https://tools.ietf.org/html/rfc2616" target="_blank" rel="noopener noreffer">RFC 2616 - Hypertext Transfer Protocol -- HTTP/1.1</a> 和 <a href="https://tools.ietf.org/html/rfc4229" target="_blank" rel="noopener noreffer">RFC 4229 - HTTP Header Field Registrations</a> 中。</p>
+<p>逐跳首部（Hop-by-hop Header）首部只对单次转发有效，会因通过缓存或代理而不再转发。HTTP/1.1 中的逐跳首部字段有：</p>
+<ul>
+<li><code>Connection</code></li>
+<li><code>Keep-Alive</code></li>
+<li><code>Proxy-Authenticate</code></li>
+<li><code>Proxy-Authorization</code></li>
+<li><code>Trailer</code></li>
+<li><code>TE</code></li>
+<li><code>Transfer-Encoding</code></li>
+<li><code>Upgrade</code></li>
+</ul>
+<p>除这 8 个首部字段之外，其他所有字段都属于端到端首部。</p>
+<h2 id="http11-通用首部字段">HTTP/1.1 通用首部字段</h2>
+<h3 id="cache-control">Cache-Control</h3>
+<p>通过指定首部字段 <code>Cache-Control</code> 的指令，就能操作缓存的工作机制。</p>
+<p><code>no-cache</code> 指令：</p>
+<ul>
+<li>客户端发送的请求中如果包含 <code>no-cache</code> 指令，则表示客户端将不会接收缓存过的响应。于是，“中间”的缓存服务器必须把客户端请求转发给源服务器。</li>
+<li>如果服务器返回的响应中包含 <code>no-cache</code> 指令，那么缓存服务器不能对资源进行缓存。</li>
+<li>由服务器返回的响应中，若报文首部字段 <code>Cache-Control</code> 中对 <code>no-cache</code> 字段名具体指定参数值，那么客户端在接收到这个被指定参数值的首部字段对应的响应报文后，就不能使用缓存。</li>
+</ul>
+<p><code>no-store</code> 指令：当使用 <code>no-store</code> 指令时，暗示请求（和对应的响应）或响应中包含机密信息。因此，该指令规定缓存不能在本地存储请求或响应的任一部分。</p>
+<p><code>max-age</code> 指令：</p>
+<ul>
+<li>当客户端发送的请求中包含 <code>max-age</code> 指令时，如果判定缓存资源的缓存时间数值比指定时间的数值更小，那么客户端就接收缓存的资源。另外，当指定 <code>max-age</code> 值为 0，那么缓存服务器通常需要将请求转发给源服务器。</li>
+<li>当服务器返回的响应中包含 max-age 指令时，缓存服务器将不对资源的有效性再作确认，而 max-age 数值代表资源保存为缓存的最长时间。</li>
+</ul>
+<p><code>no-transform</code> 指令：无论是在请求还是响应中，缓存都不能改变实体主体的媒体类型。</p>
+<h3 id="connection">Connection</h3>
+<p><code>Connection</code> 字段的作用：</p>
+<ul>
+<li>控制不再转发给代理的首部字段。在客户端发送请求和服务器返回响应内，使用 <code>Connection</code> 首部字段，可控制不再转发给代理的首部字段（即 Hop-by-hop 首部）。</li>
+<li>管理持久连接。HTTP/1.1 版本的默认连接都是持久连接。为此，客户端会在持久连接上连续发送请求。当服务器端想明确断开连接时，则指定 <code>Connection</code> 首部字段的值为 <code>Close</code>。</li>
+</ul>
+<h3 id="transfer-encoding">Transfer-Encoding</h3>
+<p>首部字段 <code>Transfer-Encoding</code> 规定了传输报文主体时采用的编码方式。HTTP/1.1 的传输编码方式仅对分块传输编码有效。</p>
+<h3 id="upgrade">Upgrade</h3>
+<p>首部字段 <code>Upgrade</code> 用于检测 HTTP 协议及其他协议是否可使用更高的版本进行通信，其参数值可以用来指定一个完全不同的通信协议。</p>
+<p><code>Upgrade</code> 首部字段产生作用的 <code>Upgrade</code> 对象仅限于客户端和邻接服务器之间。因此，使用首部字段 <code>Upgrade</code> 时，还需要额外指定 <code>Connection:Upgrade</code>。</p>
+<h3 id="via">Via</h3>
+<p>使用首部字段 <code>Via</code> 是为了追踪客户端与服务器之间的请求和响应报文的传输路径。</p>
+<p><code>Via</code> 首部是为了追踪传输路径，所以经常会和 TRACE 方法一起使用。</p>
+<h2 id="请求首部字段">请求首部字段</h2>
+<p><code>Accept</code> 首部字段可通知服务器，用户代理能够处理的媒体类型及媒体类型的相对优先级。可使用 type/subtype 这种形式，一次指定多种媒体类型。若想要给显示的媒体类型增加优先级，则使用 q=来额外表示权重值</p>
+<p><code>Accept-Charset</code> 首部字段可用来通知服务器用户代理支持的字符集及字符集的相对优先顺序。另外，可一次性指定多种字符集。与首部字段 Accept 相同的是可用权重 q 值来表示相对优先级。</p>
+<p><code>Accept-Encoding</code> 首部字段用来告知服务器用户代理支持的内容编码及内容编码的优先级顺序。可一次性指定多种内容编码。</p>
+<ul>
+<li>gzip</li>
+<li>compress</li>
+<li>deflate</li>
+<li>identity</li>
+</ul>
+<p><code>Accept-Language</code> 用来告知服务器用户代理能够处理的自然语言集（指中文或英文等），以及自然语言集的相对优先级。可一次指定多种自然语言集。和 Accept 首部字段一样，按权重值 q 来表示相对优先级。</p>
+<p><code>Authorization</code> 是用来告知服务器，用户代理的认证信息（证书值）。</p>
+<p><code>Expect</code> 来告知服务器，期望出现的某种特定行为。因服务器无法理解客户端的期望作出回应而发生错误时，会返回状态码 417 Expectation Failed。</p>
+<p><code>From</code> 用来告知服务器使用用户代理的用户的电子邮件地址。</p>
+<p><code>Host</code> 会告知服务器，请求的资源所处的互联网主机名和端口号。<strong><code>Host</code> 首部字段在 HTTP/1.1 规范内是唯一一个必须被包含在请求内的首部字段。</strong></p>
+<p><code>Max-Forwards</code>：通过 TRACE 方法或 OPTIONS 方法，发送包含首部字段 <code>Max-Forwards</code> 的请求时，该字段以十进制整数形式指定可经过的服务器最大数目。服务器在往下一个服务器转发请求之前，会将 <code>Max-Forwards</code> 的值减 1 后重新赋值。当服务器接收到 Max-Forwards 值为 0 的请求时，则不再进行转发，而是直接返回响应。</p>
+<p><code>Proxy-Authorization</code>：接收到从代理服务器发来的认证质询时，客户端会发送包含首部字段 <code>Proxy-Authorization</code> 的请求，以告知服务器认证所需要的信息。</p>
+<p><code>Range</code>：对于只需获取部分资源的范围请求，包含首部字段 <code>Range</code> 即可告知服务器资源的指定范围。</p>
+<p><code>Referer</code>：正确拼写应是 <code>Referrer</code>，当直接在浏览器的地址栏输入 URI 时，或出于安全性的考虑时，也可以不发送该首部字段。</p>
+<h2 id="响应首部字段">响应首部字段</h2>
+<p><code>ETag</code> 能告知客户端实体标识。它是一种可将资源以字符串形式做唯一性标识的方式。服务器会为每份资源分配对应的 ETag 值。</p>
+<p><code>Location</code> 可以将响应接收方引导至某个与请求 URI 位置不同的资源。</p>
+<p><code>Proxy-Authenticate</code> 会把由代理服务器所要求的认证信息发送给客户端。</p>
+<p><code>Retry-After</code> 告知客户端应该在多久之后再次发送请求。</p>
+<p><code>Server</code> 告知客户端当前服务器上安装的 HTTP 服务器应用程序的信息。</p>
+<p><code>WWW-Authenticate</code> 用于 HTTP 访问认证。它会告知客户端适用于访问请求 URI 所指定资源的认证方案（Basic 或是 Digest）和带参数提示的质询（challenge）。</p>
+<h2 id="实体首部字段">实体首部字段</h2>
+<p>实体首部字段是包含在请求报文和响应报文中的实体部分所使用的首部，用于补充内容的更新时间等与实体相关的信息。</p>
+<p><code>Allow</code> 用于通知客户端能够支持 Request-URI 指定资源的所有 HTTP 方法。</p>
+<p><code>Content-Encoding</code> 会告知客户端服务器对实体的主体部分选用的内容编码方式，主要有：</p>
+<ul>
+<li>gzip</li>
+<li>compress</li>
+<li>deflate</li>
+<li>identity</li>
+</ul>
+<p><code>Content-Language</code> 会告知客户端，实体主体使用的自然语言（指中文或英文等语言）。</p>
+<p><code>Content-Type</code> 说明了实体主体内对象的媒体类型。</p>
+<h2 id="为-cookie-服务的首部字段">为 Cookie 服务的首部字段</h2>
+<p>Cookie 的 path 属性可用于限制指定 Cookie 的发送范围的文件目录。不过另有办法可避开这项限制，看来对其作为安全机制的效果不能抱有期待。</p>
+<p>通过 Cookie 的 domain 属性指定的域名可做到与结尾匹配一致。</p>
+<h2 id="其他首部字段">其他首部字段</h2>
+<p><code>X-Frame-Options</code> 属于 HTTP 响应首部，用于控制网站内容在其他 Web 网站的 Frame 标签内的显示问题。其主要目的是为了防止点击劫持（click jacking）攻击。可指定的字段值有：</p>
+<ul>
+<li>DENY：拒绝；</li>
+<li>SAMEORIGIN：仅同源域名下的页面（Top-level-browsing-context）匹配时许可。</li>
+</ul>
+<p><code>X-XSS-Protection</code> 属于 HTTP 响应首部，它是针对跨站脚本攻击（XSS）的一种对策，用于控制浏览器 XSS 防护机制的开关。首部字段 X-XSS-Protection 可指定的字段值有：</p>
+<ul>
+<li>0 ：将 XSS 过滤设置成无效状态；</li>
+<li>1 ：将 XSS 过滤设置成有效状态。</li>
+</ul>
+<p><code>DNT</code> 属于 HTTP 请求首部，其中 DNT 是 Do Not Track 的简称，意为拒绝个人信息被收集，是表示拒绝被精准广告追踪的一种方法。首部字段 DNT 可指定的字段值有：</p>
+<ul>
+<li>0 ：同意被追踪</li>
+<li>1 ：拒绝被追踪</li>
+</ul>
+<p>在 HTTP 等多种协议中，通过给非标准参数加上前缀 X-，来区别于标准参数，并使那些非标准的参数作为扩展变成可能。但是这种简单粗暴的做法有百害而无一益，因此在 <a href="https://tools.ietf.org/html/rfc6648" target="_blank" rel="noopener noreffer">RFC 6648 - Deprecating the &ldquo;X-&rdquo; Prefix and Similar Constructs in Application Protocols</a> 中提议停止该做法。然而，对已经在使用中的 X-前缀来说，不应该要求其变更。</p>
+<h1 id="确保-web-安全的-https">确保 Web 安全的 HTTPS</h1>
+<h2 id="http-的缺点">HTTP 的缺点</h2>
+<ul>
+<li>通信使用明文（不加密），内容可能会被窃听；</li>
+<li>不验证通信方的身份，因此有可能遭遇伪装；</li>
+<li>无法证明报文的完整性，所以有可能已遭篡改；</li>
+</ul>
+<p>几个名词缩写：</p>
+<ul>
+<li>SSL（Secure Socket Layer，安全套接层）</li>
+<li>TLS（Transport LayerSecurity，安全传输层协议）</li>
+<li>PGP（Pretty Good Privacy，完美隐私）</li>
+</ul>
+<h2 id="http--加密--认证--完整性保护--https">HTTP + 加密 + 认证 + 完整性保护 = HTTPS</h2>
+<p>SSL 是独立于 HTTP 的协议，所以不光是 HTTP 协议，其他运行在应用层的 SMTP 和 Telnet 等协议均可配合 SSL 协议使用。可以说 SSL 是当今世界上应用最为广泛的网络安全技术。</p>
+<p>两种加密方式：</p>
+<ul>
+<li><strong>公开密钥加密（Public-key cryptography）</strong> 加密使用一对非对称的密钥，分别叫做私钥（private key）和公钥（public key）。私钥不能让其他任何人知道，而公钥则可以随意发布，任何人都可以获得。</li>
+<li><strong>共享密钥加密（Common key crypto system）</strong> 加密和解密同用一个密钥，也被叫做对称密钥加密。</li>
+</ul>
+<p>HTTPS 采用共享密钥加密和公开密钥加密两者并用的混合加密机制——在交换密钥环节使用公开密钥加密方式，之后的建立通信交换报文阶段则使用共享密钥加密方式。</p>
+<h2 id="https-数字证书">HTTPS 数字证书</h2>
+<ol>
+<li>数字证书认证机构（CA, Certificate Authority）处于客户端与服务器双方都可信赖的第三方机构的立场上。在判明提出申请者的身份之后，会对申请的公钥做数字签名，然后分配这个已签名的公钥，并将该公钥放入公钥证书后绑定在一起。公钥证书也可叫做数字证书或直接称为证书。</li>
+<li>服务器会将这份由数字证书认证机构颁发的公钥证书发送给客户端；</li>
+<li>客户端可使用数字证书认证机构的公开密钥，对那张证书上的数字签名进行验证，一旦验证通过，客户端便可确认认证服务器公钥的是真实有效的数字证书认证机构，进而确认服务器的公钥是值得信赖的。</li>
+</ol>
+<p>SSL 机制中，介入认证机构之所以可行，是因为建立在其信用绝对可靠这一大前提下的。值得信赖的第三方机构介入认证，才能让已植入在浏览器内的认证机构颁布的公开密钥发挥作用，并借此证明服务器的真实性。</p>
+<p>HTTPS 中还可以使用客户端证书。以客户端证书进行客户端认证，证明服务器正在通信的对方始终是预料之内的客户端，其作用跟服务器证书如出一辙。但客户端证书仍存在几点问题：</p>
+<ul>
+<li>证书的获取及发布困难，对 Web 系统的用户来说自行安装证书需要学习成本；</li>
+<li>客户端证书只能用来证明客户端真实有效，而不能用来证明用户本人的真实有效性；</li>
+</ul>
+<h2 id="https-的通信步骤">HTTPS 的通信步骤</h2>
+<ol>
+<li>客户端通过发送 Client Hello 报文开始 SSL 通信。报文中包含客户端支持的 SSL 的指定版本、加密组件（Cipher Suite）列表（所使用的加密算法及密钥长度等）。</li>
+<li>服务器可进行 SSL 通信时，会以 Server Hello 报文作为应答。和客户端一样，在报文中包含 SSL 版本以及加密组件。服务器的加密组- 件内容是从接收到的客户端加密组件内筛选出来的。</li>
+<li>之后服务器发送 Certificate 报文。报文中包含公开密钥证书。</li>
+<li>最后服务器发送 Server Hello Done 报文通知客户端，最初阶段的 SSL 握手协商部分结束。</li>
+<li>SSL 第一次握手结束之后，客户端以 Client Key Exchange 报文作为回应。报文中包含通信加密中使用的一种被称为 Pre-master secret 的随机密码串。该报文已用步骤 3 中的公开密钥进行加密。</li>
+<li>接着客户端继续发送 Change Cipher Spec 报文。该报文会提示服务器，在此报文之后的通信会采用 Pre-master secret 密钥加密。</li>
+<li>客户端发送 Finished 报文。该报文包含连接至今全部报文的整体校验值。这次握手协商是否能够成功，要以服务器是否能够正确解密该报文作为判定标准。</li>
+<li>服务器同样发送 Change Cipher Spec 报文。</li>
+<li>服务器同样发送 Finished 报文。</li>
+<li>服务器和客户端的 Finished 报文交换完毕之后，SSL 连接就算建立完成。当然，通信会受到 SSL 的保护。从此处开始进行应用层协议的通信，即发送 HTTP 请求。</li>
+<li>应用层协议通信，即发送 HTTP 响应。</li>
+<li>最后由客户端断开连接。断开连接时，发送 close_notify 报文。上图做了一些省略，这步之后再发送 TCP FIN 报文来关闭与 TCP 的通信。</li>
+</ol>
+<p>在以上流程中，应用层发送数据时会附加一种叫做 <strong>MAC（Message Authentication Code）</strong> 的报文摘要。MAC 能够查知报文是否遭到篡改，从而保护报文的完整性。</p>
+<p><strong>CBC 模式（Cipher Block Chaining）</strong> 又名密码分组链接模式。在此模式下，将前一个明文块加密处理后和下一个明文块做 XOR 运算，使之重叠，然后再对运算结果做加密处理。对第一个明文块做加密时，要么使用前一段密文的最后一块，要么利用外部生成的<strong>初始向量（initial vector,IV）</strong>。</p>
+<h1 id="确认访问用户身份的认证">确认访问用户身份的认证</h1>
+<p>质询/响应（challenge/response）认证方式是指，一开始一方会先发送认证要求给另一方，接着使用从另一方那接收到的质询码计算生成响应码。最后将响应码返回给对方进行认证的方式。</p>
+<p>HTTP BASIC 认证和 HTTP DIGEST 认证都属于质询/响应认证方式。</p>
+<h2 id="basic-认证">BASIC 认证</h2>
+<p>认证步骤：</p>
+<ol>
+<li>当请求的资源需要 BASIC 认证时，服务器会随状态码 401 Authorization Required，返回带 <code>WWW-Authenticate</code> 首部字段的响应。该字段内包含认证的方式（BASIC）及 Request-URI 安全域字符串（realm）。</li>
+<li>接收到状态码 401 的客户端为了通过 BASIC 认证，需要将用户 ID 及密码发送给服务器。发送的字符串内容是由用户 ID 和密码构成，两者中间以冒号 <code>:</code> 连接后，再经过 Base64 编码处理，放在 header 字段 <code>Authorization</code> 中。</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>由于明文解码后就是用户 ID 和密码，在 HTTP 等非加密通信的线路上进行 BASIC 认证的过程中，如果被人窃听，被盗的可能性极高。</li>
+<li>除此之外想再进行一次 BASIC 认证时，一般的浏览器却无法实现认证注销操作，这也是问题之一。</li>
+</ol>
+<h2 id="digest-认证">DIGEST 认证</h2>
+<p>DIGEST 认证弥补了 BASIC 认证直接发送明文密码的缺点。</p>
+<p>认证步骤：</p>
+<ol>
+<li>请求需认证的资源时，服务器会随着状态码 401 AuthorizationRequired，返回带 <code>WWW-Authenticate</code> 首部字段的响应。首部字段 <code>WWW-Authenticate</code> 内必须包含 <code>realm</code> 和 <code>nonce</code> 这两个字段的信息。客户端就是依靠向服务器回送这两个值进行认证的。<code>nonce</code> 是一种每次随返回的 401 响应生成的任意随机字符串。该字符串通常推荐由 Base64 编码的十六进制数的组成形式，但实际内容依赖服务器的具体实现。</li>
+<li>接收到 401 状态码的客户端，返回的响应中包含 DIGEST 认证必须的首部字段 <code>Authorization</code> 信息。首部字段 <code>Authorization</code> 内必须包含 <code>username</code>、<code>realm</code>、<code>nonce</code>、<code>uri</code> 和 <code>response</code> 的字段信息。其中，<code>realm</code> 和 <code>nonce</code> 就是之前从服务器接收到的响应中的字段。<code>uri</code>（digest-uri）即 Request-URI 的值，但考虑到经代理转发后 Request-URI 的值可能被修改，因此事先会复制一份副本保存在 uri 内。<code>response</code> 也可叫做 Request-Digest，存放经过哈希算法运算后的密码字符串（不是简单的对密码做哈希），形成响应码。</li>
+<li>服务器认证通过后则返回包含 Request-URI 资源的响应。并且这时会在首部字段 <code>Authentication-Info</code> 写入一些认证成功的相关信息。</li>
+</ol>
+<p>缺点：DIGEST 认证提供防止密码被窃听的保护机制，但并不存在防止用户伪装的保护机制。</p>
+<h2 id="ssl-客户端认证">SSL 客户端认证</h2>
+<p>认证步骤：</p>
+<ol>
+<li>接收到需要认证资源的请求，服务器会发送 Certificate Request 报文，要求客户端提供客户端证书。</li>
+<li>用户选择将发送的客户端证书后，客户端会把客户端证书信息以 Client Certificate 报文方式发送给服务器。</li>
+<li>服务器验证客户端证书验证通过后方可领取证书内客户端的公开密钥，然后开始 HTTPS 加密通信。</li>
+</ol>
+<p>多数情况下，SSL 客户端认证会作为一种多因素认证方式存在，而不会单独使用（因为无法该方式只能认证客户端有效，不能证明客户本人有效）。并且由于成本、易用性等原因，仅在部分安全要求较高的 Web 系统中使用，例如网银、支付系统等。</p>
+<h2 id="基于表单认证">基于表单认证</h2>
+<p>但是对于 Web 网站的认证功能，能够满足其安全使用级别的标准规范并不存在，所以只好使用由 Web 应用程序各自实现基于表单的认证方式。</p>
+<p>保证安全性：</p>
+<ol>
+<li>Session ID 应使用难以推测的字符串，且服务器端也需要进行有效期的管理，保证其安全性。</li>
+<li>为减轻跨站脚本攻击（XSS）造成的损失，建议事先在 Cookie 内加上 httponly 属性。</li>
+<li>不明文保存密码，加盐后做哈希。</li>
+</ol>
+<h1 id="基于-http-的功能追加协议">基于 HTTP 的功能追加协议</h1>
+<p>HTTP 的瓶颈：</p>
+<ul>
+<li>一条连接上只可发送一个请求。</li>
+<li>请求只能从客户端开始。客户端不可以接收除响应以外的指令。</li>
+<li>请求/响应首部未经压缩就发送。首部信息越多延迟越大。</li>
+<li>发送冗长的首部。每次互相发送相同的首部造成的浪费较多。</li>
+<li>可任意选择数据压缩格式。非强制压缩发送。</li>
+</ul>
+<h2 id="ajaxcomet-和-spdy">Ajax、Comet 和 SPDY</h2>
+<p>Ajax（Asynchronous JavaScript and XML，异步 JavaScript 与 XML 技术），Ajax 的核心技术是名为 XMLHttpRequest 的 API，借由这种手段从已加载完毕的 Web 页面上发起请求，只更新局部页面。但是，利用 Ajax 实时地从服务器获取内容，有可能会导致大量请求产生。另外 Ajax 仍未解决 HTTP 协议本身存在的问题。</p>
+<p>Comet 是一种通过延迟应答，模拟实现服务器端向客户端推送（Server Push）的功能。Comet 会先将响应置于挂起状态，当服务器端有内容更新时，再返回该响应。这导致为了维持连接会消耗更多的资源。</p>
+<p>SPDY 是由 Google 开发的网络传输协议，SPDY 未能单独成为正式标准，但 SPDY 的成果被采纳而最终演变为 HTTP/2。SPDY 协议通过压缩、多路复用和优先级来缩短加载时间。SPDY 基本上只是将单个域名（IP 地址）的通信多路复用，所以当一个 Web 网站上使用多个域名下的资源，改善效果就会受到限制。</p>
+<h2 id="使用浏览器进行全双工通信的-websocket">使用浏览器进行全双工通信的 WebSocket</h2>
+<p>WebSocket 通信协议在 2011 年 12 月 11 日，被 <a href="https://tools.ietf.org/html/rfc6455" target="_blank" rel="noopener noreffer">RFC 6455 - The WebSocket Protocol</a> 定为标准。由于是建立在 HTTP 基础上的协议，因此连接的发起方仍是客户端，而一旦确立 WebSocket 通信连接，不论服务器还是客户端，任意一方都可直接向对方发送报文。</p>
+<p>WebSocket 协议的主要特点：</p>
+<ul>
+<li>推送功能：支持由服务器向客户端推送数据；</li>
+<li>减少通信量：长连接，header 信息比 HTTP 少；</li>
+</ul>
+<h2 id="web-服务器管理文件的-webdav">Web 服务器管理文件的 WebDAV</h2>
+<p>WebDAV（Web-based Distributed Authoring and Versioning，基于万维网的分布式创作和版本控制）是一个可对 Web 服务器上的内容直接进行文件复制、编辑等操作的分布式文件系统。它还具备文件创建者管理、文件编辑过程中禁止其他用户内容覆盖的加锁功能，以及对文件内容修改的版本控制功能。</p>
+<h1 id="构建-web-内容的技术">构建 Web 内容的技术</h1>
+<h2 id="cgi-和-servlet">CGI 和 Servlet</h2>
+<p>CGI（Common Gateway Interface，通用网关接口）是指 Web 服务器在接收到客户端发送过来的请求后转发给程序的一组机制。由于每次接到请求，程序都要跟着启动一次。因此一旦访问量过大，Web 服务器要承担相当大的负载。</p>
+<p>Servlet 是一种能在服务器上创建动态内容的程序。Servlet 是用 Java 语言实现的一个接口，属于面向企业级 Java（JavaEE,Java Enterprise Edition）的一部分。</p>
+<h2 id="数据发布的格式及语言">数据发布的格式及语言</h2>
+<ul>
+<li>XML（eXtensible Markup Language，可扩展标记语言）</li>
+<li>RSS（简易信息聚合，也叫聚合内容）和 Atom</li>
+<li>JSON（JavaScript Object Notation）</li>
+</ul>
+<h1 id="web-的攻击技术">Web 的攻击技术</h1>
+<h2 id="对-web-应用的攻击模式">对 Web 应用的攻击模式</h2>
+<p>对 Web 应用的攻击模式有两种：</p>
+<ul>
+<li><strong>主动攻击（active attack）</strong> 是指攻击者通过直接访问 Web 应用，把攻击代码传入的攻击模式。主动攻击模式里具有代表性的攻击是 SQL 注入攻击和 OS 命令注入攻击。</li>
+<li><strong>被动攻击（passive attack）</strong> 是指利用圈套策略执行攻击代码的攻击模式。被动攻击模式中具有代表性的攻击是跨站脚本攻击和跨站点请求伪造。</li>
+</ul>
+<p>主动攻击直接针对服务器资源进行攻击，被动攻击的目标是使用 Web 应用的用户。</p>
+<h2 id="因输出值转义不完全引发的安全漏洞">因输出值转义不完全引发的安全漏洞</h2>
+<h3 id="跨站脚本攻击">跨站脚本攻击</h3>
+<p><strong>跨站脚本攻击（Cross-Site Scripting,XSS）</strong> 是指通过存在安全漏洞的 Web 网站注册用户的浏览器内运行非法的 HTML 标签或 JavaScript 进行的一种攻击。</p>
+<p>会造成以下影响：</p>
+<ul>
+<li>利用虚假输入表单骗取用户个人信息；</li>
+<li>利用脚本窃取用户的 Cookie 值，被害者在不知情的情况下，帮助攻击者发送恶意请求；</li>
+<li>显示伪造的文章或图片。</li>
+</ul>
+<p>XSS 是攻击者利用预先设置的陷阱触发的被动攻击。</p>
+<h3 id="sql-注入">SQL 注入</h3>
+<p><strong>SQL 注入（SQL Injection）</strong> 是指针对 Web 应用使用的数据库，通过运行非法的 SQL 而产生的攻击。</p>
+<p>SQL 注入攻击有可能会造成以下等影响：</p>
+<ul>
+<li>非法查看或篡改数据库内的数据；</li>
+<li>规避认证；</li>
+<li>执行和数据库服务器业务关联的程序等。</li>
+</ul>
+<h3 id="os-命令注入">OS 命令注入</h3>
+<p><strong>OS 命令注入攻击（OS Command Injection）</strong> 是指通过 Web 应用，执行非法的操作系统命令达到攻击的目的。</p>
+<p>OS 命令注入攻击可以向 Shell 发送命令，让 Windows 或 Linux 操作系统的命令行启动程序。也就是说，通过 OS 注入攻击可执行 OS 上安装着的各种程序。</p>
+<h3 id="http-首部注入">HTTP 首部注入</h3>
+<p><strong>HTTP 首部注入攻击（HTTP Header Injection）</strong> 是指攻击者通过在响应首部字段内插入换行，添加任意响应首部或主体的一种攻击。属于被动攻击模式。</p>
+<p>HTTP 首部注入攻击有可能会造成以下一些影响：</p>
+<ul>
+<li>设置任何 Cookie 信息；</li>
+<li>重定向至任意 URL；</li>
+<li>显示任意的主体（HTTP 响应截断攻击）。</li>
+</ul>
+<p>向首部主体内添加内容的攻击称为 <strong>HTTP 响应截断攻击（HTTP Response Splitting Attack）</strong>。</p>
+<p>HTTP 响应截断攻击是用在 HTTP 首部注入的一种攻击。攻击顺序相同，但是要将两个 <code>%0D%0A%</code> 并排插入字符串后发送（<code>%0D%0A</code>代表 HTTP 报文中的换行符）。利用这两个连续的换行就可作出 HTTP 首部与主体分隔所需的空行了，这样就能显示伪造的主体，达到攻击目的。</p>
+<p>另外，滥用 HTTP/1.1 中汇集多响应返回功能，会导致缓存服务器对任意内容进行缓存操作。这种攻击称为<strong>缓存污染</strong>。使用该缓存服务器的用户，在浏览遭受攻击的网站时，会不断地浏览被替换掉的 Web 网页。</p>
+<h3 id="邮件首部注入">邮件首部注入</h3>
+<p><strong>邮件首部注入（Mail Header Injection）</strong> 是指 Web 应用中的邮件发送功能，攻击者通过向邮件首部 To 或 Subject 内任意添加非法内容发起的攻击。利用存在安全漏洞的 Web 网站，可对任意邮件地址发送广告邮件或病毒邮件。</p>
+<h3 id="目录遍历">目录遍历</h3>
+<p><strong>目录遍历（Directory Traversal）攻击</strong> 是指对本无意公开的文件目录，通过非法截断其目录路径后，达成访问目的的一种攻击。这种攻击有时也称为 <strong>路径遍历（Path Traversal）</strong> 攻击。因此服务器上任意的文件或文件目录皆有可能被访问到。这样一来，就有可能非法浏览、篡改或删除 Web 服务器上的文件。</p>
+<h2 id="因设置或设计上的缺陷引发的安全漏洞">因设置或设计上的缺陷引发的安全漏洞</h2>
+<h3 id="强制浏览">强制浏览</h3>
+<p><strong>强制浏览（Forced Browsing）</strong> 安全漏洞是指，从安置在 Web 服务器的公开目录下的文件中，浏览那些原本非自愿公开的文件。</p>
+<p>会造成的影响有：</p>
+<ul>
+<li>泄露顾客的个人信息等重要情报；</li>
+<li>泄露原本需要具有访问权限的用户才可查阅的信息内容；</li>
+<li>泄露未外连到外界的文件；</li>
+</ul>
+<p>容易产生的漏洞地方：</p>
+<ul>
+<li>文件目录一览；</li>
+<li>容易被推测的文件名及目录名；</li>
+<li>备份文件；</li>
+<li>经认证才可显示的文件；</li>
+</ul>
+<h3 id="不正确的错误消息处理">不正确的错误消息处理</h3>
+<p><strong>不正确的错误消息处理（Error Handling Vulnerability）</strong> 的安全漏洞是指，Web 应用的错误信息内包含对攻击者有用的信息。主要包括：</p>
+<ul>
+<li>Web 应用抛出的错误消息；</li>
+<li>-数据库等系统抛出的错误消息；</li>
+<li>PHP 或 ASP 等脚本错误；</li>
+<li>数据库或中间件的错误；</li>
+<li>Web 服务器的错误；</li>
+</ul>
+<h3 id="开放重定向">开放重定向</h3>
+<p><strong>开放重定向（Open Redirect）</strong> 是一种对指定的任意 URL 作重定向跳转的功能。而与此功能相关联的安全漏洞是指，假如指定的重定向 URL 到某个具有恶意的 Web 网站，那么用户就会被诱导至那个 Web 网站。</p>
+<p>可信度高的 Web 网站如果开放重定向功能，则很有可能被攻击者选中并用来作为钓鱼攻击的跳板。</p>
+<h2 id="因会话管理疏忽引发的安全漏洞">因会话管理疏忽引发的安全漏洞</h2>
+<h3 id="会话劫持">会话劫持</h3>
+<p><strong>会话劫持（Session Hijack）</strong> 是指攻击者通过某种手段拿到了用户的会话 ID，并非法使用此会话 ID 伪装成用户，达到攻击的目的。</p>
+<p>攻击者可获得会话 ID 的途径有：</p>
+<ul>
+<li>通过非正规的生成方法推测会话 ID；</li>
+<li>通过窃听或 XSS 攻击盗取会话 ID；</li>
+<li>通过会话固定攻击（Session Fixation）强行获取会话 ID；</li>
+</ul>
+<h3 id="会话固定攻击">会话固定攻击</h3>
+<p>对以窃取目标会话 ID 为主动攻击手段的会话劫持而言，<strong>会话固定攻击（Session Fixation）</strong> 攻击会强制用户使用攻击者指定的会话 ID，属于被动攻击。</p>
+<h3 id="跨站点请求伪造">跨站点请求伪造</h3>
+<p><strong>跨站点请求伪造（Cross-Site Request Forgeries,CSRF）</strong> 攻击是指攻击者通过设置好的陷阱，强制对已完成认证的用户进行非预期的个人信息或设定信息等某些状态更新，属于被动攻击。</p>
+<p>可能会造成的影响：</p>
+<ul>
+<li>利用已通过认证的用户权限更新设定信息等；</li>
+<li>利用已通过认证的用户权限购买商品；</li>
+<li>利用已通过认证的用户权限在留言板上发表言论；</li>
+</ul>
+<h2 id="其他安全漏洞">其他安全漏洞</h2>
+<h3 id="密码破解攻击">密码破解攻击</h3>
+<p><strong>密码破解攻击（Password Cracking）</strong> 即算出密码，突破认证。</p>
+<p>密码破解有以下两种手段：</p>
+<ul>
+<li>通过网络的密码试错；</li>
+<li>对已加密密码的破解（指攻击者入侵系统，已获得加密或散列处理的密码数据的情况）；</li>
+</ul>
+<p>通过网络的密码试错的方法主要有：</p>
+<ul>
+<li>穷举法（Brute-force Attack，又称暴力破解法）是指对所有密钥集合构成的密钥空间（Keyspace）进行穷举。</li>
+<li>字典攻击是指利用事先收集好的候选密码（经过各种组合方式后存入字典），枚举字典中的密码，尝试通过认证的一种攻击手法。</li>
+</ul>
+<p>对已加密密码的破解的方法主要有：</p>
+<ul>
+<li>通过穷举法和字典攻击进行类推；</li>
+<li>彩虹表；</li>
+<li>拿到密钥；</li>
+<li>加密算法的漏洞；</li>
+</ul>
+<p>彩虹表（Rainbow Table）是由明文密码及与之对应的散列值构成的一张数据库表，是一种通过事先制作庞大的彩虹表，可在穷举法·字典攻击等实际破解过程中缩短消耗时间的技巧。</p>
+<h3 id="点击劫持">点击劫持</h3>
+<p>点击劫持（Click jacking）是指利用透明的按钮或链接做成陷阱，覆盖在 Web 页面之上。然后诱使用户在不知情的情况下，点击那个链接访问内容的一种攻击手段。这种行为又称为界面伪装（UI Redressing）。</p>
+<h3 id="dos-攻击">DoS 攻击</h3>
+<p><strong>DoS 攻击（Denial of Service attack）</strong> 是一种让运行中的服务呈停止状态的攻击。有时也叫做服务停止攻击或拒绝服务攻击。DoS 攻击的对象不仅限于 Web 网站，还包括网络设备及服务器等。</p>
+<p>攻击方式主要有：</p>
+<ul>
+<li>集中利用访问请求造成资源过载，资源用尽的同时，实际上服务也就呈停止状态。</li>
+<li>通过攻击安全漏洞使服务停止。</li>
+</ul>
+<p>多台计算机发起的 DoS 攻击称为 <strong>DDoS 攻击（Distributed Denial of Service attack）</strong>。</p>
+<h3 id="后门程序">后门程序</h3>
+<p><strong>后门程序（Backdoor）</strong> 是指开发设置的隐藏入口，可不按正常步骤使用受限功能。</p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-11-22</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/0b6b7/" class="prev" rel="prev" title="使用Python自己实现Base64"><i class="fas fa-angle-left fa-fw"></i>使用Python自己实现Base64</a>
+            <a href="/posts/b5ee0/" class="next" rel="next" title="在 Home Assistant 中集成 69 元 3 个的米家蓝牙温湿度计 2">在 Home Assistant 中集成 69 元 3 个的米家蓝牙温湿度计 2<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2020-11-22T00:05:39+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"《图解HTTP》笔记"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

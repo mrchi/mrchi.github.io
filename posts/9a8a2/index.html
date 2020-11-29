@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Nginx配置 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="Nginx配置" />
+<meta property="og:description" content="Nginx 的配置文件是一个以块（block）的形式组织一组指令的文本文件。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/9a8a2/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2018-08-01T15:13:36+08:00" />
+<meta property="article:modified_time" content="2018-08-01T15:13:36+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="Nginx配置"/>
+<meta name="twitter:description" content="Nginx 的配置文件是一个以块（block）的形式组织一组指令的文本文件。"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/9a8a2/" /><link rel="prev" href="https://mrchi.cc/posts/a9cbb/" /><link rel="next" href="https://mrchi.cc/posts/5304a/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Nginx配置",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/9a8a2\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  3535 ,
+        "url": "https:\/\/mrchi.cc\/posts\/9a8a2\/","datePublished": "2018-08-01T15:13:36+08:00","dateModified": "2018-08-01T15:13:36+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Invoker"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Nginx配置</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Invoker</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/web-%E5%BC%80%E5%8F%91/"><i class="far fa-folder fa-fw"></i>Web 开发</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2018-08-01">2018-08-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3535 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 8 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#include">include</a></li>
+    <li><a href="#block">block</a>
+      <ul>
+        <li><a href="#概述">概述</a></li>
+        <li><a href="#原理">原理</a></li>
+        <li><a href="#main-块">main 块</a></li>
+        <li><a href="#events-块">events 块</a></li>
+        <li><a href="#http-块">http 块</a>
+          <ul>
+            <li><a href="#gzip-压缩相关设置">gzip 压缩相关设置</a></li>
+            <li><a href="#http_proxy-相关设置">http_proxy 相关设置</a></li>
+          </ul>
+        </li>
+        <li><a href="#server块">server块</a></li>
+        <li><a href="#upstream-块">upstream 块</a>
+          <ul>
+            <li><a href="#负载均衡算法">负载均衡算法</a></li>
+            <li><a href="#状态参数">状态参数</a></li>
+          </ul>
+        </li>
+        <li><a href="#location-块">location 块</a>
+          <ul>
+            <li><a href="#uri-匹配规则">URI 匹配规则</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#https-设置">HTTPS 设置</a></li>
+    <li><a href="#websocket-设置">WebSocket 设置</a></li>
+    <li><a href="#default-server-配置">Default server 配置</a></li>
+    <li><a href="#其他">其他</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>Nginx 的配置文件是一个以块（block）的形式组织一组指令的文本文件。</p>
+<p>配置文件路径：</p>
+<ul>
+<li>Ubuntu apt 安装：<code>/etc/nginx/</code>；</li>
+<li>MacOS brew 安装：<code>/usr/local/etc/nginx/</code>；</li>
+</ul>
+<h1 id="include">include</h1>
+<p>在配置文件中，使用 <code>include</code> 指令来执行对一个特定文件的包含，即将特定文件内容插入到配置文件 <code>include</code> 指令的位置。例如</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-nginx" data-lang="nginx"> <span class="k">include</span> <span class="n">mime.types</span>;
+</code></pre></td></tr></table>
+</div>
+</div><p>以上配置包含了 Nginx 自带的文件扩展列表。</p>
+<p>这种组织配置的方式，使我们可以将不同域的配置分开成独立的配置文件。</p>
+<h1 id="block">block</h1>
+<h2 id="概述">概述</h2>
+<p>每个块以一个花括号（<code>{}</code>）来表示。主要块有：</p>
+<table>
+<thead>
+<tr>
+<th>块</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>main</td>
+<td>全局设置，包含一些 Nginx 的基本控制功能。它在配置的顶层，<strong>不需要显式写出</strong>。</td>
+</tr>
+<tr>
+<td>events</td>
+<td>事件设置，控制 Nginx 处理连接的方式</td>
+</tr>
+<tr>
+<td>http</td>
+<td>HTTP 设置</td>
+</tr>
+<tr>
+<td>server</td>
+<td>主机设置</td>
+</tr>
+<tr>
+<td>upstream</td>
+<td>负载均衡设置</td>
+</tr>
+<tr>
+<td>location</td>
+<td>针对特定 URL 的设置。</td>
+</tr>
+</tbody>
+</table>
+<p>块的嵌套关系如下： </p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">main
+├── events
+└── http
+    ├── server
+    │   └── location
+    └── upstream
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>被嵌套的块将继承其父块的设置，也可以重新进行设置。</strong></p>
+<h2 id="原理">原理</h2>
+<p>在 http 块中可以声明多个 server 块，一个 server 块允许配置一个虚拟主机和监听的端口，在 server 块内允许插入多个 location 块，当需要对特定的路径进行URL匹配时，location块允许对这些路径单独设置。</p>
+<p>例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-nginx" data-lang="nginx"><span class="k">http</span> <span class="p">{</span>
+    <span class="kn">include</span>       <span class="s">mime.types</span><span class="p">;</span>
+
+  <span class="c1"># 虚拟主机配置
+</span><span class="c1"></span>    <span class="kn">server</span> <span class="p">{</span>
+        <span class="kn">listen</span>       <span class="mi">80</span><span class="p">;</span>
+        <span class="kn">server_name</span>  <span class="s">bbs.example.com</span><span class="p">;</span>
+
+        <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
+            <span class="kn">proxy_pass</span>        <span class="s">http://localhost:5000</span><span class="p">;</span>
+            <span class="c1"># 后端的Web服务器可以通过X-Forwarded-For获取用户真实IP
+</span><span class="c1"></span>            <span class="kn">proxy_set_header</span>  <span class="s">Host</span>  <span class="nv">$host</span><span class="p">;</span>
+            <span class="kn">proxy_set_header</span>  <span class="s">X-Real-IP</span>  <span class="nv">$remote_addr</span><span class="p">;</span>
+            <span class="kn">proxy_set_header</span>  <span class="s">X-Forwarded-For</span>  <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">#静态文件，nginx自己处理，不去backend请求tomcat
+</span><span class="c1"></span>        <span class="kn">location</span>  <span class="p">~</span><span class="sr">*</span> <span class="s">/download/</span> <span class="p">{</span>
+            <span class="kn">root</span> <span class="s">/apps/oa/fs</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="main-块">main 块</h2>
+<p>nginx在运行时与具体业务功能（比如http服务或者email服务代理）无关的一些参数，比如工作进程数，运行的身份等。</p>
+<ul>
+<li><code>woker_processes 2</code> worker 工作进程的个数。这个数值简单一点可以设置为 cpu 的核数<code>grep ^processor /proc/cpuinfo | wc -l</code>，也是设置为 <code>auto</code> 时的值；如果开启了 ssl 和 gzip 应该设置成与逻辑 CPU 数量一样甚至为2倍，可以减少 I/O 操作；如果 nginx 服务器还有其它服务，可以考虑适当减少。</li>
+<li><code>worker_cpu_affinity</code> 在高并发情况下，通过设置 cpu 粘性来降低由于多 CPU 核切换造成的寄存器等现场重建带来的性能损耗。如 <code>worker_cpu_affinity 0001 0010 0100 1000;</code> （四核）。</li>
+<li><code>worker_rlimit_nofile 10240</code> 默认是没有设置，可以限制为操作系统最大的限制 65535。</li>
+</ul>
+<h2 id="events-块">events 块</h2>
+<ul>
+<li><code>worker_connections 2048</code> 每一个 worker 进程能并发处理（发起）的最大连接数（包括与客户端和后端服务器的连接）。nginx 作为反向代理服务器时，计算公式 <code>最大连接数 = worker_processes * worker_connections/4</code>；当 nginx 作为 http 服务器时，计算公式里面是除以2。</li>
+<li><code>use epoll</code> 在 Linux 操作系统下，nginx 默认使用 epoll 事件模型，得益于此，nginx 在 Linux 操作系统下效率相当高。同时 Nginx 在 OpenBSD 或 FreeBSD 操作系统上采用类似于 epoll 的高效事件模型kqueue。在操作系统不支持这些高效模型时才使用 select。</li>
+</ul>
+<h2 id="http-块">http 块</h2>
+<p>HTTP 服务相关的一些配置参数。</p>
+<ul>
+<li><code>sendfile on</code> 开启高效文件传输模式，sendfile 指令指定 nginx 是否调用 sendfile 函数来输出文件，减少用户空间到内核空间的上下文切换。对于普通应用设为 on，如果用来进行下载等应用磁盘IO重负载应用，可设置为 off，以平衡磁盘与网络 I/O 处理速度，降低系统的负载。</li>
+<li><code>keepalive_timeout 60</code> 长连接超时时间，单位是秒。如果是大量小文件的场景，设置较长的超时时间可以减少重建连接的开销；如果是大文件的场景，设置时间较短会导致失败。但如果设置时间过长，长时间保持连接会占用大量资源。</li>
+<li><code>send_timeout</code> 用于指定响应客户端的超时时间。这个超时仅限于两个连接活动之间的时间，如果超过这个时间，客户端没有任何活动，Nginx 将会关闭连接。</li>
+<li><code>client_max_body_size 10m</code> 允许客户端请求的最大单文件字节数。如果有上传较大文件，请设置它的限制值。</li>
+<li><code>client_body_buffer_size 128k</code> 缓冲区代理缓冲用户端请求的最大字节数。</li>
+</ul>
+<h3 id="gzip-压缩相关设置">gzip 压缩相关设置</h3>
+<ul>
+<li><code>gzip on</code> 开启 gzip 压缩输出，减少网络传输。</li>
+<li><code>gzip_min_length 1k</code> 设置允许压缩的页面最小字节数，页面字节数从header头得content-length中进行获取。默认值是20。建议设置成大于1k的字节数，小于1k可能会越压越大。</li>
+<li><code>gzip_buffers 4 16k</code> 设置系统获取几个单位的缓存用于存储 gzip 的压缩结果数据流。“4 16k”代表按原始数据大小以 16k 为单位的 4 倍申请内存。</li>
+<li><code>gzip_http_version 1.1</code> 启用 GZip 所需的 HTTP 最低版本，默认 1.1，也可以设置成 1.0。</li>
+<li><code>gzip_comp_level 6</code> GZip 压缩比，1 压缩比最小处理速度最快，9 压缩比最大但处理速度最慢。</li>
+<li><code>gzip_types</code> 匹配 mime 类型进行压缩，无论是否指定，“text/html” 类型总是会被压缩的。</li>
+<li><code>gzip_proxied any</code> Nginx 作为反向代理的时候，决定后端服务器返回的结果是否压缩，匹配的前提是后端服务器必须要返回包含 ”Via” 的 header 头。</li>
+<li><code>gzip_vary on</code> ： 和 http 头有关系，会在响应头加个 Vary: Accept-Encoding ，可以让前端的缓存服务器缓存经过 gzip 压缩的页面，例如，用Squid缓存经过Nginx压缩的数据。</li>
+</ul>
+<h3 id="http_proxy-相关设置">http_proxy 相关设置</h3>
+<ul>
+<li><code>proxy_connect_timeout 60</code> nginx 跟后端服务器连接超时时间(代理连接超时)。</li>
+<li><code>proxy_read_timeout 60</code> 连接成功后，与后端服务器两个成功的响应操作之间超时时间(代理接收超时)。</li>
+<li><code>proxy_buffer_size 4k</code> 设置作为代理服务器从后端 realserver 读取并保存用户<strong>头</strong>信息的缓冲区大小，默认与 <code>proxy_buffers</code> 大小相同。</li>
+<li><code>proxy_buffers 4 32k</code> proxy_buffers 缓冲区，nginx 针对单个连接缓存来自后端 realserver 的<strong>响应</strong>。</li>
+<li><code>proxy_busy_buffers_size 64k</code> 高负荷下缓冲大小，一般为 proxy_buffers*2</li>
+<li><code>proxy_max_temp_file_size</code> 当 proxy_buffers 放不下后端服务器的响应内容时，会将一部分保存到硬盘的临时文件中，这个值用来设置最大临时文件大小，默认1024M，设置为0禁用。</li>
+<li><code>proxy_temp_file_write_size 64k</code> 当缓存被代理的服务器响应到临时文件时，这个选项限制每次写临时文件的大小。</li>
+</ul>
+<h2 id="server块">server块</h2>
+<ul>
+<li><code>listen</code> 监听端口，默认80，小于1024的要以root启动。可以为<code>listen *:80</code>、<code>listen 127.0.0.1:80</code>等形式。</li>
+<li><code>server_name</code> 服务器名，如<code>localhost</code>、<code>www.example.com</code>，可以通过正则匹配。</li>
+</ul>
+<p><strong>可以根据 <code>server_name</code> 不同，对来自同一端口的访问请求转发到不同的后端服务器。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-nginx" data-lang="nginx"><span class="k">server</span> <span class="p">{</span>
+	<span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span>
+	<span class="kn">server_name</span> <span class="s">www.a.net</span><span class="p">;</span>
+	<span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
+		<span class="kn">proxy_pass</span> <span class="s">http://127.0.0.1:5000</span><span class="p">;</span>
+		<span class="kn">index</span> <span class="s">index.html</span> <span class="s">index.htm</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">server</span> <span class="p">{</span>
+	<span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span>
+    <span class="kn">server_name</span> <span class="s">www.a.cn</span><span class="p">;</span>
+    <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
+        <span class="kn">proxy_pass</span> <span class="s">http://127.0.0.1:8000</span><span class="p">;</span>
+        <span class="kn">index</span> <span class="s">index.html</span> <span class="s">index.htm</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="upstream-块">upstream 块</h2>
+<p>在 upstream 块中定义多个后端服务器地址，格式为<code>server ip:port options</code>，通过算法进行负载均衡设置。</p>
+<p>例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-nginx" data-lang="nginx"><span class="k">upstream</span> <span class="s">backend</span> <span class="p">{</span>
+    <span class="kn">least_conn</span><span class="p">;</span>
+    <span class="kn">server</span> <span class="n">127.0.0.1</span><span class="p">:</span><span class="mi">8000</span> <span class="s">down</span><span class="p">;</span>
+    <span class="kn">server</span> <span class="n">127.0.0.1</span><span class="p">:</span><span class="mi">8001</span><span class="p">;</span>
+    <span class="kn">server</span> <span class="n">127.0.0.1</span><span class="p">:</span><span class="mi">8002</span><span class="p">;</span>
+    <span class="kn">server</span> <span class="n">127.0.0.1</span><span class="p">:</span><span class="mi">8003</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>least_conn</code> 为负载均衡算法名称，<code>down</code> 表示当前服务器不参与负载均衡。</p>
+<h3 id="负载均衡算法">负载均衡算法</h3>
+<ul>
+<li><code>round-robin</code> Nginx 默认的轮询算法（不需要在 <code>upstream</code> 块中显式指定），每个请求按时间顺序逐一分配到不同的后端服务器。宕机服务器会被自动剔除。可以通过 weight 指定轮询权值，weight 值越大，该服务器被访问的概率越高，主要用于后端服务器性能不均的情况。</li>
+<li><code>least_conn</code> 请求会被发送到活跃连接数最少的服务器上。</li>
+<li><code>ip_hash</code> 按访问 IP 的哈希结果分配请求，来自同一 IP 的用户会固定访问一个后端服务器；</li>
+<li><code>hash</code> 按某个键的哈希结果分配（键可以是文本、变量等）请求。例如 <code>hash $request_uri</code> 即是按请求地址生成哈希结果。</li>
+</ul>
+<h3 id="状态参数">状态参数</h3>
+<table>
+<thead>
+<tr>
+<th>状态参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>down</td>
+<td>当前服务器暂时不参与负载均衡，对该服务器的请求会自动发送到下一个服务器</td>
+</tr>
+<tr>
+<td>max_fails</td>
+<td>允许请求失败的次数，默认为1。当超过最大次数时，返回对应的 XX_next_upstream 模块定义的错误。</td>
+</tr>
+<tr>
+<td>fail_timeout</td>
+<td>在经历了 max_fails 次失败后，暂停服务的时间，默认是 10s。</td>
+</tr>
+<tr>
+<td>backup</td>
+<td>预留的备份服务器。当其他所有非 backup 服务器出现故障或者忙时，才会请求 backup 服务器。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="location-块">location 块</h2>
+<ul>
+<li><code>root /var/www/html</code> 定义服务器的默认网站根目录位置。如果 <code>location</code> URL匹配的是子目录或文件，<code>root</code> 没什么作用，一般放在 <code>server</code> 指令里面或 <code>/</code> 下。</li>
+<li><code>index index.jsp index.html index.htm</code> 定义路径下默认访问的文件名，一般跟着 <code>root</code> 放。</li>
+<li><code>proxy_pass http://backend</code> 请求转向 backend 定义的服务器列表，即反向代理，对应 <code>upstream</code> 负载均衡器。如果只有一个服务器地址，也可以不用负载均衡直接写 <code>proxy_pass http://ip:port</code>。</li>
+<li><code>proxy_set_header Host $host;</code> 让 backend 服务器知道真实请求host。</li>
+<li><code>proxy_set_header X-Real-IP $remote_addr;</code> 让 backend 服务器知道真实请求IP。</li>
+<li><code>proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</code> 让 backend 服务器知道真实请求 URL；</li>
+</ul>
+<p><strong><code>proxy_pass</code> 是 Nginx 作为反向代理服务器时的重要配置。</strong></p>
+<h3 id="uri-匹配规则">URI 匹配规则</h3>
+<p>按照匹配顺序，如下：</p>
+<ul>
+<li><code>=</code> 开头表示精确匹配；</li>
+<li>完整路径匹配；</li>
+<li><code>^~</code> 开头表示以某个常规字符串开头，不是正则匹配；</li>
+<li><code>~</code> 开头表示区分大小写的正则匹配；</li>
+<li><code>~*</code> 开头表示不区分大小写的正则匹配；</li>
+<li><code>/images/abc</code> 表示最长字符匹配，匹配包含 <code>/images/abc</code> 的URI；</li>
+<li><code>/</code> 通用匹配，如果没有其它匹配，任何请求都会匹配到；</li>
+</ul>
+<p>举个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-nginx" data-lang="nginx"><span class="k">location</span>  <span class="p">=</span> <span class="s">/</span> <span class="p">{</span>
+  <span class="c1"># 精确匹配 / ，主机名后面不能带任何字符串
+</span><span class="c1"></span>  <span class="kn">[</span> <span class="s">configuration</span> <span class="s">A</span> <span class="s">]</span>
+<span class="err">}</span>
+
+<span class="s">location</span>  <span class="s">/</span> <span class="p">{</span>
+  <span class="c1"># 因为所有的地址都以 / 开头，所以这条规则将匹配到所有请求
+</span><span class="c1"></span>  <span class="c1"># 但是正则和最长字符串会优先匹配
+</span><span class="c1"></span>  <span class="kn">[</span> <span class="s">configuration</span> <span class="s">B</span> <span class="s">]</span>
+<span class="err">}</span>
+
+<span class="s">location</span> <span class="p">~</span> <span class="sr">/documents/Abc</span> <span class="p">{</span>
+  <span class="c1"># 匹配任何以 /documents/ 开头的地址
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="kn">location</span> <span class="s">^~</span> <span class="s">/images/</span> <span class="p">{</span>
+  <span class="c1"># 匹配任何以 /images/ 开头的地址，匹配符合以后，停止往下搜索正则，采用这一条。
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="kn">location</span> <span class="p">~</span><span class="sr">*</span> <span class="s">\.(gif|jpg|jpeg)</span>$ <span class="p">{</span>
+  <span class="c1"># 匹配所有以 gif,jpg或jpeg 结尾的请求
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="kn">location</span> <span class="s">/images/</span> <span class="p">{</span>
+  <span class="c1"># 字符匹配到 /images/
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="kn">location</span> <span class="s">/images/abc</span> <span class="p">{</span>
+  <span class="c1"># 最长字符匹配到 /images/abc，优先级高于上一条
+</span><span class="c1"></span>  <span class="kn">[</span> <span class="s">configuration</span> <span class="s">G</span> <span class="s">]</span>
+<span class="err">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="https-设置">HTTPS 设置</h1>
+<p>使用 Let’s Encrypt 的 HTTPS 证书设置如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-nginx" data-lang="nginx"><span class="k">http</span> <span class="p">{</span>
+    <span class="kn">ssl_dhparam</span> <span class="s">/etc/letsencrypt/ssl-dhparams.pem</span><span class="p">;</span>
+    <span class="kn">include</span>     <span class="s">/etc/letsencrypt/options-ssl-nginx.conf</span><span class="p">;</span>
+    <span class="kn">add_header</span>  <span class="s">Strict-Transport-Security</span> <span class="s">&#34;max-age=31536000</span><span class="p">;</span> <span class="kn">includeSubDomains&#34;</span> <span class="s">always</span><span class="p">;</span>
+
+    <span class="kn">server</span> <span class="p">{</span>
+        <span class="kn">listen</span> <span class="mi">443</span> <span class="s">ssl</span><span class="p">;</span>
+        <span class="kn">server_name</span> <span class="s">xxxxx</span><span class="p">;</span>
+
+        <span class="kn">ssl_certificate</span>     <span class="s">/etc/letsencrypt/live/jupyter.mrchi.cc/fullchain.pem</span><span class="p">;</span>
+        <span class="kn">ssl_certificate_key</span> <span class="s">/etc/letsencrypt/live/jupyter.mrchi.cc/privkey.pem</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1"># HTTP 请求301重定向到 HTTPS
+</span><span class="c1"></span>    <span class="kn">server</span> <span class="p">{</span>
+        <span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span>
+        <span class="kn">server_name</span> <span class="s">xxxxx</span><span class="p">;</span>
+        <span class="kn">return</span> <span class="mi">301</span> <span class="s">https://</span><span class="nv">$server_name$request_uri</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="websocket-设置">WebSocket 设置</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-nginx" data-lang="nginx"><span class="k">location</span> <span class="p">~</span> <span class="sr">/api/kernels/</span> <span class="p">{</span>
+    <span class="kn">proxy_pass</span>          <span class="s">http://localhost:8888</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span>    <span class="s">Host</span>       <span class="nv">$host</span><span class="p">;</span>
+    <span class="kn">proxy_http_version</span>  <span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span>    <span class="s">Upgrade</span>    <span class="s">&#34;websocket&#34;</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span>    <span class="s">Connection</span> <span class="s">&#34;Upgrade&#34;</span><span class="p">;</span>
+    <span class="kn">proxy_read_timeout</span>  <span class="mi">86400</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="default-server-配置">Default server 配置</h1>
+<p>444 状态码是 Nginx 专用状态码，会直接关闭连接，不会返回任何内容。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-nginx" data-lang="nginx"><span class="k">server</span> <span class="p">{</span>
+    <span class="kn">listen</span> <span class="mi">80</span> <span class="s">default_server</span><span class="p">;</span>
+    <span class="kn">listen</span> <span class="s">[::]:80</span> <span class="s">default_server</span><span class="p">;</span>
+
+    <span class="kn">listen</span> <span class="mi">443</span> <span class="s">ssl</span> <span class="s">default_server</span><span class="p">;</span>
+    <span class="kn">listen</span> <span class="s">[::]:443</span> <span class="s">ssl</span> <span class="s">default_server</span><span class="p">;</span>
+
+    <span class="kn">server_name</span> <span class="s">_</span><span class="p">;</span>
+
+    <span class="kn">ssl_certificate</span>     <span class="s">/etc/letsencrypt/live/jupyter.mrchi.cc/fullchain.pem</span><span class="p">;</span>
+    <span class="kn">ssl_certificate_key</span> <span class="s">/etc/letsencrypt/live/jupyter.mrchi.cc/privkey.pem</span><span class="p">;</span>
+
+    <span class="kn">return</span> <span class="mi">444</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="其他">其他</h1>
+<p>测试配置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo nginx -t
+</code></pre></td></tr></table>
+</div>
+</div><p>加载配置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo nginx -s reload
+</code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2018-08-01</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/a9cbb/" class="prev" rel="prev" title="Flask项目的目录结构"><i class="fas fa-angle-left fa-fw"></i>Flask项目的目录结构</a>
+            <a href="/posts/5304a/" class="next" rel="next" title="JSON Web Token入门">JSON Web Token入门<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2018-08-01T15:13:36+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"Nginx配置"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>

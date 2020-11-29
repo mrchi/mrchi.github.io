@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>RQ-轻量级Python任务队列 - Déjà vu</title><meta name="Description" content="MrChi的博客，记录学过的知识，看过的书，走过的路。"><meta property="og:title" content="RQ-轻量级Python任务队列" />
+<meta property="og:description" content="RQ 是一个基于 Redis 的轻量级任务队列，依赖 Redis &gt;= 2.7.0。RQ 将任务、执行结果 pickle 序列化后存储于 Redis 当中，在较小规模的应用中可以替代 Celery 执行异步任务。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mrchi.cc/posts/2e36d/" />
+<meta property="og:image" content="https://mrchi.cc/images/avatar.png"/>
+<meta property="article:published_time" content="2018-10-30T09:44:53+08:00" />
+<meta property="article:modified_time" content="2018-10-30T09:44:53+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://mrchi.cc/images/avatar.png"/>
+
+<meta name="twitter:title" content="RQ-轻量级Python任务队列"/>
+<meta name="twitter:description" content="RQ 是一个基于 Redis 的轻量级任务队列，依赖 Redis &gt;= 2.7.0。RQ 将任务、执行结果 pickle 序列化后存储于 Redis 当中，在较小规模的应用中可以替代 Celery 执行异步任务。"/>
+<meta name="application-name" content="Déjà vu">
+<meta name="apple-mobile-web-app-title" content="Déjà vu"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://mrchi.cc/posts/2e36d/" /><link rel="prev" href="https://mrchi.cc/posts/a18b7/" /><link rel="next" href="https://mrchi.cc/posts/444aa/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css" integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH&#43;KuXHiZWODptY5K8NF4="><link rel="stylesheet" href="/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css" integrity="sha256-HiaUvtFS&#43;iki2&#43;kJpEGDjtaT2IsTMPl0hb&#43;o7XjaQt8="><link rel="stylesheet" href="/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css" integrity="sha256-h20CPZ0QyXlBuAw7A&#43;KluUYx/3pK&#43;c7lYEpqLTlxjYQ="><link rel="stylesheet" href="/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css" integrity="sha256-PHcOkPmOshsMBC&#43;vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><meta name="google-site-verification" content="d8p7AVyjDaqIEdgF3x_i-xZgbvFTbZ5O6SOBaDj2F9c" /><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "RQ-轻量级Python任务队列",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/mrchi.cc\/posts\/2e36d\/"
+        },"image": ["https:\/\/mrchi.cc\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  6897 ,
+        "url": "https:\/\/mrchi.cc\/posts\/2e36d\/","datePublished": "2018-10-30T09:44:53+08:00","dateModified": "2018-10-30T09:44:53+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "MrChi","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/mrchi.cc\/images\/avatar.png",
+                    "width":  460 ,
+                    "height":  460 
+                }},"author": {
+                "@type": "Person",
+                "name": "Invoker"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/projects/"> 项目 </a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Déjà vu"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Déjà vu</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/projects/" title="">项目</a><a class="menu-item" href="https://github.com/mrchi" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">RQ-轻量级Python任务队列</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/mrchi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Invoker</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/python/"><i class="far fa-folder fa-fw"></i>Python</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2018-10-30">2018-10-30</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 6897 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 14 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#quickstart">QuickStart</a></li>
+    <li><a href="#queue-队列">Queue 队列</a>
+      <ul>
+        <li><a href="#新建队列">新建队列</a></li>
+        <li><a href="#入队enqueue-和-enqueue_call">入队：enqueue 和 enqueue_call</a></li>
+        <li><a href="#队列使用">队列使用</a></li>
+        <li><a href="#获取执行结果">获取执行结果</a></li>
+        <li><a href="#job-装饰器">@job 装饰器</a></li>
+        <li><a href="#同步执行">同步执行</a></li>
+        <li><a href="#链式执行">链式执行</a></li>
+        <li><a href="#任务注意事项">任务注意事项</a></li>
+      </ul>
+    </li>
+    <li><a href="#worker-工作进程">Worker 工作进程</a>
+      <ul>
+        <li><a href="#启动-worker">启动 Worker</a>
+          <ul>
+            <li><a href="#burst-mode-突发模式">Burst mode 突发模式</a></li>
+            <li><a href="#启动参数">启动参数</a></li>
+          </ul>
+        </li>
+        <li><a href="#生命周期">生命周期</a></li>
+        <li><a href="#提升性能">提升性能</a></li>
+        <li><a href="#worker-信息">Worker 信息</a></li>
+        <li><a href="#停止-worker">停止 Worker</a></li>
+        <li><a href="#使用配置文件">使用配置文件</a></li>
+        <li><a href="#自定义deathpenalty类">自定义DeathPenalty类</a></li>
+        <li><a href="#自定义异常处理程序">自定义异常处理程序</a></li>
+      </ul>
+    </li>
+    <li><a href="#result-执行结果">Result 执行结果</a>
+      <ul>
+        <li><a href="#处理结果">处理结果</a></li>
+        <li><a href="#异常处理">异常处理</a></li>
+        <li><a href="#中断处理">中断处理</a></li>
+        <li><a href="#超时处理">超时处理</a></li>
+      </ul>
+    </li>
+    <li><a href="#jobs-任务">Jobs 任务</a>
+      <ul>
+        <li><a href="#从-redis-中获取-job">从 Redis 中获取 Job</a></li>
+        <li><a href="#读写当前-job-实例">读写当前 Job 实例</a></li>
+        <li><a href="#job-的等待执行时间">Job 的等待执行时间</a></li>
+        <li><a href="#执行失败的-job">执行失败的 Job</a></li>
+      </ul>
+    </li>
+    <li><a href="#monitoring-监控">Monitoring 监控</a>
+      <ul>
+        <li><a href="#rq-dashboard">rq-dashboard</a></li>
+        <li><a href="#console-工具">Console 工具</a>
+          <ul>
+            <li><a href="#查询指定队列">查询指定队列</a></li>
+            <li><a href="#按队列展示">按队列展示</a></li>
+            <li><a href="#定时轮询">定时轮询</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#connection-连接">Connection 连接</a>
+      <ul>
+        <li><a href="#多-redis-连接">多 Redis 连接</a></li>
+        <li><a href="#pushpop-连接">push/pop 连接</a></li>
+        <li><a href="#结合-sentinel">结合 Sentinel</a></li>
+      </ul>
+    </li>
+    <li><a href="#exception-异常处理">Exception 异常处理</a>
+      <ul>
+        <li><a href="#failed-队列"><code>failed</code> 队列</a></li>
+        <li><a href="#自定义异常处理">自定义异常处理</a></li>
+        <li><a href="#链式异常处理">链式异常处理</a></li>
+      </ul>
+    </li>
+    <li><a href="#testing-测试">Testing 测试</a>
+      <ul>
+        <li><a href="#单元测试中的-worker">单元测试中的 Worker</a></li>
+        <li><a href="#在单元测试中执行任务">在单元测试中执行任务</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>RQ 是一个基于 Redis 的轻量级任务队列，依赖 Redis &gt;= 2.7.0。RQ 将任务、执行结果 pickle 序列化后存储于 Redis 当中，在较小规模的应用中可以替代 Celery 执行异步任务。</p>
+<p>另外我觉得比较好的一点是，RQ 的 worker 不会预先读取任务函数。因此，<strong>任务函数更改后，不需要重启 RQ 的 worker</strong>。同时，推荐以下基于 RQ 的项目：</p>
+<ul>
+<li><a href="https://github.com/rq/rq-scheduler" target="_blank" rel="noopener noreffer">rq-scheduler</a> 基于 RQ 的定时任务；</li>
+<li><a href="https://github.com/rq/Flask-RQ2" target="_blank" rel="noopener noreffer">Flask-RQ2</a> 在 Flask 中集成 RQ 的扩展；</li>
+<li><a href="https://github.com/eoranged/rq-dashboard" target="_blank" rel="noopener noreffer">rq-dashboard</a> RQ 的 web 监控工具，使用 Flask 开发，可以方便的集成到 Flask 应用中。</li>
+</ul>
+<p>RQ 的不足在于，依赖于 <code>fork()</code> 进程，因此<strong>不能在 Windows 系统中使用</strong>。</p>
+<p>本文基于 RQ 0.12.0 版本。</p>
+<h1 id="quickstart">QuickStart</h1>
+<p>安装 RQ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">pipenv install rq
+</code></pre></td></tr></table>
+</div>
+</div><p>编写任务函数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="k">def</span> <span class="nf">count_words_at_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>创建 RQ 队列：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">redis</span> <span class="kn">import</span> <span class="n">Redis</span>
+<span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Queue</span>
+
+<span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">Redis</span><span class="p">())</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>调用任务函数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">my_module</span> <span class="kn">import</span> <span class="n">count_words_at_url</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">count_words_at_url</span><span class="p">,</span> <span class="s1">&#39;http://python-rq.org&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>启动 RQ worker：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rq worker
+22:52:34 RQ worker &#39;rq:worker:InvokerPro.10689&#39; started, version 0.12.0
+22:52:34 *** Listening on default...
+22:52:34 Cleaning registries for queue: default
+22:52:34 default: job.count_words_at_url(&#39;http://python-rq.org&#39;) (c3b8fcab-347f-4529-ab4f-0865407fbaa2)
+22:52:34 default: Job OK (c3b8fcab-347f-4529-ab4f-0865407fbaa2)
+22:52:34 Result is kept for 500 seconds
+</code></pre></td></tr></table>
+</div>
+</div><p>获取结果（需要延时一段时间使异步任务执行完成）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span>
+<span class="k">while</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s1">&#39;finished&#39;</span><span class="p">:</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="queue-队列">Queue 队列</h1>
+<p><em>任务</em>（job）是一个供 RQ 后台 worker 调用的 Python 函数对象。把该函数和运行参数压入队列的过程称为<em>入队</em>（enqueue）。</p>
+<h2 id="新建队列">新建队列</h2>
+<p>首先，声明一个任务函数，这里不再赘述。</p>
+<p>新建<em>队列</em>（Queue），可以在实例化时根据需要指定 Queue 名称，常见的命名模式是按照优先级命名队列（例如 <code>high</code>，<code>medium</code>，<code>low</code>）。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="s1">&#39;low&#39;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">redis_conn</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="入队enqueue-和-enqueue_call">入队：enqueue 和 enqueue_call</h2>
+<p>使用 <code>enqueue(f, *args, **kwargs)</code> 方法将任务入队：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">q</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">job_func</span><span class="p">,</span> <span class="n">job_arg1</span><span class="p">,</span> <span class="n">job_arg2</span><span class="p">,</span> <span class="n">job_kwarg1</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>除此之外，使用 <code>enqueue</code> 入队时，可以接收以下参数控制任务执行：</p>
+<ul>
+<li><code>timeout</code> 任务超时时间，超时后将会被标记为 <code>failed</code> 状态。默认单位为秒，可以传入整数，或者能够被转换为整数的字符串，例如 <code>2</code> 或者 <code>'2’</code>。另外，也可以传入包含时分秒单位的字符串，例如 <code>1h</code>、<code>3m</code> 和 <code>10s</code>。</li>
+<li><code>result_ttl</code> 在 Redis 中存储的任务结果的过期时间，过期后任务结果会被删除，默认 500 秒。</li>
+<li><code>ttl</code> 任务加入队列后，被取消之前的等待执行时间；超过该时间后任务会被取消执行。如果设置为 -1，任务将永远不会被取消，一直等待。</li>
+<li><code>depends_on</code> 指定另一个依赖任务（或者 job ID），依赖任务执行完毕后，当前任务才会入队。</li>
+<li><code>job_id</code> 指定 job_id。</li>
+<li><code>at_front</code> 将任务放在队列的前面，即优先插队执行。</li>
+<li><code>kwargs</code> 和 <code>args</code> 存放传入任务函数的关键字参数和可变参数。</li>
+</ul>
+<p>举个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">q</span><span class="o">.</span><span class="n">enqueue_call</span><span class="p">(</span>
+    <span class="n">func</span><span class="o">=</span><span class="n">count_words_at_url</span><span class="p">,</span>
+    <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;http://nvie.com&#39;</span><span class="p">,),</span>
+    <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span>
+<span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>另外，在一些场景中，入队任务进程可能无法访问在 worker 中运行的源代码，此时该函数也可以传入字符串：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">q</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="s1">&#39;my_package.my_module.my_func&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="队列使用">队列使用</h2>
+<p>这里介绍一些 Queue 实例的其他 method。</p>
+<p>获取队列中任务数量：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>获取队列中任务 job id 列表：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">q</span><span class="o">.</span><span class="n">job_ids</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>获取任务实例列表：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">q</span><span class="o">.</span><span class="n">jobs</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>根据 job id 获取任务实例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">q</span><span class="o">.</span><span class="n">fetch_job</span><span class="p">(</span><span class="s1">&#39;my_id&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>删除队列：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">q</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">delete_jobs</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>		<span class="c1"># delete_jobs=True时，也会删除队列中的所有任务</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>RQ 依赖于 pickle 来序列化任务存入 Redis，因此只适用于 Python 系统。</p>
+<h2 id="获取执行结果">获取执行结果</h2>
+<p>当任务入队时，该 <code>queue.enqueue()</code> 方法返回一个 <code>Job</code> 实例。这是一个可以用来检查运行结果的 proxy 对象。</p>
+<p>该实例的 <code>result</code> 属性，在任务未完成时返回 <code>None</code>，在任务完成后返回任务函数的返回值（前提是有返回值）。</p>
+<h2 id="job-装饰器">@job 装饰器</h2>
+<p>使用 Celery <code>@task</code> 的任务函数装饰器。（RQ &gt;= 0.3）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">rq.decorators</span> <span class="kn">import</span> <span class="n">job</span>
+
+<span class="nd">@job</span><span class="p">(</span><span class="s1">&#39;low&#39;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">my_redis_conn</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+
+<span class="n">job</span> <span class="o">=</span> <span class="n">add</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="同步执行">同步执行</h2>
+<p>不经过 worker，直接在当前进程中同步阻塞执行任务函数。（RQ &gt;= 0.3.1）</p>
+<p>需要在 Queue 实例化时传递参数 <code>is_async=False</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; q = Queue(&#39;low&#39;, is_async=False, connection=my_redis_conn)
+&gt;&gt;&gt; job = q.enqueue(fib, 8)
+&gt;&gt;&gt; job.result
+21
+</code></pre></td></tr></table>
+</div>
+</div><p>注意这种情况下，仍然要建立 Redis 连接以存储任务执行状态。</p>
+<h2 id="链式执行">链式执行</h2>
+<p>在任务入队时传入 <code>depends_on</code> 参数以保证任务链式执行。（RQ &gt;= 0.4.0）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="s1">&#39;low&#39;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">my_redis_conn</span><span class="p">)</span>
+
+<span class="n">report_job</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">generate_report</span><span class="p">)</span>
+
+<span class="n">q</span><span class="o">.</span><span class="n">enqueue_call</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">send_report</span><span class="p">,</span> <span class="n">depends_on</span><span class="o">=</span><span class="n">report_job</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="任务注意事项">任务注意事项</h2>
+<ul>
+<li><strong>确保该函数的 <code>__module__</code> 能够被 worker 导入</strong>。这意味着无法将 <code>__main__</code> 模块中声明的函数作为任务入队。</li>
+<li><strong>确保 worker 和 worker 生成器共享<em>完全相同</em>的源代码</strong>。</li>
+<li><strong>确保函数调用不依赖于其上下文</strong>。不要在任务函数中使用全局变量、Web应用程序中的 current_user 或者 current_request 对象。当 worker 运行任务函数时，函数所依赖的<em>任何</em>状态都不存在。如果要访问这些信息，应该将这些信息作为参数传递给 worker。</li>
+</ul>
+<h1 id="worker-工作进程">Worker 工作进程</h1>
+<p><em>工作进程</em>（worker）是一个通常在后台运行的用于执行阻塞或长时任务的 Python 进程。</p>
+<p>启动</p>
+<p>RQ worker 基于 <code>fork()</code> 创建新进程。如果不使用 <a href="https://docs.microsoft.com/en-us/windows/wsl/about" target="_blank" rel="noopener noreffer">Windows Subsystem for Linux</a> 并在 shell 中运行，那么 RQ 无法在 Windows 系统上执行任务。</p>
+<h2 id="启动-worker">启动 Worker</h2>
+<p>在项目根目录执行：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rq worker high normal low
+09:07:05 RQ worker &#39;rq:worker:InvokerPro.11898&#39; started, version 0.12.0
+09:07:05 *** Listening on high, normal, low...
+09:07:05 Cleaning registries for queue: high
+09:07:05 Cleaning registries for queue: normal
+09:07:05 Cleaning registries for queue: low
+</code></pre></td></tr></table>
+</div>
+</div><p>Worker 将会在无限循环中从给定的 Queue 中依次读取任务，因此<strong>启动 Worker 时 Queue 参数的顺序很重要</strong>，应该让高优先级任务 Queue 排在前面。</p>
+<p>一个 Worker 每次只能执行一个任务，不能并发处理。如果要同时执行任务，只需要启动多个 worker 即可。</p>
+<h3 id="burst-mode-突发模式">Burst mode 突发模式</h3>
+<p>默认情况下，Worker 启动后会立即开始处理任务，处理完成后阻塞等待新任务。</p>
+<p>使用 <code>—-burst</code> 参数可以让 Worker 以<em>突发模式</em>启动。在此模式下，Worker 会在给定队列清空（即完成所有任务）后退出。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rq worker --burst high normal low
+09:24:03 RQ worker &#39;rq:worker:InvokerPro.13525&#39; started, version 0.12.0
+09:24:03 *** Listening on high, normal, low...
+09:24:03 Cleaning registries for queue: high
+09:24:03 Cleaning registries for queue: normal
+09:24:03 Cleaning registries for queue: low
+09:24:03 RQ worker &#39;rq:worker:InvokerPro.13525&#39; done, quitting
+</code></pre></td></tr></table>
+</div>
+</div><p>突发模式可以应用于：</p>
+<ul>
+<li>定期执行的批量任务，单独开 Worker 执行，在执行完毕后退出；</li>
+<li>在任务积压时，临时增加 Worker；</li>
+</ul>
+<h3 id="启动参数">启动参数</h3>
+<p>除 <code>—-burst</code> 外，Worker 还支持以下启动参数：</p>
+<ul>
+<li><code>—-url</code> <code>-u</code> 指定 Redis 数据库连接，例如 <code>redis://:secrets@example.com:1234/9</code></li>
+<li><code>—-path</code> <code>-p</code> 指定 import 路径，可以传多个值；</li>
+<li><code>—-config</code> <code>-c</code> 指定配置文件路径；</li>
+<li><code>—-worker-class</code> <code>-w</code> 指定使用的 RQ Worker 类；</li>
+<li><code>--job-class</code> <code>-j</code> 指定使用的 RQ Job 类；</li>
+<li><code>--queue-class</code> 指定使用的 RQ Queue 类；</li>
+<li><code>—-connection-class</code> 指定要使用的 Redis 连接类，默认 <code>redis.StrictRedis</code>；</li>
+<li><code>—-log-format</code> 指定 Worker 日志格式，默认为 <code>'%(asctime)s %(message)s'</code>；</li>
+<li><code>--date-format</code> 指定 Worker 日志的日期时间格式，默认为 <code>'%H:%M:%S'</code>；</li>
+</ul>
+<h2 id="生命周期">生命周期</h2>
+<p>Worker 的生命周期包括几个阶段：</p>
+<ol>
+<li><strong>Boot</strong>。加载Python环境。</li>
+<li><strong>Birth registration</strong>。Worker 将自己注册到系统。</li>
+<li><strong>Start listening</strong>。从给定的 Redis 队列中取出任务。若所有队列都为空，如果 Worker 以突发模式运行则 Worker 结束运行，否则阻塞等待任务。</li>
+<li><strong>Prepare job execution</strong>。Worker 把要执行的任务状态设置为 <code>busy</code>，并在 <code>StartedJobRegistry</code> 中注册该任务，告知系统准备执行该任务</li>
+<li><strong>Fork a child process</strong>。Fork 一个子进程（被称为 work horse），该子进程在故障安全上下文（fail-safe context）中执行任务。</li>
+<li><strong>Process work</strong>。子进程执行任务。</li>
+<li><strong>Cleanup job execution</strong>。Worker 将任务状态设置为 <code>idle</code>，将任务结果结果存储到 Redis 中并根据 <code>result_ttl</code> 设置过期时间。把任务从 <code>StartedJobRegistry</code> 中删除，如果执行成功将任务添加到 <code>FinishedJobRegistry</code> 中，如果执行失败将任务添加到 <code>FailedQueue</code> 中。</li>
+<li><strong>Loop</strong>。从第3步开始重复。</li>
+</ol>
+<h2 id="提升性能">提升性能</h2>
+<p>RQ Worker shell 脚本基本上是一个 fetch-fork-execute 循环。这样做的好处是 RQ 不会泄露内存。但当任务需要进行冗长的设置，或任务都依赖于相同的模块时，每次运行任务都要耗费这一部分时间（因为要在 fork 出新进程后再进行 import）。</p>
+<p>可以在 fork 之前就 import 必要的模块，以改进性能。RQ Worker 没有这样的设置项，但你可以在开始 worker loop 之前进行 import。</p>
+<p>为此，你要自己实现 Worker 启动脚本，而不是使用 <code>rq worker</code>。举个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Connection</span><span class="p">,</span> <span class="n">Worker</span>
+
+<span class="c1"># 提前导入必要模块</span>
+<span class="kn">import</span> <span class="nn">library_that_you_want_preloaded</span>
+
+<span class="c1"># qs 用于获取 Queue 名</span>
+<span class="k">with</span> <span class="n">Connection</span><span class="p">():</span>
+    <span class="n">qs</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="ow">or</span> <span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span>
+
+    <span class="n">w</span> <span class="o">=</span> <span class="n">Worker</span><span class="p">(</span><span class="n">qs</span><span class="p">)</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">work</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="worker-信息">Worker 信息</h2>
+<p><code>Worker</code> 名称一般是主机名和当前 PID 的组合，也可以在启动时通过 <code>—-name</code> 指定。</p>
+<p><code>Worker</code> 实例的运行时信息存储于 Redis 中，可以使用 <code>rq.Worker.all</code> 查询。注意每次查询都会从 Redis 中取信息构建 <code>Worker</code> 实例，也就是说，<strong>每次查询得到的实例不是同一内存对象。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">redis</span> <span class="kn">import</span> <span class="n">Redis</span>
+<span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">Worker</span>
+
+<span class="n">redis</span> <span class="o">=</span> <span class="n">Redis</span><span class="p">()</span>
+
+<span class="c1"># 返回当前 Redis 连接中注册的所有 Worker</span>
+<span class="n">workers</span> <span class="o">=</span> <span class="n">Worker</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">redis</span><span class="p">)</span>
+
+<span class="c1"># 返回指定 Queue 的所有 Worker（RQ &gt;= 0.10.0）</span>
+<span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="s1">&#39;queue_name&#39;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">redis</span><span class="p">)</span>
+<span class="n">workers</span> <span class="o">=</span> <span class="n">Worker</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果只是想得到 Worker 数量，可以使用 <code>rq.Worker.count</code> 方法（RQ &gt;= 0.10.0）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">redis</span> <span class="kn">import</span> <span class="n">Redis</span>
+<span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">Worker</span>
+
+<span class="n">redis</span> <span class="o">=</span> <span class="n">Redis</span><span class="p">()</span>
+
+<span class="n">workers</span> <span class="o">=</span> <span class="n">Worker</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">redis</span><span class="p">)</span>
+
+<span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="s1">&#39;queue_name&#39;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">redis</span><span class="p">)</span>
+<span class="n">workers</span> <span class="o">=</span> <span class="n">Worker</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>另外还可以通过 <code>Worker</code> 实例获得一些统计信息（RQ &gt;= 0.9.0）。首先通过 <code>Worker.find_by_key</code> 方法获得 Worker 实例，传参为 Redis key，格式为 <code>rq:worker:&lt;name&gt;</code>。再通过实例属性查看统计信息。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">rq.worker</span> <span class="kn">import</span> <span class="n">Worker</span>
+
+<span class="n">worker</span> <span class="o">=</span> <span class="n">Worker</span><span class="o">.</span><span class="n">find_by_key</span><span class="p">(</span><span class="s1">&#39;rq:worker:name&#39;</span><span class="p">)</span>
+
+<span class="n">worker</span><span class="o">.</span><span class="n">successful_job_count</span>  <span class="c1"># 执行成功任务数量</span>
+<span class="n">worker</span><span class="o">.</span><span class="n">failed_job_count</span><span class="o">.</span> <span class="c1"># 执行失败任务数量</span>
+<span class="n">worker</span><span class="o">.</span><span class="n">total_working_time</span>  <span class="c1"># 总执行时间</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="停止-worker">停止 Worker</h2>
+<p>当 Worker 收到 <code>SIGINT</code> 信号（通过 Ctrl + C）或 <code>SIGTERM</code> 信号（通过 kill）时，会等待当前任务运行结束后，结束任务循环并注册自己的死亡。</p>
+<p>如果在等待期间再次收到 <code>SIGINT</code> 或者 <code>SIGTERM</code> 信号，Worker 将会发送 <code>SIGKILL</code> 信号强行中止子进程，但仍然会尝试注册自己的死亡。</p>
+<h2 id="使用配置文件">使用配置文件</h2>
+<p>要求 RQ &gt;= 0.3.2。</p>
+<p>配置文件需要为 Python 文件，在启动 Worker 时通过 <code>-c</code> 参数指定从哪个模块读取配置。以下是配置文件支持的配置项：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">REDIS_URL</span> <span class="o">=</span> <span class="s1">&#39;redis://localhost:6379/1&#39;</span>
+
+<span class="c1"># 或者通过以下参数指定 Redis 数据库</span>
+<span class="c1"># REDIS_HOST = &#39;redis.example.com&#39;</span>
+<span class="c1"># REDIS_PORT = 6380</span>
+<span class="c1"># REDIS_DB = 3</span>
+<span class="c1"># REDIS_PASSWORD = &#39;very secret&#39;</span>
+
+<span class="c1"># 指定监听的 Queue</span>
+<span class="n">QUEUES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;high&#39;</span><span class="p">,</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="s1">&#39;low&#39;</span><span class="p">]</span>
+
+<span class="c1"># Sentry 设置</span>
+<span class="c1"># The &#39;sync+&#39; prefix is required for raven: https://github.com/nvie/rq/issues/350#issuecomment-43592410</span>
+<span class="n">SENTRY_DSN</span> <span class="o">=</span> <span class="s1">&#39;sync+http://public:secret@example.com/1&#39;</span>
+
+<span class="c1"># 自定义 Worker 名称</span>
+<span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;worker-1024&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>注意： <code>QUEUES</code> 和 <code>REDIS_PASSWORD</code> 设置是0.3.3以后的新设置。</p>
+<p>指定配置文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rq worker -c settings
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="自定义deathpenalty类">自定义DeathPenalty类</h2>
+<p>当任务超时时，Worker 将尝试使用 <code>death_penalty_class</code>（默认值 <code>UnixSignalDeathPenalty</code>）提供的方法将其终止。如果您希望尝试以特定应用程序或“更干净”的方式杀死任务，则可以覆盖此项。</p>
+<p>DeathPenalty 类使用以下参数构造 <code>BaseDeathPenalty(timeout, JobTimeoutException, job_id=job.id)</code></p>
+<h2 id="自定义异常处理程序">自定义异常处理程序</h2>
+<p>要求 RQ &gt;= 0.5.5。</p>
+<p>如果要针对不同类型的作业以不同方式处理错误，或者想自定义 默认的错误处理，可以使用 <code>--exception-handler</code> 指定错误处理类：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rq worker --exception-handler &#39;path.to.my.ErrorHandler&#39;
+
+# Multiple exception handlers is also supported
+$ rq worker --exception-handler &#39;path.to.my.ErrorHandler&#39; --exception-handler &#39;another.ErrorHandler&#39;
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="result-执行结果">Result 执行结果</h1>
+<h2 id="处理结果">处理结果</h2>
+<p>如果一个任务有非 None 的返回值，Worker 会把返回值经过 pickle 序列化后，写入到任务在 Redis 中对应记录（key 为 <code>rq:job:[hash]</code> 格式，value 为 Hash 类型）的 <code>result</code> 字段中，默认将会在 500 秒后失效。</p>
+<p>将任务入队时返回的 <code>Job</code> 实例是一个代理对象，绑定了任务 ID，以便能从任务执行结果中取到数据。</p>
+<p>若 RQ &gt;= 0.3.1 版本，可以在调用 <code>enqueue</code> 和 <code>enqueue_call</code> 入队时，使用 <code>result_ttl</code> 参数指定存储结果删除时间：</p>
+<ul>
+<li>不设置，使用默认值 500，500 秒后删除；</li>
+<li>设置为 0，立即删除；</li>
+<li>设置为 -1，永不删除，此时要注意自己清理 Redis，以免 Redis 无限增长；</li>
+<li>设置为其他正整数数值 N，在 N 秒后删除；</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">q</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>  <span class="c1"># result expires after 500 secs (the default)</span>
+<span class="n">q</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">result_ttl</span><span class="o">=</span><span class="mi">86400</span><span class="p">)</span>  <span class="c1"># result expires after 1 day</span>
+<span class="n">q</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">result_ttl</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># result gets deleted immediately</span>
+<span class="n">q</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">result_ttl</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># result never expires--you should delete jobs manually</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>文档中的这一段与实际测试结果不符，实际测试没有返回值的情况下也使用默认的 500 秒的超时时间。</p>
+<blockquote>
+<p>Additionally, you can use this for keeping around finished jobs without return values, which would be deleted immediately by default.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">q.enqueue(func_without_rv, result_ttl=500)  # job kept explicitly
+</code></pre></td></tr></table>
+</div>
+</div></blockquote>
+<h2 id="异常处理">异常处理</h2>
+<p>任务执行失败时会抛出异常，为了引起足够的注意，失败任务在 Redis 中的记录永不过期。RQ 目前没有可靠的或自动的方法判断某些失败的任务能否安全重试。</p>
+<p>失败任务中抛出的异常，会被 Worker 捕获，pickle 序列化后存储到任务在 Redis 中记录的 <code>exc_info</code> 字段中，而 失败任务的 <code>Job</code> 对象则会放入 <code>failed</code> 队列中。</p>
+<p><code>Job</code> 对象本身有一些有用的属性，可以用于辅助检查：</p>
+<ul>
+<li>任务原始创建时间；</li>
+<li>最后入队日期；</li>
+<li>入队始发队列；</li>
+<li>函数调用的文本描述；</li>
+<li>异常信息；</li>
+</ul>
+<p>可以根据这些信息手动检查和判断问题并可以重新提交任务。</p>
+<h2 id="中断处理">中断处理</h2>
+<p>当 Worker 进程被以“礼貌的”方式杀死时（Ctrl + C 或 <code>kill</code>），RQ 会努力不丢失任何任务，会在当前任务处理完成后停止处理新的任务。</p>
+<p>但是，Worker 进程也可以通过 <code>kill -9</code> 的方式强行杀死，此时 Worker 不能“优雅地”完成工作，没有时间把任务加入 <code>failed</code> 队列中。因此，强行杀死进程可能会导致异常。</p>
+<h2 id="超时处理">超时处理</h2>
+<p>默认情况下，任务应该在 180 秒内执行完毕。否则，Worker 会杀死 work horse 进程，并将任务加入到 <code>failed</code> 队列中，表明工作超时。</p>
+<p>根据任务需要，我们可以自定义超时时间。</p>
+<p>在 Job 维度，入队时使用 <code>timeout</code> 参数设置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+<span class="n">q</span><span class="o">.</span><span class="n">enqueue_call</span><span class="p">(</span><span class="n">mytask</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">foo</span><span class="p">,),</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;bar&#39;</span><span class="p">:</span> <span class="n">qux</span><span class="p">},</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>  <span class="c1"># 10 mins</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在 Queue 维度，新建 Queue 时使用 <code>timeout</code> 参数设置，对队列中所有任务都有效。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># High prio jobs should end in 8 secs, while low prio</span>
+<span class="c1"># work may take up to 10 mins</span>
+<span class="n">high</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="s1">&#39;high&#39;</span><span class="p">,</span> <span class="n">default_timeout</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>  <span class="c1"># 8 secs</span>
+<span class="n">low</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="s1">&#39;low&#39;</span><span class="p">,</span> <span class="n">default_timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>  <span class="c1"># 10 mins</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Job 维度的设置项优先级高于 Queue 维度。</strong></p>
+<h1 id="jobs-任务">Jobs 任务</h1>
+<h2 id="从-redis-中获取-job">从 Redis 中获取 Job</h2>
+<p>所有的任务信息都存储于 Redis 中，可以使用 <code>Job.fetch(id, connection=redis)</code> 方法获取 Job 实例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">redis</span> <span class="kn">import</span> <span class="n">Redis</span>
+<span class="kn">from</span> <span class="nn">rq.job</span> <span class="kn">import</span> <span class="n">Job</span>
+
+<span class="n">connection</span> <span class="o">=</span> <span class="n">Redis</span><span class="p">()</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">Job</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;my_job_id&#39;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">redis</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Status: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="err">$</span> <span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">())</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>该 Job 对象的一些属性包括：</p>
+<ul>
+<li><code>job.status</code></li>
+<li><code>job.func_name</code></li>
+<li><code>job.args</code></li>
+<li><code>job.kwargs</code></li>
+<li><code>job.result</code></li>
+<li><code>job.enqueued_at</code></li>
+<li><code>job.started_at</code></li>
+<li><code>job.ended_at</code></li>
+<li><code>job.exc_info</code></li>
+</ul>
+<h2 id="读写当前-job-实例">读写当前 Job 实例</h2>
+<p>由于任务函数是常规的 Python 函数，因此在任务函数中，只能通过 RQ 的 <code>get_current_job</code> 函数获得当前 Job 的实例。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">get_current_job</span>
+
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">get_current_job</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Current job: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>通过 Job 实例的 <code>meta</code> 属性 和 <code>save_meta()</code> 方法，可以向 Job 实例中写入数据。（RQ &gt;= 0.8.0）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">get_current_job</span><span class="p">()</span>
+    <span class="n">job</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">job</span><span class="o">.</span><span class="n">save_meta</span><span class="p">()</span>
+
+    <span class="c1"># do more work</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>注意，以上内容<strong>只在任务函数中有效</strong>。</p>
+<h2 id="job-的等待执行时间">Job 的等待执行时间</h2>
+<p>一个任务有两个 TTL：一个用于执行结果，另一个用于任务 Job 本身。后者表示任务在队列中等待多久后会被取消。该 TTL 可以在创建任务或入队时指定：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">rq.job</span> <span class="kn">import</span> <span class="n">Job</span>
+
+<span class="c1"># 在任务创建时指定</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">Job</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">say_hello</span><span class="p">,</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># 在任务入队时指定</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">count_words_at_url</span><span class="p">,</span> <span class="s1">&#39;http://nvie.com&#39;</span><span class="p">,</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">43</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>设置为 <code>-1</code> 时任务将一直等待，不会被取消。<strong>被取消的 Job 会立即被从 Redis 中立即删除。</strong></p>
+<h2 id="执行失败的-job">执行失败的 Job</h2>
+<p>如果任务执行失败，Worker 会把任务放入 <code>failed</code> 队列中，同时 Redis 中 Job 实例的 <code>is_failed</code> 属性会被置为 True。使用 <code>get_failed_queue</code> 可以获取所有失败的任务。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">redis</span> <span class="kn">import</span> <span class="n">StrictRedis</span>
+<span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">push_connection</span><span class="p">,</span> <span class="n">get_failed_queue</span><span class="p">,</span> <span class="n">Queue</span>
+<span class="kn">from</span> <span class="nn">rq.job</span> <span class="kn">import</span> <span class="n">Job</span>
+
+
+<span class="n">con</span> <span class="o">=</span> <span class="n">StrictRedis</span><span class="p">()</span>
+<span class="n">push_connection</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">div_by_zero</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="mi">0</span>
+
+<span class="n">job</span> <span class="o">=</span> <span class="n">Job</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">div_by_zero</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">job</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;fake&#39;</span>
+<span class="n">job</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="c1"># 获取 failed queue 对象</span>
+<span class="n">fq</span> <span class="o">=</span> <span class="n">get_failed_queue</span><span class="p">()</span>
+
+<span class="c1"># 把 job 加入到 failed queue 中</span>
+<span class="n">fq</span><span class="o">.</span><span class="n">quarantine</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Some fake error&#39;</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">fq</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">1</span>
+
+<span class="c1"># 把 job 重新加入到执行队列中，并从 failed queue 中删除</span>
+<span class="n">fq</span><span class="o">.</span><span class="n">requeue</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">fq</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="k">assert</span> <span class="n">Queue</span><span class="p">(</span><span class="s1">&#39;fake&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">1</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="monitoring-监控">Monitoring 监控</h1>
+<h2 id="rq-dashboard">rq-dashboard</h2>
+<p><a href="https://github.com/nvie/rq-dashboard" target="_blank" rel="noopener noreffer">RQ dashboard</a> 是一个单独分发的，轻量级的 Web 前端监控工具，基于 Flask 开发。</p>
+<p>安装方式如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">pip install rq-dashboard
+</code></pre></td></tr></table>
+</div>
+</div><p>运行：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">rq-dashboard
+</code></pre></td></tr></table>
+</div>
+</div><p>与 Flask 集成</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">import</span> <span class="nn">rq_dashboard</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="n">rq_dashboard</span><span class="o">.</span><span class="n">default_settings</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">rq_dashboard</span><span class="o">.</span><span class="n">blueprint</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s2">&#34;/rq&#34;</span><span class="p">)</span>
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s2">&#34;/&#34;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">hello</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s2">&#34;Hello World!&#34;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="console-工具">Console 工具</h2>
+<p>RQ 自带了 console 监控工具，启动命令为 <code>rq info</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rq info
+failed       |██ 2
+default      | 0
+2 queues, 2 jobs total
+
+InvokerPro.53243 idle: default
+1 workers, 2 queues
+
+Updated: 2018-10-29 23:03:07.478540
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="查询指定队列">查询指定队列</h3>
+<p>通过 <code>rq info queue1 queue2 …</code> 可以返回指定队列的信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rq info default
+default      | 0
+1 queues, 0 jobs total
+
+InvokerPro.53243 idle: default
+1 workers, 1 queues
+
+Updated: 2018-10-29 23:22:17.640684
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="按队列展示">按队列展示</h3>
+<p>默认情况下，<code>rq info</code> 输出活跃 Worker 和它们监听的 Queue。</p>
+<p>通过设置 <code>-R</code> 或者 <code>--by-queue</code>，可以让 RQ 按照队列组织展示，即展示队列和监听队列的 Worker。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rq info -R
+failed       |██ 2
+default      | 0
+2 queues, 2 jobs total
+
+failed:  –
+default: InvokerPro.53243 (idle)
+1 workers, 2 queues
+
+Updated: 2018-10-29 23:33:58.255413
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="定时轮询">定时轮询</h3>
+<p>默认情况下，<code>rq info</code> 打印信息后就会退出。可以使用 <code>—-interval</code> 参数指定轮询间隔，以不断刷新监控信息。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rq info --interval 1
+</code></pre></td></tr></table>
+</div>
+</div><p>注意，如果 interval 设置的过低，会加重 Redis 的负载。</p>
+<h1 id="connection-连接">Connection 连接</h1>
+<p>**RQ 维护一个 Redis 连接堆栈，每个 RQ 对象实例在创建时，会使用堆栈最顶层的 Redis 连接。**因此我们可以使用 with 上下文管理器创建连接，并在其中新建 RQ 对象实例。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">Connection</span>
+<span class="kn">from</span> <span class="nn">redis</span> <span class="kn">import</span> <span class="n">Redis</span>
+
+<span class="k">with</span> <span class="n">Connection</span><span class="p">(</span><span class="n">Redis</span><span class="p">()):</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>或者新建 RQ 对象实例时显式地指定连接：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Queue</span>
+<span class="kn">from</span> <span class="nn">redis</span> <span class="kn">import</span> <span class="n">Redis</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">Redis</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="多-redis-连接">多 Redis 连接</h2>
+<p>使用显式连接实现——准确但乏味：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Queue</span>
+<span class="kn">from</span> <span class="nn">redis</span> <span class="kn">import</span> <span class="n">Redis</span>
+
+<span class="n">conn1</span> <span class="o">=</span> <span class="n">Redis</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">)</span>
+<span class="n">conn2</span> <span class="o">=</span> <span class="n">Redis</span><span class="p">(</span><span class="s1">&#39;remote.host.org&#39;</span><span class="p">,</span> <span class="mi">9836</span><span class="p">)</span>
+
+<span class="n">q1</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">conn1</span><span class="p">)</span>
+<span class="n">q2</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">conn2</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>使用 with 上下文管理器实现：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">Connection</span>
+<span class="kn">from</span> <span class="nn">redis</span> <span class="kn">import</span> <span class="n">Redis</span>
+
+<span class="k">with</span> <span class="n">Connection</span><span class="p">(</span><span class="n">Redis</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">)):</span>
+    <span class="n">q1</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">Connection</span><span class="p">(</span><span class="n">Redis</span><span class="p">(</span><span class="s1">&#39;remote.host.org&#39;</span><span class="p">,</span> <span class="mi">9836</span><span class="p">)):</span>
+        <span class="n">q2</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+    <span class="n">q3</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="s1">&#39;qux&#39;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">q1</span><span class="o">.</span><span class="n">connection</span> <span class="o">!=</span> <span class="n">q2</span><span class="o">.</span><span class="n">connection</span>
+<span class="k">assert</span> <span class="n">q2</span><span class="o">.</span><span class="n">connection</span> <span class="o">!=</span> <span class="n">q3</span><span class="o">.</span><span class="n">connection</span>
+<span class="k">assert</span> <span class="n">q1</span><span class="o">.</span><span class="n">connection</span> <span class="o">==</span> <span class="n">q3</span><span class="o">.</span><span class="n">connection</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="pushpop-连接">push/pop 连接</h2>
+<p>如果代码不允许使用 <code>with</code> 语句（例如在单元测试中），则可以使用 <code>push_connection()</code> 和 <code>pop_connection()</code> 方法替代上下文管理器。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Queue</span>
+<span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">push_connection</span><span class="p">,</span> <span class="n">pop_connection</span>
+
+<span class="k">class</span> <span class="nc">MyTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># 将新连接压入连接堆栈</span>
+        <span class="n">push_connection</span><span class="p">(</span><span class="n">Redis</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># 从连接堆栈中丢弃连接</span>
+        <span class="n">pop_connection</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">test_foo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;Any queues created here use local Redis.&#34;&#34;&#34;</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+        <span class="o">...</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="结合-sentinel">结合 Sentinel</h2>
+<p>要使用 redis sentinel，必须在配置文件中指定字典。将此设置与带有自动重启选项的 systemd 或 docker 容器结合使用，以便允许 worker 和 RQ 通过容错连接（fault-tolerant connection）连接 Redis。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">SENTINEL</span><span class="p">:</span><span class="w"> </span>{<span class="w">
+</span><span class="w">    </span><span class="s1">&#39;INSTANCES&#39;</span><span class="p">:[</span><span class="w">
+</span><span class="w">        </span>(<span class="s1">&#39;remote.host1.org&#39;</span><span class="p">,</span><span class="w"> </span><span class="m">26379</span>)<span class="p">,</span><span class="w">
+</span><span class="w">        </span>(<span class="s1">&#39;remote.host2.org&#39;</span><span class="p">,</span><span class="w"> </span><span class="m">26379</span>)<span class="p">,</span><span class="w">
+</span><span class="w">        </span>(<span class="s1">&#39;remote.host3.org&#39;</span><span class="p">,</span><span class="w"> </span><span class="m">26379</span>)<span class="w">
+</span><span class="w">    </span><span class="p">],</span><span class="w">
+</span><span class="w">    </span><span class="k">&#39;SOCKET_TIMEOUT&#39;</span><span class="p">:</span><span class="w"> </span>None<span class="p">,</span><span class="w">
+</span><span class="w">    </span><span class="k">&#39;PASSWORD&#39;</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;secret&#39;</span><span class="p">,</span><span class="w">
+</span><span class="w">    </span><span class="k">&#39;DB&#39;</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w">
+</span><span class="w">    </span><span class="k">&#39;MASTER_NAME&#39;</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;master&#39;</span><span class="w">
+</span><span class="w"></span>}<span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><h1 id="exception-异常处理">Exception 异常处理</h1>
+<p>任务在发生异常时会执行失败，当 RQ Worker 在后台运行时，你怎么才能知道任务失败了呢？</p>
+<h2 id="failed-队列"><code>failed</code> 队列</h2>
+<p>默认情况下，RQ 会将失败的任务放入到 <code>failed</code> 队列中，包含了它们的异常信息（类型，值，堆栈）。这只能被动保存发生的异常，但不会有任何主动通知。</p>
+<h2 id="自定义异常处理">自定义异常处理</h2>
+<p>RQ支持注册自定义异常处理程序（RQ &gt;= 0.3.1）。这样就可以在发生异常时采取其他步骤，或者替换默认地将失败任务发送到 <code>failed</code> 队列的行为。</p>
+<p>在创建 Worker 时，使用 <code>exception_handlers</code> 参数指定异常处理程序列表。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">rq.handlers</span> <span class="kn">import</span> <span class="n">move_to_failed_queue</span>	<span class="c1"># RQ 默认的异常处理行为——发送任务到 failed 队列</span>
+
+<span class="n">w</span> <span class="o">=</span> <span class="n">Worker</span><span class="p">([</span><span class="n">q</span><span class="p">],</span> <span class="n">exception_handlers</span><span class="o">=</span><span class="p">[</span><span class="n">my_handler</span><span class="p">,</span> <span class="n">move_to_failed_queue</span><span class="p">])</span>
+<span class="o">...</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>异常处理 handler 是一个函数，其参数为：</p>
+<ul>
+<li><code>job</code> 任务对象</li>
+<li><code>exc_type</code> 异常类型</li>
+<li><code>exc_value</code> 异常值</li>
+<li><code>traceback</code> 异常堆栈</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">my_handler</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+    <span class="c1"># do custom things here</span>
+    <span class="c1"># for example, write the exception info to a DB</span>
+    <span class="o">...</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>或者使用可变参数定义：<code>job</code> 和 <code>*exc_info</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">my_handler</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="o">*</span><span class="n">exc_info</span><span class="p">):</span>
+    <span class="c1"># do custom things here</span>
+    <span class="o">...</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="链式异常处理">链式异常处理</h2>
+<p>异常处理程序可以决定是否完成处理异常，还是由堆栈中的后续程序继续处理异常。这通过返回值来控制：</p>
+<ul>
+<li>若返回 <code>True</code> 表示继续，并进入下一个异常处理程序；</li>
+<li>若返回 <code>False</code> 表示停止处理异常；</li>
+<li>若没有返回值，即返回 <code>None</code>，则认为是 <code>True</code>，继续进入下一个异常处理程序；</li>
+</ul>
+<p>如果要替换默认的错误处理行为，错误处理程序应该返回 <code>False</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">black_hole</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="o">*</span><span class="n">exc_info</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">False</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="testing-测试">Testing 测试</h1>
+<h2 id="单元测试中的-worker">单元测试中的 Worker</h2>
+<p>许多框架在执行单元测试时使用内存数据库，这些数据库与 RQ 默认使用的 <code>fork()</code> 不太兼容。</p>
+<p>因此在单元测试用，应该使用 <code>SimpleWorker</code> 类来避免 <code>fork()</code>，且建议以突发模式运行。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">redis</span> <span class="kn">import</span> <span class="n">Redis</span>
+<span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">SimpleWorker</span><span class="p">,</span> <span class="n">Queue</span>
+
+<span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">Redis</span><span class="p">())</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">my_long_running_job</span><span class="p">)</span>
+<span class="n">worker</span> <span class="o">=</span> <span class="n">SimpleWorker</span><span class="p">([</span><span class="n">queue</span><span class="p">],</span> <span class="n">connection</span><span class="o">=</span><span class="n">queue</span><span class="o">.</span><span class="n">connection</span><span class="p">)</span>
+<span class="n">worker</span><span class="o">.</span><span class="n">work</span><span class="p">(</span><span class="n">burst</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  <span class="c1"># Runs enqueued job</span>
+<span class="c1"># Check for result...</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="在单元测试中执行任务">在单元测试中执行任务</h2>
+<p>另一种解决方案是，在创建队列时使用 <code>is_async=False</code> 参数，使任务在同一个线程中立即执行，而不是将其分配给 Worker。此时不需要启动 RQ worker。</p>
+<p>除此之外，还可以使用 FakeStrictRedis 替代 Redis，也不必再启动 Redis 服务器，FakeStrictRedis 的实例可以直接作为连接参数传递给队列。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">fakeredis</span> <span class="kn">import</span> <span class="n">FakeStrictRedis</span>
+<span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Queue</span>
+
+<span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="n">is_async</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">FakeStrictRedis</span><span class="p">())</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">my_long_running_job</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">job</span><span class="o">.</span><span class="n">is_finished</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="参考链接">参考链接</h1>
+<ul>
+<li><a href="http://python-rq.org/docs/" target="_blank" rel="noopener noreffer">RQ: Documentation</a></li>
+<li><a href="https://github.com/rq/rq" target="_blank" rel="noopener noreffer">GitHub - rq/rq</a></li>
+<li><a href="https://github.com/eoranged/rq-dashboard" target="_blank" rel="noopener noreffer">GitHub - eoranged/rq-dashboard</a></li>
+</ul></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2018-10-30</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/a18b7/" class="prev" rel="prev" title="双因素认证2FA"><i class="fas fa-angle-left fa-fw"></i>双因素认证2FA</a>
+            <a href="/posts/444aa/" class="next" rel="next" title="PyYAML-YAML格式Python处理库">PyYAML-YAML格式Python处理库<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">❤️ <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.74.3">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10">LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2017-2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/mrchi" target="_blank">MrChi</a></span>
+                    🇨🇳&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css" integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb&#43;Q="><link rel="stylesheet" href="/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css" integrity="sha256-RxADTmacf/F/gj&#43;boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel="stylesheet" href="/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css" integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs&#43;A="><script type="text/javascript" src="/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js" integrity="sha256-Coc8etTI4&#43;r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js" integrity="sha256-vP&#43;F&#43;14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js" integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.8af144bb3c7d3cadc3955a71b27d946c14d8aedce9b9c64b07cd00365357ae08.js" integrity="sha256-ivFEuzx9PK3DlVpxsn2UbBTYrtzpucZLB80ANlNXrgg="></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js" integrity="sha256-&#43;2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type="text/javascript" src="/lib/twemoji/twemoji.min.e5845681ecd26aaf715f65c6b871e241c1d37b95960d5a258126a27d481ae306.js" integrity="sha256-5YRWgezSaq9xX2XGuHHiQcHTe5WWDVolgSaifUga4wY="></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js" integrity="sha256-inc5kl9MA1hkeYUt&#43;EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type="text/javascript" src="/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js" integrity="sha256-F/Xda58SPdcUCr&#43;xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type="text/javascript" src="/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js" integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type="text/javascript" src="/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js" integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type="text/javascript" src="/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js" integrity="sha256-XOo1bWAlxaLxjEVMg&#43;xWdNuwT6sc0ddVaed3iMa2&#43;Ig="></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":40},"comment":{"gitalk":{"admin":["mrchi"],"clientID":"b67590451a2c656bcbf1","clientSecret":"a85495f1e78a3a4fdfbb01752e214febaa4520d3","id":"2018-10-30T09:44:53+08:00","owner":"mrchi","repo":"mrchi.github.io","title":"RQ-轻量级Python任务队列"}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"JTHYEW4WCB","algoliaIndex":"mrchi_cc","algoliaSearchKey":"18bcc6ccd70b36f665d79ff79e8c8918","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"},"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js" integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/&#43;HcLiLAxmjw="></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'UA-137477905-2', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-137477905-2" async></script></body>
+</html>
